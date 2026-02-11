@@ -29,6 +29,11 @@ public class M_MonitorManager : MonoBehaviour
     [Header("Loading Visual")]
     public SpriteRenderer loadingRenderer;
 
+    [Header("Pages")]
+    public GameObject petshopPage;
+    public GameObject searchPage; // optional
+
+
     [Header("Timing")]
     public float delayBeforeIdle = 0.3f;
     public float loadingDuration = 2f;
@@ -103,5 +108,25 @@ public class M_MonitorManager : MonoBehaviour
         currentState = MonitorState.On;
         screenOff.SetActive(false);
         screenOn.SetActive(true);
+    }
+    public void HandleSearch(string url)
+    {
+        string cleanUrl = url.ToLower().Trim();
+
+        if (cleanUrl == "www.miawshopp.com")
+        {
+            OpenPetshop();
+        }
+        else
+        {
+            Debug.Log("Wrong URL");
+            // nanti bisa popup ads disini
+        }
+    }
+
+    void OpenPetshop()
+    {
+        searchPage.SetActive(false);
+        petshopPage.SetActive(true);
     }
 }
