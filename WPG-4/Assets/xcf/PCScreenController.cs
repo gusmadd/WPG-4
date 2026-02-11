@@ -1,47 +1,61 @@
 using UnityEngine;
+using System.Collections;
 
 public class PCScreenController : MonoBehaviour
 {
-    public SpriteRenderer screenSprite;   // sprite layar pc
-    public GameState activeState = GameState.DESKTOP; // state saat layar nyala
+    [Header("Main Screen")]
+    public SpriteRenderer screenSprite;   // layar PC utama
+    public GameState activeState = GameState.DESKTOP;
+
+    [Header("Browser Layer")]
+    public SpriteRenderer browserLayer;   // layer browser
+    public float browserDelay = 2f;       // delay setelah nyala PC
 
     private bool isOn = false;
+    private bool browserShown = false;
 
     void Start()
     {
         if (screenSprite != null)
-            screenSprite.enabled = false; // awal mati
+            screenSprite.enabled = false;
+
+        if (browserLayer != null)
+            browserLayer.enabled = false;
     }
 
-void Update()
-{
-    if (GameManager.Instance == null)
+    void Update()
     {
-        Debug.Log("GM NULL ❌");
-        return;
-    }
+        if (GameManager.Instance == null) return;
 
-    if (!isOn && GameManager.Instance.CurrentState == activeState)
-    {
-        TurnOnScreen();
+        if (!isOn && GameManager.Instance.CurrentState == activeState)
+        {
+            TurnOnScreen();
+        }
     }
-}
-
 
     void TurnOnScreen()
     {
         isOn = true;
 
         if (screenSprite != null)
-        {
             screenSprite.enabled = true;
-            screenSprite.color = Color.white;
 
-            Debug.Log("SCREEN ON 🖥️✨");
-        }
-        else
+        Debug.Log("SCREEN ON 🖥️✨");
+
+        // mulai delay browser
+        StartCoroutine(ShowBrowserAfterDelay());
+    }
+
+    IEnumerator ShowBrowserAfterDelay()
+    {
+        yield return new WaitForSeconds(browserDelay);
+
+        if (browserLayer != null && !browserShown)
         {
-            Debug.Log("SCREEN ga nyala ❌");
+            browserLayer.enabled = true;
+            browserShown = true;
+
+            Debug.Log("BROWSER LAYER ON 🌐🔥");
         }
     }
 }
