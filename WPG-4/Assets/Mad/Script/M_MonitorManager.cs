@@ -17,22 +17,19 @@ public class M_MonitorManager : MonoBehaviour
     public MonitorState currentState = MonitorState.Off;
 
     [Header("References")]
-    public Animator loadingAnimator;   // Animator di Layar loading
+    public Animator loadingAnimator;
 
     [Header("Circle Spin")]
     public float circleSpinSpeed = 180f;
-    public GameObject loadingCircle;   // object Loading (spinner)
+    public GameObject loadingCircle;
 
-    public GameObject screenOff;        // Screen_OFF
-    public GameObject screenOn;         // Screen_ON
-
-    [Header("Loading Visual")]
-    public SpriteRenderer loadingRenderer;
+    public GameObject screenOff;
+    public GameObject screenOn;
 
     [Header("Pages")]
+    public GameObject searchPage;
     public GameObject petshopPage;
-    public GameObject searchPage; // optional
-
+    public M_NotFoundController notFoundController; // 🔥 pakai controller
 
     [Header("Timing")]
     public float delayBeforeIdle = 0.3f;
@@ -48,7 +45,10 @@ public class M_MonitorManager : MonoBehaviour
 
         screenOff.SetActive(true);
         screenOn.SetActive(false);
-        loadingCircle.SetActive(false);    // spinner mati
+        loadingCircle.SetActive(false);
+
+        searchPage.SetActive(false);
+        petshopPage.SetActive(false);
     }
 
     void Update()
@@ -78,37 +78,35 @@ public class M_MonitorManager : MonoBehaviour
 
     IEnumerator PowerOnSequence()
     {
-        // LOADING IN
         currentState = MonitorState.LoadingIn;
         loadingAnimator.SetTrigger("isIn");
 
-        // Tunggu animasi IN selesai
         yield return new WaitUntil(() =>
             loadingAnimator.GetCurrentAnimatorStateInfo(0).IsName("in") &&
             loadingAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
         );
 
-        // Delay kecil biar halus
         yield return new WaitForSeconds(0.1f);
 
-        // LOADING IDLE
         currentState = MonitorState.LoadingIdle;
         loadingCircle.SetActive(true);
 
         yield return new WaitForSeconds(loadingDuration);
 
-        // LOADING OUT
         currentState = MonitorState.LoadingOut;
         loadingCircle.SetActive(false);
-        loadingAnimator.ResetTrigger("isIn");
         loadingAnimator.SetTrigger("isOut");
+
         yield return new WaitForSeconds(delayAfterOut);
 
-        // MONITOR ON
         currentState = MonitorState.On;
+
         screenOff.SetActive(false);
         screenOn.SetActive(true);
+
+        searchPage.SetActive(true); // 🔥 masuk ke search setelah nyala
     }
+
     public void HandleSearch(string url)
     {
         string cleanUrl = url.ToLower().Trim();
@@ -119,8 +117,8 @@ public class M_MonitorManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Wrong URL");
-            // nanti bisa popup ads disini
+            searchPage.SetActive(false);
+            notFoundController.Show();
         }
     }
 

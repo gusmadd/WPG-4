@@ -5,47 +5,155 @@ using TMPro;  // 🔥 TAMBAH INI
 
 public class M_SearchInput : MonoBehaviour
 {
+    [Header("Settings")]
     public string currentText = "";
     public int maxCharacter = 20;
 
+    [Header("Default")]
+    public string defaultText = "Search...";
+    bool isFirstInput = true;
+
+    [Header("References")]
     public M_MonitorManager monitorManager;
     public M_KeyboardController keyboard;
+    public TextMeshPro textDisplay;
 
-    public TextMeshProUGUI textDisplay;   // 🔥 TAMBAH INI
+    [Header("Cursor")]
+    public bool isTyping = false;
+    public float blinkSpeed = 0.5f;
+
+    bool cursorVisible = true;
+
+    void Start()
+    {
+        currentText = defaultText;   // 🔥 Set default
+        UpdateText();
+        StartCoroutine(CursorBlink());
+    }
 
     void OnMouseDown()
     {
         keyboard.ShowKeyboard();
+        ForceTyping();
     }
 
     public void AddCharacter(string c)
     {
+        // CAPS
+        if (c == "CAPS")
+        {
+            keyboard.ToggleCaps();
+            return;
+        }
+
+        // BACKSPACE
         if (c == "BACK")
         {
-            if (currentText.Length > 0)
+            if (!isFirstInput && currentText.Length > 0)
+            {
                 currentText = currentText.Substring(0, currentText.Length - 1);
+
+                if (currentText.Length == 0)
+                {
+                    ResetToDefault();
+                    return;
+                }
+            }
+
+            UpdateText();
+            return;
         }
-        else if (c == "ENTER")
+
+        // ENTER
+        if (c == "ENTER")
         {
             Submit();
             return;
         }
-        else if (currentText.Length < maxCharacter)
+
+        // SPACE
+        if (c == "SPACE")
         {
-            currentText += c;
+            if (isFirstInput)
+            {
+                currentText = "";
+                isFirstInput = false;
+            }
+
+            if (currentText.Length < maxCharacter)
+                currentText += " ";
+
+            UpdateText();
+            return;
         }
 
-        UpdateText();   // 🔥 update visual
+        // HURUF
+        if (currentText.Length < maxCharacter)
+        {
+            // 🔥 Hapus default saat huruf pertama diketik
+            if (isFirstInput)
+            {
+                currentText = "";
+                isFirstInput = false;
+            }
+
+            if (keyboard.isCaps)
+                currentText += c.ToUpper();
+            else
+                currentText += c.ToLower();
+        }
+
+        UpdateText();
+    }
+
+    IEnumerator CursorBlink()
+    {
+        while (true)
+        {
+            if (isTyping)
+            {
+                cursorVisible = !cursorVisible;
+                UpdateText();
+            }
+
+            yield return new WaitForSeconds(blinkSpeed);
+        }
     }
 
     void UpdateText()
     {
-        textDisplay.text = currentText;
+        if (isTyping && cursorVisible)
+            textDisplay.text = currentText + "|";
+        else
+            textDisplay.text = currentText;
     }
 
     void Submit()
     {
+        isTyping = false;
+        UpdateText();
         monitorManager.HandleSearch(currentText);
         keyboard.HideKeyboard();
+    }
+
+    void OnEnable()
+    {
+        UpdateText();
+    }
+
+    public void ForceTyping()
+    {
+        StopAllCoroutines();
+        isTyping = true;
+        cursorVisible = true;
+        UpdateText();
+        StartCoroutine(CursorBlink());
+    }
+
+    public void ResetToDefault()
+    {
+        currentText = defaultText;
+        isFirstInput = true;
+        UpdateText();
     }
 }
