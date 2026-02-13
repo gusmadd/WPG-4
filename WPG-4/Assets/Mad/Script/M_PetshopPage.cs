@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class M_PetshopPage : MonoBehaviour
 {
+    [Header("Back To Search")]
     public GameObject searchPage;
     public M_SearchInput searchField;
-    public Collider2D closeButtonCollider;   // 🔥 collider tombol X
+    public Collider2D closeButtonCollider; // colidder close X
+
+    [Header("Pages")]
+    public GameObject homePage;   // kategori utama
+    public GameObject foodPage;   // halaman pilih hewan
+
+    [Header("Buttons")]
+    public Collider2D foodButtonCollider;   // collider tulisan FOOD
 
     void Awake()
     {
@@ -21,16 +29,38 @@ public class M_PetshopPage : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+            // ❌ tombol X
             if (closeButtonCollider.OverlapPoint(mousePos))
             {
                 Close();
+                return;
+            }
+
+            // 🍖 tombol FOOD
+            if (foodButtonCollider.OverlapPoint(mousePos))
+            {
+                OpenFoodPage();
             }
         }
+    }
+
+    void OpenFoodPage()
+    {
+        homePage.SetActive(false);
+        foodPage.SetActive(true);
+    }
+
+    public void BackToHome()
+    {
+        foodPage.SetActive(false);
+        homePage.SetActive(true);
     }
 
     public void Show()
     {
         gameObject.SetActive(true);
+        homePage.SetActive(true);
+        foodPage.SetActive(false);
     }
 
     public void Close()
@@ -42,14 +72,14 @@ public class M_PetshopPage : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        // Aktifkan kembali search page
         searchPage.SetActive(true);
 
-        // Pastikan search field aktif
+        yield return null; // 🔥 tunggu 1 frame
+
         if (!searchField.gameObject.activeSelf)
             searchField.gameObject.SetActive(true);
 
-        yield return null;
+        yield return null; // 🔥 tunggu 1 frame lagi
 
         searchField.ForceTyping();
     }

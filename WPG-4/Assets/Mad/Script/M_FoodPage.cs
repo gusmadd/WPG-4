@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class M_FoodPage : MonoBehaviour
 {
-    public GameObject previousPage;  // Halaman sebelumnya (bisa Search Page atau yang lain)
+    [Header("Navigation")]
+    public GameObject homePage; //halaman utama
+    public GameObject searchPage; //search page
+    public GameObject catFoodPage;   // 🔥 halaman makanan kucing
+
+    [Header("Search")]
     public M_SearchInput searchField;
-    public Collider2D closeButtonCollider;   // 🔥 collider tombol X
+
+    [Header("Buttons")]
+    public Collider2D backButtonCollider; // colider balik ke halam utama
+    public Collider2D closeButtonCollider; // colider close
+    public Collider2D catButtonCollider;   //  collider gambar kucing
 
     void Awake()
     {
@@ -21,38 +30,56 @@ public class M_FoodPage : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            if (closeButtonCollider.OverlapPoint(mousePos))
+            // 🐱 CAT
+            if (catButtonCollider != null && catButtonCollider.OverlapPoint(mousePos))
             {
-                Close();
+                OpenCatFood();
+                return;
+            }
+
+            // 🔙 BACK → ke homepage
+            if (backButtonCollider != null && backButtonCollider.OverlapPoint(mousePos))
+            {
+                BackToHome();
+                return;
+            }
+
+            // ❌ CLOSE → ke search page
+            if (closeButtonCollider != null && closeButtonCollider.OverlapPoint(mousePos))
+            {
+                CloseToSearch();
+                return;
             }
         }
     }
 
-    public void Show()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Close()
-    {
-        StartCoroutine(CloseRoutine());
-    }
-
-    IEnumerator CloseRoutine()
+    void OpenCatFood()
     {
         gameObject.SetActive(false);
 
-        // Aktifkan kembali halaman sebelumnya
-        if (previousPage != null)
-            previousPage.SetActive(true);
+        if (catFoodPage != null)
+            catFoodPage.SetActive(true);
+    }
 
-        // Pastikan search field aktif
-        if (searchField != null && !searchField.gameObject.activeSelf)
-            searchField.gameObject.SetActive(true);
+    void BackToHome()
+    {
+        gameObject.SetActive(false);
 
-        yield return null;
+        if (homePage != null)
+            homePage.SetActive(true);
+    }
+
+    void CloseToSearch()
+    {
+        gameObject.SetActive(false);
+
+        if (searchPage != null)
+            searchPage.SetActive(true);
 
         if (searchField != null)
+        {
+            searchField.gameObject.SetActive(true);
             searchField.ForceTyping();
+        }
     }
 }

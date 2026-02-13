@@ -143,6 +143,7 @@ public class M_SearchInput : MonoBehaviour
 
     public void ForceTyping()
     {
+        if (!gameObject.activeInHierarchy) return; // 🔥 safety guard
         StopAllCoroutines();
         isTyping = true;
         cursorVisible = true;
