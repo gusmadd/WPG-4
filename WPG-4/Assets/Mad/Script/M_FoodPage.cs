@@ -33,6 +33,7 @@ public class M_FoodPage : MonoBehaviour
             // 🐱 CAT
             if (catButtonCollider != null && catButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 OpenCatFood();
                 return;
             }
@@ -40,6 +41,7 @@ public class M_FoodPage : MonoBehaviour
             // 🔙 BACK → ke homepage
             if (backButtonCollider != null && backButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 BackToHome();
                 return;
             }
@@ -47,6 +49,7 @@ public class M_FoodPage : MonoBehaviour
             // ❌ CLOSE → ke search page
             if (closeButtonCollider != null && closeButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 CloseToSearch();
                 return;
             }

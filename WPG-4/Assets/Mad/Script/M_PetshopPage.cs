@@ -32,6 +32,7 @@ public class M_PetshopPage : MonoBehaviour
             // ❌ tombol X
             if (closeButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 Close();
                 return;
             }
@@ -39,6 +40,7 @@ public class M_PetshopPage : MonoBehaviour
             // 🍖 tombol FOOD
             if (foodButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 OpenFoodPage();
             }
         }

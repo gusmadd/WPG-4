@@ -27,6 +27,7 @@ public class M_NotFoundController : MonoBehaviour
 
             if (closeButtonCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 Close();
             }
         }

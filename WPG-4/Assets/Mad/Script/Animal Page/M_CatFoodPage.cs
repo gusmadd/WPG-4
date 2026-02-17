@@ -41,6 +41,7 @@ public class M_CatFoodPage : MonoBehaviour
             // 🍗 ITEM
             if (item1Collider != null && item1Collider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 OpenDetail();
                 return;
             }
@@ -48,6 +49,7 @@ public class M_CatFoodPage : MonoBehaviour
             // 🔙 BACK
             if (backCollider != null && backCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 BackToFood();
                 return;
             }
@@ -55,6 +57,7 @@ public class M_CatFoodPage : MonoBehaviour
             // 🏠 HOME
             if (homeCollider != null && homeCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 GoHome();
                 return;
             }
@@ -62,6 +65,7 @@ public class M_CatFoodPage : MonoBehaviour
             // ❌ CLOSE
             if (closeCollider != null && closeCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 CloseToSearch();
                 return;
             }

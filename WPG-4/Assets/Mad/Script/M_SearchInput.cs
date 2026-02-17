@@ -33,6 +33,7 @@ public class M_SearchInput : MonoBehaviour
 
     void OnMouseDown()
     {
+        M_AudioManager.Instance?.PlayCursorClick();
         keyboard.ShowKeyboard();
         ForceTyping();
     }
@@ -49,6 +50,7 @@ public class M_SearchInput : MonoBehaviour
         // BACKSPACE
         if (c == "BACK")
         {
+            M_AudioManager.Instance?.PlayKeyboardClick();
             if (!isFirstInput && currentText.Length > 0)
             {
                 currentText = currentText.Substring(0, currentText.Length - 1);
@@ -67,6 +69,7 @@ public class M_SearchInput : MonoBehaviour
         // ENTER
         if (c == "ENTER")
         {
+            M_AudioManager.Instance?.PlayKeyboardClick();
             Submit();
             return;
         }
@@ -74,6 +77,7 @@ public class M_SearchInput : MonoBehaviour
         // SPACE
         if (c == "SPACE")
         {
+             M_AudioManager.Instance?.PlaySpacebar();
             if (isFirstInput)
             {
                 currentText = "";
@@ -90,6 +94,7 @@ public class M_SearchInput : MonoBehaviour
         // HURUF
         if (currentText.Length < maxCharacter)
         {
+            M_AudioManager.Instance?.PlayKeyboardClick();
             // 🔥 Hapus default saat huruf pertama diketik
             if (isFirstInput)
             {
