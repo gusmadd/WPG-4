@@ -154,6 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1057308539021970439}
   - component: {fileID: 821171621893138841}
+  - component: {fileID: 8418826927942403481}
   m_Layer: 0
   m_Name: DetailItem_1
   m_TagString: Untagged
@@ -231,6 +232,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8418826927942403481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4599123996719802857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64370915cda9c464aafe2c9d29c32d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backfoodPage: {fileID: 0}
+  petshopHomePage: {fileID: 0}
+  searchPage: {fileID: 0}
+  searchField: {fileID: 0}
+  backCollider: {fileID: 4450397447376566865}
+  homeCollider: {fileID: 8112648983408812314}
+  closeCollider: {fileID: 5316826791714219872}
 --- !u!1 &5677465781947535726
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 791260573510493176}
   - component: {fileID: 4450397447376566865}
+  - component: {fileID: 7364431416952671881}
   m_Layer: 0
   m_Name: Tombol  BackToCatFood
   m_TagString: Untagged
@@ -308,3 +329,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.44568026, y: 0.28035516}
   m_EdgeRadius: 0
+--- !u!114 &7364431416952671881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677465781947535726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64370915cda9c464aafe2c9d29c32d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backfoodPage: {fileID: 0}
+  petshopHomePage: {fileID: 0}
+  searchPage: {fileID: 0}
+  searchField: {fileID: 0}
+  backCollider: {fileID: 0}
+  homeCollider: {fileID: 0}
+  closeCollider: {fileID: 0}

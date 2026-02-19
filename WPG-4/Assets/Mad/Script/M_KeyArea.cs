@@ -8,6 +8,8 @@ public class M_KeyArea : MonoBehaviour
     public M_SearchInput searchField;
     void OnMouseDown()
     {
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            return;
         searchField.AddCharacter(keyValue);
     }
 }
