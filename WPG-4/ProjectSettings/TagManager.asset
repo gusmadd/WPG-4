@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: FrameMonitor
+    uniqueID: 2633529151
+    locked: 0
+  - name: Envi
+    uniqueID: 1835655465
+    locked: 0
+  - name: Player
+    uniqueID: 277198089
+    locked: 0
+  - name: Chair
+    uniqueID: 2634887399
+    locked: 0
