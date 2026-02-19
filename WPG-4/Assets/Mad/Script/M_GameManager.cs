@@ -36,7 +36,15 @@ public class M_GameManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -67,7 +75,7 @@ public class M_GameManager : MonoBehaviour
         yield return StartCoroutine(Fade(1f, 0f));
 
         yield return new WaitForSecondsRealtime(0.2f);
-        
+
         if (catAnimator != null)
             catAnimator.SetTrigger("OnNoiseFull");
 
@@ -118,5 +126,32 @@ public class M_GameManager : MonoBehaviour
         }
 
         fadeCanvasGroup.alpha = to;
+    }
+    public void FastFade()
+    {
+        StartCoroutine(FastFadeRoutine());
+    }
+
+    IEnumerator FastFadeRoutine()
+    {
+        yield return StartCoroutine(Fade(0f, 1f));
+        yield return StartCoroutine(Fade(1f, 0f));
+    }
+
+    public void EndQTE()
+    {
+        Time.timeScale = 1f;
+        currentState = GameState.Gameplay;
+        M_NoiseSystem.Instance.isQTEActive = false;
+    }
+    public void GameOver()
+    {
+        Debug.Log("GAME OVER");
+
+        Time.timeScale = 1f;
+
+        // TODO:
+        // load scene game over
+        // atau munculin UI game over
     }
 }

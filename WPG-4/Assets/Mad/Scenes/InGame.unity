@@ -5692,6 +5692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1386594057}
   - component: {fileID: 1386594058}
+  - component: {fileID: 1386594059}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -5735,6 +5736,28 @@ MonoBehaviour:
   fadeCanvasGroup: {fileID: 96268750}
   fadeDuration: 1
   catAnimator: {fileID: 345401905}
+--- !u!114 &1386594059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386594056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51435fb8e277202489317fbb9a49d235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 15
+  timerFill: {fileID: 1641403688}
+  minX: 0
+  maxX: 0
+  minY: 0
+  maxY: 0
+  bubblePrefab: {fileID: 1183244830477395386, guid: 70c41a80f4e7d514f8f1fcf56c563087, type: 3}
+  spawnIntervalStart: 1
+  spawnIntervalEnd: 0.3
+  isActive: 0
 --- !u!1 &1468000169
 GameObject:
   m_ObjectHideFlags: 0
