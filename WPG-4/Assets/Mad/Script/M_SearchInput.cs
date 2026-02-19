@@ -33,6 +33,8 @@ public class M_SearchInput : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            return;
         M_AudioManager.Instance?.PlayCursorClick();
         keyboard.ShowKeyboard();
         ForceTyping();
@@ -77,7 +79,7 @@ public class M_SearchInput : MonoBehaviour
         // SPACE
         if (c == "SPACE")
         {
-             M_AudioManager.Instance?.PlaySpacebar();
+            M_AudioManager.Instance?.PlaySpacebar();
             if (isFirstInput)
             {
                 currentText = "";

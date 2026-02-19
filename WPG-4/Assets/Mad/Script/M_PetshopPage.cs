@@ -27,6 +27,8 @@ public class M_PetshopPage : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+                return;
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             // ❌ tombol X

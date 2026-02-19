@@ -75,8 +75,20 @@ public class M_CatFoodPage : MonoBehaviour
     void OpenDetail()
     {
         if (detailPrefab != null)
+        {
             currentDetail = Instantiate(detailPrefab);
+
+            M_DetailFoodPage detailScript = currentDetail.GetComponent<M_DetailFoodPage>();
+
+            detailScript.catFoodPage = gameObject;
+            detailScript.petshopHomePage = petshopHomePage;
+            detailScript.searchPage = searchPage;
+            detailScript.searchField = searchField;
+
+            gameObject.SetActive(false);
+        }
     }
+
 
     public void CloseDetail()
     {
