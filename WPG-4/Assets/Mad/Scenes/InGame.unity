@@ -5692,6 +5692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1386594057}
   - component: {fileID: 1386594058}
+  - component: {fileID: 1386594059}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -5727,14 +5728,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  qtePrefab: {fileID: 1183244830477395386, guid: 70c41a80f4e7d514f8f1fcf56c563087, type: 3}
-  fastFadeUI: {fileID: 96268746}
+  qtePrefab: {fileID: 7777106782820333652, guid: d56137e7ac2cc9c4db07bdf1d1e04ec7, type: 3}
+  catAnimator: {fileID: 345401905}
+--- !u!114 &1386594059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386594056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bef8cc910308d84b87398567b3606e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeCanvasGroup: {fileID: 96268750}
+  fadeDuration: 2
   cameraTransform: {fileID: 519420032}
   shakeDuration: 0.4
-  shakeMagnitude: 0.2
-  fadeCanvasGroup: {fileID: 96268750}
-  fadeDuration: 1
-  catAnimator: {fileID: 345401905}
+  shakeMagnitude: 0.1
+  timerUI: {fileID: 1529256867}
+  timerFill: {fileID: 1641403688}
 --- !u!1 &1468000169
 GameObject:
   m_ObjectHideFlags: 0
@@ -5954,8 +5968,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -469.07, y: 390.9}
-  m_SizeDelta: {x: 705.07, y: 43.8}
+  m_AnchoredPosition: {x: -859.6, y: 153.02}
+  m_SizeDelta: {x: 53.88, y: 413.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1529256869
 MonoBehaviour:
@@ -6364,8 +6378,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
-  m_SizeDelta: {x: 705.07, y: 43.8}
+  m_AnchoredPosition: {x: 0.6000366, y: -1.2700043}
+  m_SizeDelta: {x: 37.73, y: 393.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1641403688
 MonoBehaviour:

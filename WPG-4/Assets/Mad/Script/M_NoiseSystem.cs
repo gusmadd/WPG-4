@@ -128,5 +128,14 @@ public class M_NoiseSystem : MonoBehaviour
             ownerAnimator.SetInteger("OwnerState", currentStage);
         }
     }
+    public void ResetNoiseTrigger()
+    {
+        noiseTriggered = false;
+    }
+    public void ResetAfterQTE()
+    {
+        noiseTriggered = false;
+        isQTEActive = false;
+    }
 }
 
