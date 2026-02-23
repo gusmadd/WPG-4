@@ -1659,6 +1659,7 @@ Transform:
   - {fileID: 527101686}
   - {fileID: 1806175188}
   - {fileID: 1386594057}
+  - {fileID: 466507498}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &369173861
@@ -2088,6 +2089,57 @@ MonoBehaviour:
   searchPage: {fileID: 1749184489}
   searchField: {fileID: 1049357085}
   closeButtonCollider: {fileID: 1704260874}
+--- !u!1 &466507497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 466507498}
+  - component: {fileID: 466507499}
+  m_Layer: 0
+  m_Name: QTE System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &466507498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466507497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 357905973}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &466507499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466507497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b832338b3ff2ce44824ebca8cca243a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adPrefab: {fileID: 2729088266502284659, guid: 980e6b6c18df4134baebe3827929fdf0, type: 3}
+  totalAds: 15
+  minX: -4.4
+  maxX: -4.45
+  minY: 1.08
+  maxY: 1.07
+  totalTime: 15
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -5692,6 +5744,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1386594057}
   - component: {fileID: 1386594058}
+  - component: {fileID: 1386594059}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -5727,14 +5780,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  qtePrefab: {fileID: 1183244830477395386, guid: 70c41a80f4e7d514f8f1fcf56c563087, type: 3}
-  fastFadeUI: {fileID: 96268746}
-  cameraTransform: {fileID: 519420032}
-  shakeDuration: 0.4
-  shakeMagnitude: 0.2
+  qtePrefab: {fileID: 466507497}
+  catAnimator: {fileID: 345401905}
+  mainCamera: {fileID: 519420031}
+  normalSize: 5
+  qteSize: 3
+  normalPosition: {x: 0, y: 0, z: 0}
+  qtePosition: {x: -3.53, y: 1.03, z: -1}
+  zoomDuration: 0.1
+--- !u!114 &1386594059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386594056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bef8cc910308d84b87398567b3606e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   fadeCanvasGroup: {fileID: 96268750}
   fadeDuration: 1
-  catAnimator: {fileID: 345401905}
+  cameraTransform: {fileID: 519420032}
+  shakeDuration: 0.4
+  shakeMagnitude: 0.05
+  timerUI: {fileID: 1529256867}
+  timerFill: {fileID: 1641403688}
 --- !u!1 &1468000169
 GameObject:
   m_ObjectHideFlags: 0
@@ -5954,8 +6026,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -469.07, y: 390.9}
-  m_SizeDelta: {x: 705.07, y: 43.8}
+  m_AnchoredPosition: {x: -859.6, y: 153.02}
+  m_SizeDelta: {x: 53.88, y: 413.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1529256869
 MonoBehaviour:
@@ -6364,8 +6436,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
-  m_SizeDelta: {x: 705.07, y: 43.8}
+  m_AnchoredPosition: {x: 0.6000366, y: -1.2700043}
+  m_SizeDelta: {x: 37.73, y: 393.85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1641403688
 MonoBehaviour:
@@ -6391,10 +6463,10 @@ MonoBehaviour:
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 0
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1641403689
