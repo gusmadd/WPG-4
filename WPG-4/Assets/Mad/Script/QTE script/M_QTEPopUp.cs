@@ -16,6 +16,7 @@ public class M_QTEPopUp : MonoBehaviour
     {
         if (!M_NoiseSystem.Instance.isQTEActive) return;
         if (isClosed) return;
+        M_AudioManager.Instance?.PlayCursorClick();
 
         CloseAd();
     }
