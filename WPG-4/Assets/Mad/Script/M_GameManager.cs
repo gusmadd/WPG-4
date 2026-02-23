@@ -20,6 +20,17 @@ public class M_GameManager : MonoBehaviour
     [Header("Animators")]
     public Animator catAnimator;
 
+    [Header("Camera Zoom")]
+    public Camera mainCamera;
+
+    public float normalSize = 5f;
+    public float qteSize = 2f;
+
+    public Vector3 normalPosition;
+    public Vector3 qtePosition;
+
+    public float zoomDuration = 0.3f;
+
     private bool isSequenceRunning = false;
 
     void Awake()
@@ -30,6 +41,7 @@ public class M_GameManager : MonoBehaviour
     void Start()
     {
         M_NoiseSystem.Instance.OnNoiseFull += HandleNoiseFull;
+        normalPosition = mainCamera.transform.position;
     }
 
     void HandleNoiseFull()
@@ -50,8 +62,7 @@ public class M_GameManager : MonoBehaviour
         yield return StartCoroutine(UI_Script.Instance.Shake());
 
         // Fade (UI_Script)
-        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
-        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
+        yield return StartCoroutine(FadeAndZoom(true));
 
         yield return new WaitForSecondsRealtime(0.2f);
 
@@ -71,13 +82,12 @@ public class M_GameManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(1f);
 
-        yield return StartCoroutine(ReduceNoiseSmoothly(31f));
+        yield return StartCoroutine(FadeAndZoom(false));
 
         yield return new WaitForSecondsRealtime(0.5f);
 
-        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
-        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
-
+        yield return StartCoroutine(ReduceNoiseSmoothly(31f));
+        
         yield return new WaitForSecondsRealtime(1f);
 
         M_NoiseSystem.Instance.isQTEActive = false;
@@ -100,6 +110,45 @@ public class M_GameManager : MonoBehaviour
         }
 
         M_NoiseSystem.Instance.currentNoise = targetValue;
+    }
+
+    IEnumerator ZoomCamera(float fromSize, float toSize, Vector3 fromPos, Vector3 toPos)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < zoomDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / zoomDuration;
+
+            mainCamera.orthographicSize = Mathf.Lerp(fromSize, toSize, t);
+            mainCamera.transform.position = Vector3.Lerp(fromPos, toPos, t);
+
+            yield return null;
+        }
+
+        mainCamera.orthographicSize = toSize;
+        mainCamera.transform.position = toPos;
+    }
+
+    IEnumerator FadeAndZoom(bool toQTE)
+    {
+        float fromSize = toQTE ? normalSize : qteSize;
+        float toSize = toQTE ? qteSize : normalSize;
+
+        Vector3 fromPos = toQTE ? normalPosition : qtePosition;
+        Vector3 toPos = toQTE ? qtePosition : normalPosition;
+
+        // 1️⃣ Fade to black
+        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
+
+        // 2️⃣ Zoom saat layar hitam
+        yield return StartCoroutine(
+            ZoomCamera(fromSize, toSize, fromPos, toPos)
+        );
+
+        // 3️⃣ Fade back (lebih smooth)
+        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
     }
 
     public void GameOver()
