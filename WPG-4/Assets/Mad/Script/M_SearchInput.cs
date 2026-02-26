@@ -45,6 +45,7 @@ public class M_SearchInput : MonoBehaviour
         // CAPS
         if (c == "CAPS")
         {
+            M_AudioManager.Instance?.PlayKeyboardClick();
             keyboard.ToggleCaps();
             return;
         }
@@ -162,6 +163,15 @@ public class M_SearchInput : MonoBehaviour
     {
         currentText = defaultText;
         isFirstInput = true;
+        UpdateText();
+    }
+
+    public void SetTextFromExternal(string newText)
+    {
+        currentText = newText;
+        isFirstInput = false;
+        isTyping = false;
+        cursorVisible = true;
         UpdateText();
     }
 }

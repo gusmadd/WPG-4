@@ -26,13 +26,26 @@ public class M_MonitorManager : MonoBehaviour
     public GameObject screenOff;
     public GameObject screenOn;
 
+    [Header("Power Button")]
+    public SpriteRenderer powerSprite;
+    public Sprite powerOffSprite;
+    public Sprite powerOnSprite;
+
     [Header("Pages")]
-    public GameObject searchPage;
+    public GameObject desktopPage;
+    public GameObject searchHomePage;
+    public GameObject searchResultPage;
     public GameObject petshopPage;
-    public M_NotFoundController notFoundController; // 🔥 pakai controller
+    public M_NotFoundController notFoundController;
+    public M_SearchPage searchPageController;
+    public M_SearchInput homeSearchInput;
+    public M_SearchInput resultSearchInput;
+
+    [Header("Desktop")]
+    public Collider2D browserCollider;
+    public Collider2D closeSearchCollider;
 
     [Header("Timing")]
-    public float delayBeforeIdle = 0.3f;
     public float loadingDuration = 2f;
     public float delayAfterOut = 0.1f;
 
@@ -47,8 +60,13 @@ public class M_MonitorManager : MonoBehaviour
         screenOn.SetActive(false);
         loadingCircle.SetActive(false);
 
-        searchPage.SetActive(false);
+        desktopPage.SetActive(false);
+        searchHomePage.SetActive(false);
+        searchResultPage.SetActive(false);
         petshopPage.SetActive(false);
+
+        if (powerSprite != null && powerOffSprite != null)
+            powerSprite.sprite = powerOffSprite;
     }
 
     void Update()
@@ -62,12 +80,36 @@ public class M_MonitorManager : MonoBehaviour
         {
             if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
                 return;
+
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+            // 🔥 POWER BUTTON
             if (currentState == MonitorState.Off &&
+                powerCollider != null &&
                 powerCollider.OverlapPoint(mousePos))
             {
                 PowerOn();
+                return;
+            }
+
+            // 🔥 DESKTOP → OPEN BROWSER
+            if (currentState == MonitorState.On)
+            {
+                // 🔥 CLOSE SEARCH PAGE
+                if ((searchHomePage.activeSelf || searchResultPage.activeSelf) &&
+                    closeSearchCollider != null &&
+                    closeSearchCollider.OverlapPoint(mousePos))
+                {
+                    M_AudioManager.Instance?.PlayCursorClick();
+                    CloseSearch();
+                    return;
+                }
+                if (browserCollider != null &&
+                    browserCollider.OverlapPoint(mousePos))
+                {
+                    M_AudioManager.Instance?.PlayCursorClick();
+                    OpenBrowser();
+                }
             }
         }
     }
@@ -101,32 +143,64 @@ public class M_MonitorManager : MonoBehaviour
 
         yield return new WaitForSeconds(delayAfterOut);
 
+        // 🔥 MONITOR ON
         currentState = MonitorState.On;
 
         screenOff.SetActive(false);
         screenOn.SetActive(true);
 
-        searchPage.SetActive(true); // 🔥 masuk ke search setelah nyala
+        desktopPage.SetActive(true);
+        searchHomePage.SetActive(false);
+        searchResultPage.SetActive(false);
+
+        // 🔥 GANTI SPRITE POWER
+        if (powerSprite != null && powerOnSprite != null)
+            powerSprite.sprite = powerOnSprite;
+    }
+
+    void OpenBrowser()
+    {
+        desktopPage.SetActive(false);
+        searchHomePage.SetActive(true);
+        searchResultPage.SetActive(false);
+    }
+
+    void CloseSearch()
+    {
+        searchHomePage.SetActive(false);
+        searchResultPage.SetActive(false);
+        petshopPage.SetActive(false);
+        desktopPage.SetActive(true);
+
+        if (homeSearchInput != null)
+            homeSearchInput.ResetToDefault();
     }
 
     public void HandleSearch(string url)
     {
         string cleanUrl = url.ToLower().Trim();
 
-        if (cleanUrl == "www.miawshopp.com")
+        if (cleanUrl == "pawshopp" || cleanUrl == "pawshop" || cleanUrl == "petshop" || cleanUrl == "miawshopp")
         {
-            OpenPetshop();
+            searchHomePage.SetActive(false);
+            searchResultPage.SetActive(true);
+
+            if (resultSearchInput != null)
+                resultSearchInput.SetTextFromExternal(url);
+
+            if (searchPageController != null)
+                searchPageController.GenerateResults();
         }
         else
         {
-            searchPage.SetActive(false);
+            searchHomePage.SetActive(false);
+            searchResultPage.SetActive(false);
             notFoundController.Show();
         }
     }
-
-    void OpenPetshop()
+    public void OpenPetshopFromResult()
     {
-        searchPage.SetActive(false);
+        searchResultPage.SetActive(false);
         petshopPage.SetActive(true);
     }
 }

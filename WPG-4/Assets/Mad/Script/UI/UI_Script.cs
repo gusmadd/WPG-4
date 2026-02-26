@@ -40,8 +40,9 @@ public class UI_Script : MonoBehaviour
             fadeCanvasGroup.alpha = Mathf.Lerp(from, to, t);
             yield return null;
         }
-
+        
         fadeCanvasGroup.alpha = to;
+
     }
 
     // ===================== SHAKE =====================
