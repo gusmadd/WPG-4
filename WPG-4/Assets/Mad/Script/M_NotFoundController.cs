@@ -12,11 +12,6 @@ public class M_NotFoundController : MonoBehaviour
     public M_SearchInput searchField;
     public Collider2D closeButtonCollider;   // 🔥 collider tombol X
 
-    void Awake()
-    {
-        gameObject.SetActive(false);
-    }
-
     void Update()
     {
         if (!gameObject.activeSelf) return;

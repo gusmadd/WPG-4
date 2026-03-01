@@ -488,6 +488,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 1229729901}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -496,13 +500,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 541555130}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -821,7 +841,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 3ca93ea254aadb6459834b284aad1444, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -928,6 +948,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 1229729901}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -936,13 +960,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 1635045893}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -2366,7 +2406,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 7147ec563f6324c488d7fc940a4198d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4030,7 +4070,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &455751620
 Transform:
   m_ObjectHideFlags: 0
@@ -4464,14 +4504,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 1978782956}
-  cursorClick: {fileID: 8300000, guid: b264116ed07810e44a02fb87f6aef489, type: 3}
+  cursorClicks:
+  - {fileID: 8300000, guid: a0ed34ec1eb348247be2c7c1fd0d147e, type: 3}
+  - {fileID: 8300000, guid: ae920e3835f33f549b4624b29a7201de, type: 3}
   keyboardClicks:
-  - {fileID: 8300000, guid: e76d187a11a683c4299676111f337b81, type: 3}
-  - {fileID: 8300000, guid: 2d959a282db8c3b4c8e16384b3cde595, type: 3}
-  - {fileID: 8300000, guid: 5854ce3ba2fa6054da792011b82bcfc0, type: 3}
-  - {fileID: 8300000, guid: b7340a12a91767d41b9959800129871d, type: 3}
-  - {fileID: 8300000, guid: b33b409311115b1408737933253869c8, type: 3}
-  spacebarClick: {fileID: 8300000, guid: 1cfc56dcd4327554187fdcde52b2b83a, type: 3}
+  - {fileID: 8300000, guid: 95b18fe4dfeed7a4c9889834252aa2cd, type: 3}
+  - {fileID: 8300000, guid: a9d2124d5a8dbe345bc1ad38eb3753b8, type: 3}
+  spacebarClick: {fileID: 8300000, guid: dd8a45f8f328b084b8b85887b549e624, type: 3}
+  paymentSfx: {fileID: 8300000, guid: f03075b137965404393403a506b0cdce, type: 3}
+  showKeyboardSfx: {fileID: 8300000, guid: dd5240fe29a71fd4f9bd854b35fd7ff7, type: 3}
+  hideKeyboardSfx: {fileID: 8300000, guid: 4f9279c1a35b32041b79b445e0c5dfa0, type: 3}
 --- !u!1 &530564122
 GameObject:
   m_ObjectHideFlags: 0
@@ -4623,6 +4665,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 12911362}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &541555130 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 82598298}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &547159103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4636,6 +4683,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 1112428984}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -4644,13 +4695,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 2056644509}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -4786,6 +4853,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 877903475}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -4794,13 +4865,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 689182671}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -5751,6 +5838,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &689182671 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 579480709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &690755234
 GameObject:
   m_ObjectHideFlags: 0
@@ -5843,6 +5935,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6444497, y: 0.6812306}
   m_EdgeRadius: 0
+--- !u!60 &690798971 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 1392577758}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705858659
 GameObject:
   m_ObjectHideFlags: 0
@@ -6022,6 +6119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 721881426}
   - component: {fileID: 721881427}
+  - component: {fileID: 721881428}
   m_Layer: 0
   m_Name: Halaman  Buy Succes
   m_TagString: Untagged
@@ -6101,6 +6199,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &721881428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721881425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09584586a1b233247b1a4f0b1c015c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  petshopHomePage: {fileID: 1280542775}
+  servicesPage: {fileID: 1533067358}
+  desktopPage: {fileID: 1749184489}
+  closeCollider: {fileID: 265297954}
+  homeCollider: {fileID: 387497563}
+  servicesCollider: {fileID: 1311591362}
+  backCollider: {fileID: 1782602484}
+  homeSearchInput: {fileID: 1049357085}
+  backTargetPage: {fileID: 1250414071}
 --- !u!1 &722859608
 GameObject:
   m_ObjectHideFlags: 0
@@ -7120,6 +7239,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!212 &877903475 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7110360959881826103, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 579480709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &893855883
 GameObject:
   m_ObjectHideFlags: 0
@@ -9494,6 +9618,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
   m_PrefabInstance: {fileID: 1303564508}
   m_PrefabAsset: {fileID: 0}
+--- !u!60 &1042040645 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 1303564508}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1045409621
 GameObject:
   m_ObjectHideFlags: 0
@@ -9796,7 +9925,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 5c2a644f83e687b46bc78f44b360850d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -10150,6 +10279,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!212 &1112428984 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7110360959881826103, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 547159103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162594465
 GameObject:
   m_ObjectHideFlags: 0
@@ -10449,6 +10583,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.57088757, y: 0.5831477}
   m_EdgeRadius: 0
+--- !u!212 &1229729901 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7110360959881826103, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 124808207}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1250414071
 GameObject:
   m_ObjectHideFlags: 0
@@ -10466,7 +10605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1250414072
 Transform:
   m_ObjectHideFlags: 0
@@ -10560,13 +10699,14 @@ MonoBehaviour:
   foodsPage: {fileID: 1276921616}
   petcarePage: {fileID: 12911359}
   accessoriesPage: {fileID: 1896359129}
-  toysPage: {fileID: 1463178488}
+  toysPage: {fileID: 1769373133}
   homeCollider: {fileID: 651619854}
   servicesCollider: {fileID: 1098215106}
   foodsCollider: {fileID: 614902285}
   petcareCollider: {fileID: 707318445}
   accessoriesCollider: {fileID: 1474826508}
   toysCollider: {fileID: 1788980416}
+  homeSearchInput: {fileID: 1049357085}
 --- !u!1 &1276921616
 GameObject:
   m_ObjectHideFlags: 0
@@ -10584,7 +10724,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1276921617
 Transform:
   m_ObjectHideFlags: 0
@@ -10625,7 +10765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homePage: {fileID: 1280542775}
-  servicePage: {fileID: 1842064027}
+  servicePage: {fileID: 1533067358}
   productPage: {fileID: 1250414071}
   desktopPage: {fileID: 1749184489}
   item1DetailPrefab: {fileID: 1016084745}
@@ -10652,6 +10792,7 @@ MonoBehaviour:
   item5Collider: {fileID: 678260542}
   item6Collider: {fileID: 898231335}
   viewButton: {fileID: 223917919}
+  homeSearchInput: {fileID: 1049357085}
 --- !u!212 &1276921619
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10721,7 +10862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1280542776
 Transform:
   m_ObjectHideFlags: 0
@@ -10964,6 +11105,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 1680684545}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -10972,13 +11117,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 1042040645}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -12306,6 +12467,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: buySprite
+      value: 
+      objectReference: {fileID: 1411706441}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: catFoodPage
       value: 
       objectReference: {fileID: 1276921616}
@@ -12314,13 +12479,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1749184489}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: servicePage
+      value: 
+      objectReference: {fileID: 1533067358}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: buySuccessPage
       value: 
       objectReference: {fileID: 721881425}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: homeSearchInput
+      value: 
+      objectReference: {fileID: 1049357085}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
       objectReference: {fileID: 1280542775}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: serviceCollider
+      value: 
+      objectReference: {fileID: 690798971}
+    - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+      propertyPath: holdToBuySeconds
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3270112872655287459, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.46
@@ -12398,6 +12579,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+--- !u!212 &1411706441 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7110360959881826103, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 1392577758}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1463178488
 GameObject:
   m_ObjectHideFlags: 0
@@ -12656,6 +12842,73 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2900974, y: 1.106878}
   m_EdgeRadius: 0
+--- !u!1 &1496170614
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1496170616}
+  - component: {fileID: 1496170615}
+  m_Layer: 0
+  m_Name: Close Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!58 &1496170615
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496170614}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.072460376, y: 0.16468275}
+  serializedVersion: 2
+  m_Radius: 0.1267194
+--- !u!4 &1496170616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496170614}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.08, y: 1.83, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1533067359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1513805466
 GameObject:
   m_ObjectHideFlags: 0
@@ -12971,6 +13224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1533067359}
   - component: {fileID: 1533067360}
+  - component: {fileID: 1533067361}
   m_Layer: 0
   m_Name: Halaman Service
   m_TagString: Untagged
@@ -12990,7 +13244,10 @@ Transform:
   m_LocalPosition: {x: -4.59, y: 0.78, z: 0}
   m_LocalScale: {x: 0.93, y: 0.93, z: 0.93}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 1496170616}
+  - {fileID: 1827655552}
+  - {fileID: 1584567567}
   m_Father: {fileID: 429823368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1533067360
@@ -13045,6 +13302,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1533067361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533067358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a122e0c68f744b540b2a514199577ec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desktopPage: {fileID: 1749184489}
+  closeCollider: {fileID: 1496170615}
+  homePage: {fileID: 1280542775}
+  productPage: {fileID: 1250414071}
+  homeCollider: {fileID: 1827655551}
+  productCollider: {fileID: 1584567566}
+  homeSearchInput: {fileID: 1049357085}
 --- !u!1 &1535728750
 GameObject:
   m_ObjectHideFlags: 0
@@ -13313,6 +13589,83 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.57088757, y: 0.5831477}
   m_EdgeRadius: 0
+--- !u!1 &1584567565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1584567567}
+  - component: {fileID: 1584567566}
+  m_Layer: 0
+  m_Name: Products Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!61 &1584567566
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584567565}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0016357303, y: 0.066409394}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.811153, y: 0.32114768}
+  m_EdgeRadius: 0
+--- !u!4 &1584567567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584567565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.23, y: 0.76, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1533067359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608849216
 GameObject:
   m_ObjectHideFlags: 0
@@ -13380,6 +13733,11 @@ CircleCollider2D:
   m_Offset: {x: -4.5906076, y: 1.0410107}
   serializedVersion: 2
   m_Radius: 0.2283467
+--- !u!60 &1635045893 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 124808207}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1641403686
 GameObject:
   m_ObjectHideFlags: 0
@@ -13487,6 +13845,11 @@ Transform:
   - {fileID: 742352540}
   m_Father: {fileID: 429823368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1680684545 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7110360959881826103, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 1303564508}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1682995273
 GameObject:
   m_ObjectHideFlags: 0
@@ -13972,8 +14335,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1769373134}
   - component: {fileID: 1769373135}
+  - component: {fileID: 1769373136}
   m_Layer: 0
-  m_Name: Halaman Toys (1)
+  m_Name: Halaman Toys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14051,6 +14415,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1769373136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769373133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c7e352e68c666e408e06d908134682c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  desktopPage: {fileID: 1749184489}
+  closeCollider: {fileID: 113497449}
+  homePage: {fileID: 1280542775}
+  servicePage: {fileID: 1533067358}
+  productPage: {fileID: 1250414071}
+  homeCollider: {fileID: 1923711274}
+  serviceCollider: {fileID: 474899090}
+  backCollider: {fileID: 1981584811}
+  homeSearchInput: {fileID: 1049357085}
 --- !u!1 &1782602482
 GameObject:
   m_ObjectHideFlags: 0
@@ -14851,6 +15236,83 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1827655550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1827655552}
+  - component: {fileID: 1827655551}
+  m_Layer: 0
+  m_Name: Home Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!61 &1827655551
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827655550}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.018446922, y: 0.066409394}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.2287431, y: 0.32114768}
+  m_EdgeRadius: 0
+--- !u!4 &1827655552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827655550}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.41, y: 0.76, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1533067359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1842064027
 GameObject:
   m_ObjectHideFlags: 0
@@ -16220,6 +16682,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &2056644509 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5558078630563619523, guid: d537ee6ad553825489860f57f043ae98, type: 3}
+  m_PrefabInstance: {fileID: 547159103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2057143234 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7600850341767482352, guid: d537ee6ad553825489860f57f043ae98, type: 3}

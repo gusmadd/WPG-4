@@ -200,6 +200,7 @@ public class M_MonitorManager : MonoBehaviour
     }
     public void OpenPetshopFromResult()
     {
+        desktopPage.SetActive(false);
         searchResultPage.SetActive(false);
         petshopPage.SetActive(true);
     }

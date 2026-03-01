@@ -21,11 +21,6 @@ public class M_PetshopPage : MonoBehaviour
     public Collider2D productButtonCollider;
     public Collider2D serviceButtonCollider;
 
-    void Awake()
-    {
-        gameObject.SetActive(false);
-    }
-
     void Update()
     {
         if (!gameObject.activeSelf) return;
@@ -38,6 +33,7 @@ public class M_PetshopPage : MonoBehaviour
             if (closeButtonCollider != null && closeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                if (searchField != null) searchField.ResetToDefault();
                 CloseToDesktop();
                 return;
             }

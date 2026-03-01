@@ -46,10 +46,10 @@ public class M_FoodPage : MonoBehaviour
 
     GameObject selectedItemPrefab = null;
     SpriteRenderer selectedSprite = null;
+    public M_SearchInput homeSearchInput;
 
     void Awake()
     {
-        gameObject.SetActive(false);
         if (viewButton != null) viewButton.SetActive(false);
     }
 
@@ -66,6 +66,7 @@ public class M_FoodPage : MonoBehaviour
             if (closeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 CloseToDesktop();
                 return;
             }
@@ -174,7 +175,11 @@ public class M_FoodPage : MonoBehaviour
     void GoToService()
     {
         gameObject.SetActive(false);
-        if (servicePage != null) servicePage.SetActive(true);
+        if (servicePage != null)
+        {
+            servicePage.SetActive(true);
+            Debug.Log("servicePage aktif? " + servicePage.activeSelf);
+        }
     }
 
     void BackToProduct()

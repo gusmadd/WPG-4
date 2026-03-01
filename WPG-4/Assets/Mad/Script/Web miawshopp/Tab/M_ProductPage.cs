@@ -24,10 +24,8 @@ public class M_ProductPage : MonoBehaviour
     public Collider2D accessoriesCollider;
     public Collider2D toysCollider;
 
-    void Awake()
-    {
-        gameObject.SetActive(false);
-    }
+    [Header ("Navigation")]
+    public M_SearchInput homeSearchInput;
 
     void Update()
     {
@@ -42,6 +40,7 @@ public class M_ProductPage : MonoBehaviour
             if (closeCollider != null && closeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 CloseToDesktop();
                 return;
             }

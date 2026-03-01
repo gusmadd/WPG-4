@@ -10,36 +10,41 @@ public class M_AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     [Header("Cursor")]
-    public AudioClip cursorClick;
+    public AudioClip[] cursorClicks; // isi 2 variasi
 
     [Header("Keyboard")]
-    public AudioClip[] keyboardClicks;   // isi 5 variasi
+    public AudioClip[] keyboardClicks;   // isi variasi
     public AudioClip spacebarClick;
+
+    [Header("UI / Payment")]
+    public AudioClip paymentSfx;
+    public AudioClip showKeyboardSfx;
+    public AudioClip hideKeyboardSfx;
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    // CURSOR CLICK
+    // CURSOR CLICK (Random dari 2 SFX)
     public void PlayCursorClick()
     {
-        sfxSource.PlayOneShot(cursorClick);
+        if (sfxSource == null) return;
+        if (cursorClicks == null || cursorClicks.Length == 0) return;
+
+        int i = Random.Range(0, cursorClicks.Length);
+        sfxSource.PlayOneShot(cursorClicks[i]);
+
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.clickNoise); // Tambah noise saat klik
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
     // KEYBOARD RANDOM CLICK
     public void PlayKeyboardClick()
     {
-        if (keyboardClicks.Length == 0) return;
+        if (sfxSource == null) return;
+        if (keyboardClicks == null || keyboardClicks.Length == 0) return;
 
         int randomIndex = Random.Range(0, keyboardClicks.Length);
 
@@ -48,14 +53,48 @@ public class M_AudioManager : MonoBehaviour
         sfxSource.pitch = 1f;
 
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.keyboardNoise); // Tambah noise saat ketik    
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.keyboardNoise);
     }
 
     // SPACEBAR CLICK
     public void PlaySpacebar()
     {
+        if (sfxSource == null) return;
+        if (spacebarClick == null) return;
+
         sfxSource.PlayOneShot(spacebarClick);
+
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.spaceNoise); // Tambah noise saat spacebar
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.spaceNoise);
+    }
+
+    // PAYMENT
+    public void PlayPayment()
+    {
+        if (sfxSource == null) return;
+        if (paymentSfx == null) return;
+
+        sfxSource.PlayOneShot(paymentSfx);
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.clickNoise);
+    }
+
+    // SHOW KEYBOARD
+    public void PlayShowKeyboard()
+    {
+        if (sfxSource == null) return;
+        if (showKeyboardSfx == null) return;
+
+        sfxSource.PlayOneShot(showKeyboardSfx);
+    }
+
+    // HIDE KEYBOARD
+    public void PlayHideKeyboard()
+    {
+        if (sfxSource == null) return;
+        if (hideKeyboardSfx == null) return;
+
+        sfxSource.PlayOneShot(hideKeyboardSfx);
     }
 }

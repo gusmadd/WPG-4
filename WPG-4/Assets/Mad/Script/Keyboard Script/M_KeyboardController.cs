@@ -11,6 +11,7 @@ public class M_KeyboardController : MonoBehaviour
 
     public void ShowKeyboard()
     {
+        M_AudioManager.Instance?.PlayShowKeyboard();
         gameObject.SetActive(true);
         animator.SetTrigger("isIn");
     }
@@ -22,6 +23,7 @@ public class M_KeyboardController : MonoBehaviour
 
     IEnumerator HideRoutine()
     {
+        M_AudioManager.Instance?.PlayHideKeyboard();
         animator.SetTrigger("isOut");
         yield return new WaitForSeconds(animDuration);
         gameObject.SetActive(false);
