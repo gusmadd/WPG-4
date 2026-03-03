@@ -6,11 +6,11 @@ public class M_GameManager : MonoBehaviour
 {
     public enum GameState
     {
+        Boot,
         Gameplay,
+        TaskOverlay,
         QTE
     }
-
-    public GameState currentState = GameState.Gameplay;
 
     public static M_GameManager Instance;
 
@@ -32,6 +32,8 @@ public class M_GameManager : MonoBehaviour
     public float zoomDuration = 0.3f;
 
     private bool isSequenceRunning = false;
+
+    public GameState currentState = GameState.Boot;
 
     void Awake()
     {
@@ -87,7 +89,7 @@ public class M_GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
 
         yield return StartCoroutine(ReduceNoiseSmoothly(31f));
-        
+
         yield return new WaitForSecondsRealtime(1f);
 
         M_NoiseSystem.Instance.isQTEActive = false;

@@ -16,7 +16,7 @@ public class M_NoiseSystem : MonoBehaviour
     public float clickNoise = 2f;
     public float keyboardNoise = 4f;
     public float spaceNoise = 6f;
-
+    public float paymentNoise = 8f;
 
     [Header("Stage Threshold")]
     public float stage2Threshold = 30f;

@@ -27,6 +27,9 @@ public class M_DetailFoodPage : MonoBehaviour
     [Header("Navigation")]
     public M_SearchInput homeSearchInput;
 
+    [Header("Item Info")]
+    public string itemId;
+
     bool isHoldingBuy = false;
     float holdTimer = 0f;
 
@@ -70,10 +73,10 @@ public class M_DetailFoodPage : MonoBehaviour
                 return;
             }
             //ke service page
-            if (serviceCollider !=null && serviceCollider.OverlapPoint(mousePosWorld))
+            if (serviceCollider != null && serviceCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-                if (servicePage != null)  servicePage.SetActive(true);
+                if (servicePage != null) servicePage.SetActive(true);
                 gameObject.SetActive(false);
                 return;
             }
@@ -130,6 +133,8 @@ public class M_DetailFoodPage : MonoBehaviour
     {
         M_AudioManager.Instance?.PlayPayment();
 
+        if (TaskManager.Instance != null)
+            TaskManager.Instance.OnItemPurchased(itemId);
         if (buySuccessPage != null)
             buySuccessPage.SetActive(true);
 

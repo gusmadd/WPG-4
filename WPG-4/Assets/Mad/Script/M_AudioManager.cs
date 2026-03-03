@@ -77,7 +77,7 @@ public class M_AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(paymentSfx);
 
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.clickNoise);
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.paymentNoise);
     }
 
     // SHOW KEYBOARD
