@@ -9,6 +9,7 @@ public class M_GameManager : MonoBehaviour
         Boot,
         Gameplay,
         TaskOverlay,
+        AdsOverlay,
         QTE
     }
 

@@ -18,6 +18,10 @@ public class M_NoiseSystem : MonoBehaviour
     public float spaceNoise = 6f;
     public float paymentNoise = 8f;
 
+    [Header("Ads Noise")]
+    public float adsNoisePerSecond = 2f; // 2 per detik
+    bool adsNoiseActive = false;
+
     [Header("Stage Threshold")]
     public float stage2Threshold = 30f;
     public float stage3Threshold = 70f;
@@ -37,6 +41,7 @@ public class M_NoiseSystem : MonoBehaviour
 
     private int currentStage = 0;
     private bool noiseTriggered = false;
+    bool freezeNoise = false;
 
     void Awake()
     {
@@ -46,12 +51,25 @@ public class M_NoiseSystem : MonoBehaviour
     void Update()
     {
         HandleDecay();
+        HandleAdsNoise();
         UpdateOwnerState();
     }
 
     void HandleDecay()
     {
+        if (freezeNoise)
+        {
+            currentDecayRate = 0f;
+            return;
+        }
         if (isQTEActive)
+        {
+            currentDecayRate = 0f;
+            return;
+        }
+
+        // kalau ads lagi tampil, jangan decay
+        if (adsNoiseActive)
         {
             currentDecayRate = 0f;
             return;
@@ -80,6 +98,7 @@ public class M_NoiseSystem : MonoBehaviour
 
     public void AddNoise(float amount)
     {
+        if (freezeNoise) return;
         if (isQTEActive) return;
 
         currentNoise += amount;
@@ -95,6 +114,36 @@ public class M_NoiseSystem : MonoBehaviour
         {
             noiseTriggered = true;
         }
+    }
+    void HandleAdsNoise()
+    {
+        if (freezeNoise) return;
+        if (!adsNoiseActive) return;
+        if (isQTEActive) return;
+
+        currentNoise += adsNoisePerSecond * Time.deltaTime;
+        currentNoise = Mathf.Clamp(currentNoise, 0, maxNoise);
+
+        if (!noiseTriggered && currentNoise >= maxNoise)
+        {
+            currentNoise = maxNoise;
+            noiseTriggered = true;
+            OnNoiseFull?.Invoke();
+        }
+        if (!noiseTriggered && currentNoise >= maxNoise - 0.1f)
+        {
+            noiseTriggered = true;
+        }
+    }
+
+    public void StartAdsNoise()
+    {
+        adsNoiseActive = true;
+    }
+
+    public void StopAdsNoise()
+    {
+        adsNoiseActive = false;
     }
 
     public void ResetNoiseAfterQTE()
@@ -136,6 +185,23 @@ public class M_NoiseSystem : MonoBehaviour
     {
         noiseTriggered = false;
         isQTEActive = false;
+    }
+    public void FreezeNoise(bool freeze)
+    {
+        freezeNoise = freeze;
+        currentDecayRate = 0f;
+    }
+
+    public void ResetForNewDay()
+    {
+        currentNoise = 0f;
+        noiseTriggered = false;
+        currentStage = 0;
+        adsNoiseActive = false;
+        freezeNoise = false;
+
+        if (ownerAnimator != null)
+            ownerAnimator.SetInteger("OwnerState", 0);
     }
 }
 

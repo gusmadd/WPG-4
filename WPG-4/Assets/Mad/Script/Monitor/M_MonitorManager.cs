@@ -36,7 +36,6 @@ public class M_MonitorManager : MonoBehaviour
     public GameObject searchHomePage;
     public GameObject searchResultPage;
     public GameObject petshopPage;
-    public M_NotFoundController notFoundController;
     public M_SearchPage searchPageController;
     public M_SearchInput homeSearchInput;
     public M_SearchInput resultSearchInput;
@@ -52,18 +51,21 @@ public class M_MonitorManager : MonoBehaviour
     [Header("Colliders")]
     public Collider2D powerCollider;
 
+    [Header("Ads")]
+    public M_AdsPopup[] adsPopups; // isi 8 di Inspector
+
     void Start()
     {
         currentState = MonitorState.Off;
 
-        screenOff.SetActive(true);
-        screenOn.SetActive(false);
-        loadingCircle.SetActive(false);
+        if (screenOff != null) screenOff.SetActive(true);
+        if (screenOn != null) screenOn.SetActive(false);
+        if (loadingCircle != null) loadingCircle.SetActive(false);
 
-        desktopPage.SetActive(false);
-        searchHomePage.SetActive(false);
-        searchResultPage.SetActive(false);
-        petshopPage.SetActive(false);
+        if (desktopPage != null) desktopPage.SetActive(false);
+        if (searchHomePage != null) searchHomePage.SetActive(false);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
+        if (petshopPage != null) petshopPage.SetActive(false);
 
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
@@ -71,19 +73,17 @@ public class M_MonitorManager : MonoBehaviour
 
     void Update()
     {
-        if (loadingCircle.activeSelf)
-        {
+        if (loadingCircle != null && loadingCircle.activeSelf)
             loadingCircle.transform.Rotate(0, 0, -circleSpinSpeed * Time.deltaTime);
-        }
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            if (M_GameManager.Instance != null &&
+                M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
                 return;
 
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // 🔥 POWER BUTTON
             if (currentState == MonitorState.Off &&
                 powerCollider != null &&
                 powerCollider.OverlapPoint(mousePos))
@@ -92,23 +92,29 @@ public class M_MonitorManager : MonoBehaviour
                 return;
             }
 
-            // 🔥 DESKTOP → OPEN BROWSER
+            // selain power, baru dibatasi GameState
+            if (M_GameManager.Instance != null &&
+                M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+                return;
+
             if (currentState == MonitorState.On)
             {
-                // 🔥 CLOSE SEARCH PAGE
-                if ((searchHomePage.activeSelf || searchResultPage.activeSelf) &&
-                    closeSearchCollider != null &&
-                    closeSearchCollider.OverlapPoint(mousePos))
+                if ((searchHomePage != null && searchHomePage.activeSelf) ||
+                    (searchResultPage != null && searchResultPage.activeSelf))
                 {
-                    M_AudioManager.Instance?.PlayCursorClick();
-                    CloseSearch();
-                    return;
+                    if (closeSearchCollider != null && closeSearchCollider.OverlapPoint(mousePos))
+                    {
+                        M_AudioManager.Instance?.PlayCursorClick();
+                        CloseSearch();
+                        return;
+                    }
                 }
-                if (browserCollider != null &&
-                    browserCollider.OverlapPoint(mousePos))
+
+                if (browserCollider != null && browserCollider.OverlapPoint(mousePos))
                 {
                     M_AudioManager.Instance?.PlayCursorClick();
                     OpenBrowser();
+                    return;
                 }
             }
         }
@@ -123,9 +129,10 @@ public class M_MonitorManager : MonoBehaviour
     IEnumerator PowerOnSequence()
     {
         currentState = MonitorState.LoadingIn;
-        loadingAnimator.SetTrigger("isIn");
+        if (loadingAnimator != null) loadingAnimator.SetTrigger("isIn");
 
         yield return new WaitUntil(() =>
+            loadingAnimator != null &&
             loadingAnimator.GetCurrentAnimatorStateInfo(0).IsName("in") &&
             loadingAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
         );
@@ -133,44 +140,56 @@ public class M_MonitorManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         currentState = MonitorState.LoadingIdle;
-        loadingCircle.SetActive(true);
+        if (loadingCircle != null) loadingCircle.SetActive(true);
 
         yield return new WaitForSeconds(loadingDuration);
 
         currentState = MonitorState.LoadingOut;
-        loadingCircle.SetActive(false);
-        loadingAnimator.SetTrigger("isOut");
+        if (loadingCircle != null) loadingCircle.SetActive(false);
+        if (loadingAnimator != null) loadingAnimator.SetTrigger("isOut");
 
         yield return new WaitForSeconds(delayAfterOut);
 
-        // 🔥 MONITOR ON
         currentState = MonitorState.On;
 
-        screenOff.SetActive(false);
-        screenOn.SetActive(true);
+        if (screenOff != null) screenOff.SetActive(false);
+        if (screenOn != null) screenOn.SetActive(true);
 
-        desktopPage.SetActive(true);
-        searchHomePage.SetActive(false);
-        searchResultPage.SetActive(false);
+        if (desktopPage != null) desktopPage.SetActive(true);
+        if (searchHomePage != null) searchHomePage.SetActive(false);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
 
-        // 🔥 GANTI SPRITE POWER
         if (powerSprite != null && powerOnSprite != null)
             powerSprite.sprite = powerOnSprite;
     }
 
     void OpenBrowser()
     {
-        desktopPage.SetActive(false);
-        searchHomePage.SetActive(true);
-        searchResultPage.SetActive(false);
+        if (desktopPage != null) desktopPage.SetActive(false);
+        if (searchHomePage != null) searchHomePage.SetActive(true);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
+    }
+
+    void ShowRandomAds()
+    {
+        if (adsPopups == null || adsPopups.Length == 0) return;
+
+        int pick = Random.Range(0, adsPopups.Length);
+
+        for (int i = 0; i < adsPopups.Length; i++)
+            if (adsPopups[i] != null)
+                adsPopups[i].gameObject.SetActive(false);
+
+        if (adsPopups[pick] != null)
+            adsPopups[pick].gameObject.SetActive(true);
     }
 
     void CloseSearch()
     {
-        searchHomePage.SetActive(false);
-        searchResultPage.SetActive(false);
-        petshopPage.SetActive(false);
-        desktopPage.SetActive(true);
+        if (searchHomePage != null) searchHomePage.SetActive(false);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
+        if (petshopPage != null) petshopPage.SetActive(false);
+        if (desktopPage != null) desktopPage.SetActive(true);
 
         if (homeSearchInput != null)
             homeSearchInput.ResetToDefault();
@@ -182,8 +201,8 @@ public class M_MonitorManager : MonoBehaviour
 
         if (cleanUrl == "pawshopp" || cleanUrl == "pawshop" || cleanUrl == "petshop" || cleanUrl == "miawshopp")
         {
-            searchHomePage.SetActive(false);
-            searchResultPage.SetActive(true);
+            if (searchHomePage != null) searchHomePage.SetActive(false);
+            if (searchResultPage != null) searchResultPage.SetActive(true);
 
             if (resultSearchInput != null)
                 resultSearchInput.SetTextFromExternal(url);
@@ -193,15 +212,45 @@ public class M_MonitorManager : MonoBehaviour
         }
         else
         {
-            searchHomePage.SetActive(false);
-            searchResultPage.SetActive(false);
-            notFoundController.Show();
+            // HomeSearch tetap aktif supaya terlihat
+            if (searchHomePage != null) searchHomePage.SetActive(true);
+
+            // Pastikan result tidak tampil
+            if (searchResultPage != null) searchResultPage.SetActive(false);
+
+            // Munculkan ads overlay
+            ShowRandomAds();
         }
+    }
+    public void ShowRandomAdsFromExternal()
+    {
+        ShowRandomAds();
     }
     public void OpenPetshopFromResult()
     {
-        desktopPage.SetActive(false);
-        searchResultPage.SetActive(false);
-        petshopPage.SetActive(true);
+        if (desktopPage != null) desktopPage.SetActive(false);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
+        if (petshopPage != null) petshopPage.SetActive(true);
+    }
+    public void ResetToOff()
+    {
+        StopAllCoroutines();
+
+        currentState = MonitorState.Off;
+
+        if (screenOff != null) screenOff.SetActive(true);
+        if (screenOn != null) screenOn.SetActive(false);
+        if (loadingCircle != null) loadingCircle.SetActive(false);
+
+        if (desktopPage != null) desktopPage.SetActive(false);
+        if (searchHomePage != null) searchHomePage.SetActive(false);
+        if (searchResultPage != null) searchResultPage.SetActive(false);
+        if (petshopPage != null) petshopPage.SetActive(false);
+
+        if (homeSearchInput != null) homeSearchInput.ResetToDefault();
+        if (resultSearchInput != null) resultSearchInput.ResetToDefault();
+
+        if (powerSprite != null && powerOffSprite != null)
+            powerSprite.sprite = powerOffSprite;
     }
 }

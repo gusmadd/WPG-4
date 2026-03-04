@@ -21,6 +21,9 @@ public class M_AudioManager : MonoBehaviour
     public AudioClip showKeyboardSfx;
     public AudioClip hideKeyboardSfx;
 
+    [Header("Ads")]
+    public AudioClip[] adsSfx; // isi 2 variasi
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -78,6 +81,19 @@ public class M_AudioManager : MonoBehaviour
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.paymentNoise);
+    }
+
+    // ADS (Random dari 2 SFX)
+    public void PlayAdsSfx()
+    {
+        if (sfxSource == null) return;
+        if (adsSfx == null || adsSfx.Length == 0) return;
+
+        int i = Random.Range(0, adsSfx.Length);
+        sfxSource.PlayOneShot(adsSfx[i]);
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
     // SHOW KEYBOARD

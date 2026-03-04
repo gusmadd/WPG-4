@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UI_Script : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class UI_Script : MonoBehaviour
     [Header("Fade")]
     public CanvasGroup fadeCanvasGroup;
     public float fadeDuration = 0.2f;
-
 
     [Header("Shake")]
     public Transform cameraTransform;
@@ -21,34 +21,57 @@ public class UI_Script : MonoBehaviour
     public GameObject timerUI;
     public Image timerFill;
 
+    [Header("Day Success Panel")]
+    public GameObject daySuccessPanel;
+    public Button dayHomeButton;
+    public Button dayNextButton;
+    public TMP_Text daySuccessText;
+
+    [Header("Game Over Panel")]
+    public GameObject gameOverPanel;
+    public Button gameOverHomeButton;
+    public Button gameOverRestartButton;
+
     void Awake()
     {
         Instance = this;
     }
 
-    // ===================== FADE =====================
+    void Start()
+    {
+        if (daySuccessPanel != null) daySuccessPanel.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+
+        if (dayHomeButton != null) dayHomeButton.onClick.AddListener(OnClickDayHome);
+        if (dayNextButton != null) dayNextButton.onClick.AddListener(OnClickDayNext);
+
+        if (gameOverHomeButton != null) gameOverHomeButton.onClick.AddListener(OnClickGameOverHome);
+        if (gameOverRestartButton != null) gameOverRestartButton.onClick.AddListener(OnClickGameOverRestart);
+    }
 
     public IEnumerator Fade(float from, float to)
     {
         float elapsed = 0f;
-        fadeCanvasGroup.alpha = from;
+        if (fadeCanvasGroup != null) fadeCanvasGroup.alpha = from;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / fadeDuration;
-            fadeCanvasGroup.alpha = Mathf.Lerp(from, to, t);
+
+            if (fadeCanvasGroup != null)
+                fadeCanvasGroup.alpha = Mathf.Lerp(from, to, t);
+
             yield return null;
         }
-        
-        fadeCanvasGroup.alpha = to;
 
+        if (fadeCanvasGroup != null) fadeCanvasGroup.alpha = to;
     }
-
-    // ===================== SHAKE =====================
 
     public IEnumerator Shake()
     {
+        if (cameraTransform == null) yield break;
+
         Vector3 originalPos = cameraTransform.localPosition;
         float elapsed = 0f;
 
@@ -66,15 +89,10 @@ public class UI_Script : MonoBehaviour
         cameraTransform.localPosition = originalPos;
     }
 
-    // ===================== TIMER =====================
-
     public void StartTimer(float maxTime)
     {
-        if (timerUI != null)
-            timerUI.SetActive(true);
-
-        if (timerFill != null)
-            timerFill.fillAmount = 1f;
+        if (timerUI != null) timerUI.SetActive(true);
+        if (timerFill != null) timerFill.fillAmount = 1f;
     }
 
     public void UpdateTimer(float current, float max)
@@ -85,8 +103,59 @@ public class UI_Script : MonoBehaviour
 
     public void StopTimer()
     {
-        if (timerUI != null)
-            timerUI.SetActive(false);
+        if (timerUI != null) timerUI.SetActive(false);
     }
 
+    public void ShowDaySuccess(int day)
+    {
+        if (daySuccessPanel != null) daySuccessPanel.SetActive(true);
+        if (daySuccessText != null) daySuccessText.text = "Day " + day + " Success";
+
+        if (M_GameManager.Instance != null)
+            M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
+    }
+
+    public void HideDaySuccess()
+    {
+        if (daySuccessPanel != null) daySuccessPanel.SetActive(false);
+    }
+
+    public void ShowGameOver()
+    {
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+
+        if (M_GameManager.Instance != null)
+            M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
+    }
+
+    public void HideGameOver()
+    {
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+    }
+
+    void OnClickDayHome()
+    {
+        M_AudioManager.Instance?.PlayCursorClick();
+        DayManager.Instance?.GoHome();
+    }
+
+    void OnClickDayNext()
+    {
+        M_AudioManager.Instance?.PlayCursorClick();
+        HideDaySuccess();
+        DayManager.Instance?.NextDay();
+    }
+
+    void OnClickGameOverHome()
+    {
+        M_AudioManager.Instance?.PlayCursorClick();
+        DayManager.Instance?.GoHome();
+    }
+
+    void OnClickGameOverRestart()
+    {
+        M_AudioManager.Instance?.PlayCursorClick();
+        HideGameOver();
+        DayManager.Instance?.RestartGame();
+    }
 }

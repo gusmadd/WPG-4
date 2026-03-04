@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;  // 
 
 public class TaskManager : MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class TaskManager : MonoBehaviour
 
     [Header("Day Settings")]
     public float dayDurationSeconds = 120f;
-    public int itemsPerTask = 3;
 
     [Header("Runtime")]
+    public int itemsPerTask = 3;
     public List<string> targetItemIds = new List<string>();
     public HashSet<string> purchasedSet = new HashSet<string>();
     public bool completed;
@@ -18,16 +19,12 @@ public class TaskManager : MonoBehaviour
     float timer;
     bool timerRunning = false;
 
+    public event Action OnDaySuccess;
+    public event Action OnDayFailed;
+
     void Awake()
     {
         Instance = this;
-    }
-
-    void Start()
-    {
-        ResetTaskData();
-        CreateNewTask();
-        timerRunning = false;
     }
 
     void Update()
@@ -38,28 +35,29 @@ public class TaskManager : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
-            FailAndNewTask();
-            return;
+            timer = 0f;
+            FailDay();
         }
     }
 
-    public void StartTimer()
+    public void SetupNewDay(int newItemsPerTask, float durationSeconds)
     {
-        timerRunning = true;
-    }
+        itemsPerTask = newItemsPerTask;
+        dayDurationSeconds = durationSeconds;
 
-    public void StopTimer()
-    {
-        timerRunning = false;
-    }
-
-    void CreateNewTask()
-    {
         targetItemIds.Clear();
         purchasedSet.Clear();
         completed = false;
-        timer = dayDurationSeconds;
 
+        timer = dayDurationSeconds;
+        timerRunning = false;
+        Debug.Log("SetupNewDay done. itemsPerTask=" + itemsPerTask + " timer=" + GetTimeLeft());
+
+        CreateTaskList();
+    }
+
+    void CreateTaskList()
+    {
         if (ItemDatabase.Instance == null || ItemDatabase.Instance.items.Count == 0)
         {
             Debug.LogError("ItemDatabase kosong.");
@@ -76,13 +74,24 @@ public class TaskManager : MonoBehaviour
                 targetItemIds.Add(pick.id);
         }
 
-        Debug.Log("Task baru: " + string.Join(",", targetItemIds));
+        Debug.Log("Task list: " + string.Join(",", targetItemIds));
     }
 
-    void ResetTaskData()
+    public void StartTimer()
     {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
+        timerRunning = true;
+    }
+
+    public void StopTimer()
+    {
+        timerRunning = false;
+    }
+
+    void FailDay()
+    {
+        if (completed) return;
+        timerRunning = false;
+        OnDayFailed?.Invoke();
     }
 
     public void OnItemPurchased(string itemId)
@@ -98,17 +107,9 @@ public class TaskManager : MonoBehaviour
         if (purchasedSet.Count >= targetItemIds.Count)
         {
             completed = true;
-            Debug.Log("Task selesai.");
-            if (TaskUIController.Instance != null)
-                TaskUIController.Instance.ShowTaskOverlay(false);
+            timerRunning = false;
+            OnDaySuccess?.Invoke();
         }
-    }
-
-    void FailAndNewTask()
-    {
-        CreateNewTask();
-        if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ShowTaskOverlay(false);
     }
 
     public bool IsPurchased(string itemId) => purchasedSet.Contains(itemId);

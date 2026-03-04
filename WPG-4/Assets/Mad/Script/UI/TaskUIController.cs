@@ -18,7 +18,6 @@ public class TaskUIController : MonoBehaviour
     public Color doneColor = new Color(0.4f, 0.4f, 0.4f, 1f);
 
     [Header("Flow")]
-    public float bootDelay = 2f;
     public float outAnimDelay = 0.2f;
 
     bool overlayActive = false;
@@ -26,19 +25,12 @@ public class TaskUIController : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
-    }
-
-    IEnumerator Start()
-    {
-        if (taskPanel != null) taskPanel.SetActive(false);
-
-        if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.Boot;
-
-        yield return new WaitForSecondsRealtime(bootDelay);
-
-        ShowTaskOverlay(true); // overlay pertama
     }
 
     void Update()
@@ -82,12 +74,30 @@ public class TaskUIController : MonoBehaviour
 
         if (!firstStartDone)
         {
+            if (TaskManager.Instance == null) yield break;
+
+            // guard: task belum siap
+            if (TaskManager.Instance.targetItemIds == null || TaskManager.Instance.targetItemIds.Count == 0)
+            {
+                Debug.LogError("Task belum siap. targetItemIds kosong.");
+                overlayActive = true;
+                if (taskPanel != null) taskPanel.SetActive(true);
+                yield break;
+            }
+
+            // guard: timer masih 0
+            if (TaskManager.Instance.GetTimeLeft() <= 0f)
+            {
+                Debug.LogError("Timer masih 0. Cek dayDurationSeconds.");
+                overlayActive = true;
+                if (taskPanel != null) taskPanel.SetActive(true);
+                yield break;
+            }
+
             firstStartDone = true;
-            if (TaskManager.Instance != null)
-                TaskManager.Instance.StartTimer(); // timer mulai setelah shift pertama
+            TaskManager.Instance.StartTimer();
         }
     }
-
     void UpdateIconsProgress()
     {
         if (TaskManager.Instance == null) return;
@@ -114,5 +124,12 @@ public class TaskUIController : MonoBehaviour
             bool done = TaskManager.Instance.IsPurchased(id);
             itemIcons[i].color = done ? doneColor : notDoneColor;
         }
+    }
+
+    public void ResetForNewDay()
+    {
+        firstStartDone = false;
+        overlayActive = false;
+        if (taskPanel != null) taskPanel.SetActive(false);
     }
 }

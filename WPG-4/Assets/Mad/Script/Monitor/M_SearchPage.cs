@@ -24,16 +24,15 @@ public class M_SearchPage : MonoBehaviour
 
     public void GenerateResults()
     {
-        // reset status
         foreach (var s in slots)
             s.isCorrect = false;
 
-        // acak index slot yang benar
         int correctIndex = Random.Range(0, slots.Count);
         slots[correctIndex].isCorrect = true;
-        slots[correctIndex].spriteRenderer.sprite = correctSprite;
 
-        // ambil 4 sprite salah acak dari pool
+        if (slots[correctIndex].spriteRenderer != null)
+            slots[correctIndex].spriteRenderer.sprite = correctSprite;
+
         List<Sprite> tempWrong = new List<Sprite>(wrongSprites);
         Shuffle(tempWrong);
 
@@ -43,14 +42,22 @@ public class M_SearchPage : MonoBehaviour
         {
             if (i == correctIndex) continue;
 
-            slots[i].spriteRenderer.sprite = tempWrong[wrongPointer];
-            wrongPointer++;
+            if (slots[i].spriteRenderer != null && wrongPointer < tempWrong.Count)
+            {
+                slots[i].spriteRenderer.sprite = tempWrong[wrongPointer];
+                wrongPointer++;
+            }
         }
     }
 
     void Update()
     {
         if (!gameObject.activeSelf) return;
+
+        if (M_GameManager.Instance != null &&
+            M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            return;
+
         if (!Input.GetMouseButtonDown(0)) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -67,16 +74,18 @@ public class M_SearchPage : MonoBehaviour
 
     void OnClickLink(LinkSlot slot)
     {
+        M_AudioManager.Instance?.PlayCursorClick();
+
         if (slot.isCorrect)
         {
-            M_AudioManager.Instance?.PlayCursorClick();
-            monitorManager.OpenPetshopFromResult();
+            if (monitorManager != null)
+                monitorManager.OpenPetshopFromResult();
+            return;
         }
-        else
-        {
-            // link salah belum bisa diklik
-            M_AudioManager.Instance?.PlayCursorClick();
-        }
+
+        // LINK SALAH -> munculin ads
+        if (monitorManager != null)
+            monitorManager.ShowRandomAdsFromExternal();
     }
 
     void Shuffle(List<Sprite> list)
