@@ -2191,7 +2191,7 @@ MonoBehaviour:
   startDay: 1
   startTasks: 3
   tasksIncreasePerDay: 1
-  dayDurationSeconds: 10
+  dayDurationSeconds: 80
   bootDelay: 1.5
   successDelay: 1
   desktopPage: {fileID: 1749184489}
@@ -5615,13 +5615,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b832338b3ff2ce44824ebca8cca243a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adPrefab: {fileID: 2729088266502284659, guid: 980e6b6c18df4134baebe3827929fdf0, type: 3}
-  totalAds: 15
-  minX: -4.4
-  maxX: -4.45
-  minY: 1.08
-  maxY: 1.07
-  totalTime: 15
+  adPrefab:
+  - {fileID: 2090420860321236378, guid: 8eee290114929c448a3e27eae73c28f6, type: 3}
+  - {fileID: 3796912628314641456, guid: 0afab9a1db974c0428a0c10b23338436, type: 3}
+  - {fileID: 2631899432402491273, guid: 3fe8b5681c0fc6041b3590c9e8dbcd37, type: 3}
+  - {fileID: 8254535577516951320, guid: f74fbb359e9894c45997963471458279, type: 3}
+  - {fileID: 5459994092463171521, guid: ff76bd17a2d23bc46aeb3ca66070f498, type: 3}
+  - {fileID: 6145286041704520030, guid: 24401d0fe270567408a536b21ec6bcef, type: 3}
+  - {fileID: 5454182179848189698, guid: 6eacf6af917c1bf49bae9576949d36e4, type: 3}
+  - {fileID: 665487065238007333, guid: 9bb245d3626a9e74ca1732ab9bc50333, type: 3}
+  totalAds: 10
+  minX: -6.5
+  maxX: -2.5
+  minY: 0.5
+  maxY: 1.5
+  totalTime: 20
 --- !u!1 &474899088
 GameObject:
   m_ObjectHideFlags: 0

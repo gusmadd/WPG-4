@@ -5,7 +5,7 @@ using UnityEngine;
 public class M_QTEAdClean : MonoBehaviour
 {
     [Header("Ad Settings")]
-    public GameObject adPrefab;
+    public List<GameObject> adPrefab;
     public int totalAds = 15;
 
     [Header("Spawn Area (World)")]
@@ -61,17 +61,19 @@ public class M_QTEAdClean : MonoBehaviour
         for (int i = 0; i < totalAds; i++)
         {
             Vector2 pos = new Vector2(
-                Random.Range(minX, maxX),
-                Random.Range(minY, maxY)
+            Random.Range(minX, maxX),
+            Random.Range(minY, maxY)
             );
 
-            GameObject obj = Instantiate(adPrefab, pos, Quaternion.identity);
+            GameObject randomAd = adPrefab[Random.Range(0, adPrefab.Count)];
+            GameObject obj = Instantiate(randomAd, pos, Quaternion.identity);
 
             M_QTEPopUp popup = obj.GetComponent<M_QTEPopUp>();
             popup.Init(this);
 
             activeAds.Add(popup);
         }
+
     }
 
     public void AdClosed(M_QTEPopUp popup)

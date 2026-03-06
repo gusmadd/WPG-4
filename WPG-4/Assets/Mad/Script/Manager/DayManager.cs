@@ -40,7 +40,7 @@ public class DayManager : MonoBehaviour
             TaskManager.Instance.OnDayFailed += HandleDayFailed;
         }
 
-        //StopAllCoroutines();
+        StopAllCoroutines();
         StartCoroutine(StartDayRoutine(currentDay)); // DAY MULAI SAAT PLAY
     }
 
@@ -129,10 +129,15 @@ public class DayManager : MonoBehaviour
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.ResetForNewDay();
 
+        ResetPagesToDesktop();
+
         currentDay = startDay;
 
         if (monitorManager != null)
             monitorManager.ResetToOff();
+
+        if (M_GameManager.Instance != null)
+            M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
 
         StopAllCoroutines();
         StartCoroutine(StartDayRoutine(currentDay)); // balik ke flow awal lagi
