@@ -3517,7 +3517,7 @@ MonoBehaviour:
   startTasks: 3
   tasksIncreasePerDay: 1
   dayDurationSeconds: 80
-  bootDelay: 1.5
+  bootDelay: 1
   successDelay: 1
   desktopPage: {fileID: 1749184489}
   pagesToDisable:
@@ -15656,6 +15656,7 @@ MonoBehaviour:
   - {fileID: 1104093670}
   - {fileID: 259315311}
   - {fileID: 1004936578}
+  keyboard: {fileID: 2135906904}
 --- !u!212 &1011755574
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20952,6 +20953,7 @@ MonoBehaviour:
   qtePrefab: {fileID: 466507497}
   catAnimator: {fileID: 345401905}
   mainCamera: {fileID: 519420031}
+  keyboard: {fileID: 2135906904}
   normalSize: 5
   qteSize: 3
   normalPosition: {x: 0, y: 0, z: 0}
@@ -26132,7 +26134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1896359129}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4593e67b1d3d5a429d8da7f44d5281d, type: 3}
   m_Name: 
@@ -26144,7 +26146,7 @@ MonoBehaviour:
   productsPage: {fileID: 1250414071}
   homeCollider: {fileID: 1513805468}
   servicesCollider: {fileID: 618254612}
-  backCollider: {fileID: 0}
+  backCollider: {fileID: 36434708}
   homeSearchInput: {fileID: 1049357085}
 --- !u!1 &1896726350
 GameObject:

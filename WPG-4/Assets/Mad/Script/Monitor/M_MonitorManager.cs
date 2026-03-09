@@ -54,6 +54,8 @@ public class M_MonitorManager : MonoBehaviour
     [Header("Ads")]
     public M_AdsPopup[] adsPopups; // isi 8 di Inspector
 
+    public M_KeyboardController keyboard;
+
     void Start()
     {
         currentState = MonitorState.Off;
@@ -186,6 +188,7 @@ public class M_MonitorManager : MonoBehaviour
 
     void CloseSearch()
     {
+        keyboard.HideKeyboard();
         if (searchHomePage != null) searchHomePage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(false);
