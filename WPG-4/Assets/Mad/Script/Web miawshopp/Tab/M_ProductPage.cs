@@ -48,6 +48,7 @@ public class M_ProductPage : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(homePage);
                 return;
             }
@@ -55,6 +56,7 @@ public class M_ProductPage : MonoBehaviour
             if (servicesCollider != null && servicesCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(servicesPage);
                 return;
             }
@@ -62,6 +64,7 @@ public class M_ProductPage : MonoBehaviour
             if (foodsCollider != null && foodsCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(foodsPage);
                 return;
             }
@@ -69,6 +72,7 @@ public class M_ProductPage : MonoBehaviour
             if (petcareCollider != null && petcareCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(petcarePage);
                 return;
             }
@@ -76,6 +80,7 @@ public class M_ProductPage : MonoBehaviour
             if (accessoriesCollider != null && accessoriesCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(accessoriesPage);
                 return;
             }
@@ -83,6 +88,7 @@ public class M_ProductPage : MonoBehaviour
             if (toysCollider != null && toysCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenPage(toysPage);
                 return;
             }

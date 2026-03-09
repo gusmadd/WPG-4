@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DayManager : MonoBehaviour
 {
@@ -30,7 +31,12 @@ public class DayManager : MonoBehaviour
     public float adsChanceAfterDay3 = 0.2f;
 
 
+    [Header("Week End")]
+    public int maxDay = 5;
+    public GameObject weekCompletePanel;
+
     int currentDay;
+    public string mainMenuSceneName = "MainMenu";
 
     void Awake()
     {
@@ -45,10 +51,26 @@ public class DayManager : MonoBehaviour
         {
             TaskManager.Instance.OnDaySuccess += HandleDaySuccess;
             TaskManager.Instance.OnDayFailed += HandleDayFailed;
+            TaskManager.Instance.StopTimer();
         }
 
+        UI_Script.Instance?.HideDaySuccess();
+        UI_Script.Instance?.HideGameOver();
+        HideWeekComplete();
+
+        if (TaskUIController.Instance != null)
+            TaskUIController.Instance.ResetForNewDay();
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.ResetForNewDay();
+
+        ResetPagesToDesktop();
+
+        if (monitorManager != null)
+            monitorManager.ResetToOff();
+
         StopAllCoroutines();
-        StartCoroutine(StartDayRoutine(currentDay)); // DAY MULAI SAAT PLAY
+        StartCoroutine(StartDayRoutine(currentDay));
     }
 
     IEnumerator StartDayRoutine(int day)
@@ -63,6 +85,7 @@ public class DayManager : MonoBehaviour
 
         UI_Script.Instance?.HideDaySuccess();
         UI_Script.Instance?.HideGameOver();
+        HideWeekComplete();
 
         if (TaskUIController.Instance != null)
             TaskUIController.Instance.ResetForNewDay();
@@ -95,6 +118,13 @@ public class DayManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(successDelay);
 
+        if (currentDay >= maxDay)
+        {
+            if (weekCompletePanel != null)
+                weekCompletePanel.SetActive(true);
+            yield break;
+        }
+
         UI_Script.Instance?.ShowDaySuccess(currentDay);
     }
 
@@ -111,10 +141,18 @@ public class DayManager : MonoBehaviour
 
     public void NextDay()
     {
+        if (currentDay >= maxDay)
+        {
+            if (weekCompletePanel != null)
+                weekCompletePanel.SetActive(true);
+            return;
+        }
+
         currentDay++;
 
         UI_Script.Instance?.HideDaySuccess();
         UI_Script.Instance?.HideGameOver();
+        HideWeekComplete();
 
         ResetPagesToDesktop();
 
@@ -151,14 +189,7 @@ public class DayManager : MonoBehaviour
     }
     public void GoHome()
     {
-        UI_Script.Instance?.HideDaySuccess();
-        UI_Script.Instance?.HideGameOver();
-
-        if (monitorManager != null)
-            monitorManager.ResetToOff();
-
-        if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
+        SceneManager.LoadScene(mainMenuSceneName);
     }
     void ResetPagesToDesktop()
     {
@@ -177,5 +208,59 @@ public class DayManager : MonoBehaviour
 
         if (resultSearchInput != null)
             resultSearchInput.ResetToDefault();
+    }
+    public float GetAdsChanceForCurrentDay()
+    {
+        if (currentDay <= 1) return Mathf.Clamp01(day1AdsChance);
+        if (currentDay == 2) return Mathf.Clamp01(day2AdsChance);
+        if (currentDay == 3) return Mathf.Clamp01(day3AdsChance);
+        return Mathf.Clamp01(adsChanceAfterDay3);
+    }
+
+    public bool TrySpawnAdsOnPawshoppClick()
+    {
+        float chance = GetAdsChanceForCurrentDay();
+        return Random.value < chance;
+    }
+    public void TryShowAdsFromPawshoppClick()
+    {
+        if (monitorManager == null) return;
+
+        if (TrySpawnAdsOnPawshoppClick())
+            monitorManager.ShowRandomAdsFromExternal();
+    }
+    public void HideWeekComplete()
+    {
+        if (weekCompletePanel != null)
+            weekCompletePanel.SetActive(false);
+    }
+    public void StartNewGameFromMenu()
+    {
+        StopAllCoroutines();
+
+        currentDay = startDay;
+
+        UI_Script.Instance?.HideDaySuccess();
+        UI_Script.Instance?.HideGameOver();
+        HideWeekComplete();
+
+        if (TaskManager.Instance != null)
+            TaskManager.Instance.StopTimer();
+
+        if (TaskUIController.Instance != null)
+            TaskUIController.Instance.ResetForNewDay();
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.ResetForNewDay();
+
+        ResetPagesToDesktop();
+
+        if (monitorManager != null)
+            monitorManager.ResetToOff();
+
+        if (M_GameManager.Instance != null)
+            M_GameManager.Instance.currentState = M_GameManager.GameState.Boot;
+
+        StartCoroutine(StartDayRoutine(currentDay));
     }
 }

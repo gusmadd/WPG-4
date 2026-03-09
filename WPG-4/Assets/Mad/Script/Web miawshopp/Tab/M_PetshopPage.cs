@@ -41,6 +41,7 @@ public class M_PetshopPage : MonoBehaviour
             if (productButtonCollider != null && productButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenProductPage();
                 return;
             }
@@ -48,6 +49,7 @@ public class M_PetshopPage : MonoBehaviour
             if (serviceButtonCollider != null && serviceButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenServicePage();
                 return;
             }

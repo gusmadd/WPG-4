@@ -17,6 +17,11 @@ public class M_QTEAdClean : MonoBehaviour
     [Header("Timer")]
     public float totalTime = 15f;
 
+    [Header("Ad Scaling")]
+    public int baseAds = 15;
+    public int adsIncreasePerQTE = 3;
+    public int maxAds = 30; // opsional
+
     float timer;
     bool isRunning = false;
 
@@ -26,6 +31,10 @@ public class M_QTEAdClean : MonoBehaviour
     {
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.QTE)
             return;
+
+        int qteIndex = Mathf.Max(1, M_GameManager.Instance.qteCount);
+        totalAds = baseAds + (qteIndex - 1) * adsIncreasePerQTE;
+        if (maxAds > 0) totalAds = Mathf.Min(totalAds, maxAds);
 
         timer = totalTime;
         isRunning = true;

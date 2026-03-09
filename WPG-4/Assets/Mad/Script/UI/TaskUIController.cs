@@ -37,6 +37,8 @@ public class TaskUIController : MonoBehaviour
     {
         if (TaskManager.Instance != null && timerText != null)
             timerText.text = TaskManager.FormatTime(TaskManager.Instance.GetTimeLeft());
+        if (TaskManager.Instance != null && timerText != null && timerText.gameObject.activeSelf)
+            timerText.text = TaskManager.FormatTime(TaskManager.Instance.GetTimeLeft());
 
         if (!overlayActive) return;
 
@@ -131,5 +133,23 @@ public class TaskUIController : MonoBehaviour
         firstStartDone = false;
         overlayActive = false;
         if (taskPanel != null) taskPanel.SetActive(false);
+    }
+    public void HideTaskInstant()
+    {
+        overlayActive = false;
+
+        if (taskPanel != null)
+            taskPanel.SetActive(false);
+
+        if (timerText != null)
+            timerText.gameObject.SetActive(false);
+    }
+
+    public void ShowTaskAfterQTE()
+    {
+        if (timerText != null)
+            timerText.gameObject.SetActive(true);
+
+        ShowTaskOverlay(false);
     }
 }

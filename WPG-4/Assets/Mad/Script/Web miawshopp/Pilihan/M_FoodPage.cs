@@ -74,6 +74,7 @@ public class M_FoodPage : MonoBehaviour
             if (homeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 GoToHome();
                 return;
             }
@@ -81,6 +82,7 @@ public class M_FoodPage : MonoBehaviour
             if (serviceButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 GoToService();
                 return;
             }
@@ -88,12 +90,14 @@ public class M_FoodPage : MonoBehaviour
             if (backButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 BackToProduct();
                 return;
             }
 
             if (viewButtonCollider != null && viewButtonCollider.OverlapPoint(mousePos))
             {
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 OpenSelectedItem();
                 return;
             }

@@ -44,6 +44,7 @@ public class M_ToysPage : MonoBehaviour
             if (homeCollider !=null && homeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (homePage !=null) homePage.SetActive(true);
                 gameObject.SetActive(false);
                 return;
@@ -52,6 +53,7 @@ public class M_ToysPage : MonoBehaviour
             if (serviceCollider !=null && serviceCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicePage !=null) servicePage.SetActive(true);
                 gameObject.SetActive(false);
                 return;
@@ -60,6 +62,7 @@ public class M_ToysPage : MonoBehaviour
             if (backCollider !=null && backCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (productPage !=null) productPage.SetActive(true);
                 gameObject.SetActive(false);
                 return;           

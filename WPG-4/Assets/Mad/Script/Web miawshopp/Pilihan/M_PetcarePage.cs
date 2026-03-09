@@ -42,6 +42,7 @@ public class M_PetcarePage : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (homePage != null) homePage.SetActive(true);
                 gameObject.SetActive(false);
                 return;
@@ -50,6 +51,7 @@ public class M_PetcarePage : MonoBehaviour
             if (servicesCollider != null && servicesCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicesPage != null) servicesPage.SetActive(true);
                 gameObject.SetActive(false);
                 return;
@@ -58,6 +60,7 @@ public class M_PetcarePage : MonoBehaviour
             if (backCollider != null && backCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (productsPage != null) productsPage.SetActive(true);
                 gameObject.SetActive(false);
                 return;

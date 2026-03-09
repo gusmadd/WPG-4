@@ -36,6 +36,8 @@ public class M_GameManager : MonoBehaviour
 
     public GameState currentState = GameState.Boot;
 
+    public int qteCount = 0;
+
     void Awake()
     {
         Instance = this;
@@ -57,6 +59,10 @@ public class M_GameManager : MonoBehaviour
     {
         isSequenceRunning = true;
         currentState = GameState.QTE;
+        // pause task saat QTE
+        TaskManager.Instance?.PauseTimer();
+        TaskUIController.Instance?.HideTaskInstant();
+        qteCount++;
 
         Time.timeScale = 0f;
         M_NoiseSystem.Instance.isQTEActive = true;
@@ -90,6 +96,9 @@ public class M_GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
 
         yield return StartCoroutine(ReduceNoiseSmoothly(31f));
+        // setelah kamera normal, tampilkan task lagi dan lanjut timer
+        TaskUIController.Instance?.ShowTaskAfterQTE();
+        TaskManager.Instance?.ResumeTimer();
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -157,6 +166,21 @@ public class M_GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("GAME OVER");
+
         Time.timeScale = 1f;
+
+        // stop task + hide task UI
+        TaskManager.Instance?.StopTimer();
+        TaskUIController.Instance?.HideTaskInstant();
+
+        // pastikan noise tidak jalan lagi
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.FreezeNoise(true);
+
+        // kunci input
+        currentState = GameState.TaskOverlay;
+
+        // munculin panel game over
+        UI_Script.Instance?.ShowGameOver();
     }
 }

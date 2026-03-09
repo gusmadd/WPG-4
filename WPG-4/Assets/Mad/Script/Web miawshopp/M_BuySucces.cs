@@ -47,7 +47,7 @@ public class M_BuySucces : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (petshopHomePage != null)
                     petshopHomePage.SetActive(true);
 
@@ -59,7 +59,7 @@ public class M_BuySucces : MonoBehaviour
             if (servicesCollider != null && servicesCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicesPage != null)
                     servicesPage.SetActive(true);
 
@@ -71,7 +71,7 @@ public class M_BuySucces : MonoBehaviour
             if (backCollider != null && backCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (backTargetPage != null)
                     backTargetPage.SetActive(true);
 

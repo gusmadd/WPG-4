@@ -122,4 +122,13 @@ public class TaskManager : MonoBehaviour
         int r = sec % 60;
         return m.ToString("00") + ":" + r.ToString("00");
     }
+    public void PauseTimer()
+    {
+        StopTimer();
+    }
+
+    public void ResumeTimer()
+    {
+        StartTimer();
+    }
 }
