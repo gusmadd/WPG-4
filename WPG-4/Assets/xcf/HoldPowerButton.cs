@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class HoldPowerButton : MonoBehaviour, 
+    IPointerDownHandler, IPointerUpHandler
 {
-    public float holdTimeRequired = 2f;
-    public Image progressFill;
+    public float holdTimeRequired = 2f;   // detik
+    public Image progressFill;            // UI fill (optional)
 
     private float holdTimer = 0f;
     private bool isHolding = false;
@@ -30,34 +31,30 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // ================= UI INPUT =================
     public void OnPointerDown(PointerEventData eventData)
     {
-        StartHolding();
+        Debug.Log("UI POINTER DOWN 🔥");
+        isHolding = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        Debug.Log("UI POINTER UP ❄️");
         ResetHold();
     }
 
-    // ================= WORLD INPUT =================
+    // ================= WORLD INPUT FALLBACK =================
     void OnMouseDown()
     {
-        StartHolding();
+        Debug.Log("WORLD MOUSE DOWN 🔥");
+        isHolding = true;
     }
 
     void OnMouseUp()
     {
+        Debug.Log("WORLD MOUSE UP ❄️");
         ResetHold();
     }
 
-    // ================= HOLD LOGIC =================
-    void StartHolding()
-    {
-        if (activated) return;
-
-        Debug.Log("HOLD START 🔥");
-        isHolding = true;
-    }
-
+    // ================= LOGIC =================
     void ActivatePower()
     {
         if (activated) return;
@@ -65,24 +62,20 @@ public class HoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         activated = true;
         isHolding = false;
 
-        Debug.Log("PC POWER ON 💻");
+        Debug.Log("PC POWER ON 🔥💻");
 
         if (GameManager.Instance != null)
             GameManager.Instance.PowerOn();
         else
-            Debug.LogError("GameManager NOT FOUND ❌");
+            Debug.LogError("GameManager Instance NOT FOUND ❌");
     }
 
     void ResetHold()
     {
-        if (activated) return;
-
         isHolding = false;
         holdTimer = 0f;
 
         if (progressFill != null)
             progressFill.fillAmount = 0f;
-
-        Debug.Log("HOLD RESET");
     }
 }

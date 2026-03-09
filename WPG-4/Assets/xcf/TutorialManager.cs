@@ -8,7 +8,7 @@ public class TutorialManager : MonoBehaviour
     public TMP_Text narratorText;
     public Image backgroundImage;
 
-    public GameObject task; // 1 object task
+    public GameObject task;
 
     string[] dialogs =
     {
@@ -22,12 +22,15 @@ public class TutorialManager : MonoBehaviour
     };
 
     int dialogIndex = 0;
+
     bool taskShown = false;
     bool taskClosed = false;
+    bool fading = false;
 
     void Start()
     {
         SetAlpha(0);
+
         narratorText.text = dialogs[dialogIndex];
 
         task.SetActive(false);
@@ -37,15 +40,19 @@ public class TutorialManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !taskShown)
+        // lanjut dialog
+        if (Input.GetMouseButtonDown(0) && !taskShown && !fading)
         {
             NextDialog();
         }
 
+        // close task
         if (taskShown && !taskClosed && Input.GetKeyDown(KeyCode.LeftShift))
         {
             task.SetActive(false);
             taskClosed = true;
+
+            EndTutorial();
         }
     }
 
@@ -70,6 +77,18 @@ public class TutorialManager : MonoBehaviour
         task.SetActive(true);
     }
 
+    void EndTutorial()
+    {
+        Debug.Log("Tutorial Finished");
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.EndTutorial();
+        }
+
+        gameObject.SetActive(false);
+    }
+
     void SetAlpha(float a)
     {
         Color bg = backgroundImage.color;
@@ -83,6 +102,8 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+        fading = true;
+
         float t = 0;
 
         while (t < 1)
@@ -91,10 +112,15 @@ public class TutorialManager : MonoBehaviour
             SetAlpha(t);
             yield return null;
         }
+
+        SetAlpha(1);
+        fading = false;
     }
 
     IEnumerator FadeOut()
     {
+        fading = true;
+
         float t = 1;
 
         while (t > 0)
@@ -103,5 +129,8 @@ public class TutorialManager : MonoBehaviour
             SetAlpha(t);
             yield return null;
         }
+
+        SetAlpha(0);
+        fading = false;
     }
 }
