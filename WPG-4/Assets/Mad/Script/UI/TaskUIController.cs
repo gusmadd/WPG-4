@@ -40,7 +40,7 @@ public class TaskUIController : MonoBehaviour
 
         if (!overlayActive) return;
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetKeyDown(KeyCode.Space))
             StartCoroutine(HideOverlay());
     }
 

@@ -23,6 +23,13 @@ public class DayManager : MonoBehaviour
     public M_SearchInput homeSearchInput;
     public M_SearchInput resultSearchInput;
 
+    [Header("Ads Changce per day")]
+    public float day1AdsChance = 0.05f;
+    public float day2AdsChance = 0.1f;
+    public float day3AdsChance = 0.15f;
+    public float adsChanceAfterDay3 = 0.2f;
+
+
     int currentDay;
 
     void Awake()

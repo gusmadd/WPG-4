@@ -20,9 +20,7 @@ public class M_DetailFoodPage : MonoBehaviour
 
     [Header("Hold to Buy")]
     public float holdToBuySeconds = 2f;
-    public SpriteRenderer buySprite;          // Sprite tombol BUY
-    public Color buyNormalColor = Color.white;
-    public Color buyHoldColor = new Color(0.35f, 0.35f, 0.35f, 1f);
+    public SpriteRenderer buySprite;
 
     [Header("Navigation")]
     public M_SearchInput homeSearchInput;
@@ -33,9 +31,27 @@ public class M_DetailFoodPage : MonoBehaviour
     bool isHoldingBuy = false;
     float holdTimer = 0f;
 
+    Material runtimeBuyMat;
+    static readonly int FillAmountID = Shader.PropertyToID("_FillAmount");
+
+    void Awake()
+    {
+        if (buySprite != null && buySprite.sharedMaterial != null)
+        {
+            runtimeBuyMat = new Material(buySprite.sharedMaterial);
+            buySprite.material = runtimeBuyMat;
+        }
+    }
+
     void OnEnable()
     {
         ResetHoldState();
+    }
+
+    void OnDestroy()
+    {
+        if (runtimeBuyMat != null)
+            Destroy(runtimeBuyMat);
     }
 
     void Update()
@@ -47,7 +63,6 @@ public class M_DetailFoodPage : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // klik tombol lain tetap normal
             if (backCollider != null && backCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
@@ -55,7 +70,7 @@ public class M_DetailFoodPage : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
-            //ke home page
+
             if (homeCollider != null && homeCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
@@ -63,7 +78,7 @@ public class M_DetailFoodPage : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
-            // ke dekstop
+
             if (closeCollider != null && closeCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
@@ -72,7 +87,7 @@ public class M_DetailFoodPage : MonoBehaviour
                 gameObject.SetActive(false);
                 return;
             }
-            //ke service page
+
             if (serviceCollider != null && serviceCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
@@ -81,7 +96,6 @@ public class M_DetailFoodPage : MonoBehaviour
                 return;
             }
 
-            // mulai hold kalau klik kena BUY
             if (buyCollider != null && buyCollider.OverlapPoint(mousePosWorld))
             {
                 StartHoldBuy();
@@ -89,10 +103,8 @@ public class M_DetailFoodPage : MonoBehaviour
             }
         }
 
-        // update hold saat tombol mouse masih ditekan
         if (Input.GetMouseButton(0) && isHoldingBuy)
         {
-            // kalau cursor keluar dari collider BUY, batal
             if (buyCollider == null || !buyCollider.OverlapPoint(mousePosWorld))
             {
                 CancelHoldBuy();
@@ -100,7 +112,7 @@ public class M_DetailFoodPage : MonoBehaviour
             }
 
             holdTimer += Time.deltaTime;
-            UpdateBuyDarkening();
+            UpdateBuyFill();
 
             if (holdTimer >= holdToBuySeconds)
             {
@@ -109,7 +121,6 @@ public class M_DetailFoodPage : MonoBehaviour
             }
         }
 
-        // kalau mouse dilepas sebelum selesai, batal
         if (Input.GetMouseButtonUp(0) && isHoldingBuy)
         {
             CancelHoldBuy();
@@ -121,7 +132,7 @@ public class M_DetailFoodPage : MonoBehaviour
     {
         isHoldingBuy = true;
         holdTimer = 0f;
-        UpdateBuyDarkening();
+        UpdateBuyFill();
     }
 
     void CancelHoldBuy()
@@ -135,6 +146,7 @@ public class M_DetailFoodPage : MonoBehaviour
 
         if (TaskManager.Instance != null)
             TaskManager.Instance.OnItemPurchased(itemId);
+
         if (buySuccessPage != null)
             buySuccessPage.SetActive(true);
 
@@ -142,12 +154,12 @@ public class M_DetailFoodPage : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void UpdateBuyDarkening()
+    void UpdateBuyFill()
     {
-        if (buySprite == null) return;
+        if (runtimeBuyMat == null) return;
 
         float t = Mathf.Clamp01(holdTimer / Mathf.Max(0.01f, holdToBuySeconds));
-        buySprite.color = Color.Lerp(buyNormalColor, buyHoldColor, t);
+        runtimeBuyMat.SetFloat(FillAmountID, t);
     }
 
     void ResetHoldState()
@@ -155,7 +167,7 @@ public class M_DetailFoodPage : MonoBehaviour
         isHoldingBuy = false;
         holdTimer = 0f;
 
-        if (buySprite != null)
-            buySprite.color = buyNormalColor;
+        if (runtimeBuyMat != null)
+            runtimeBuyMat.SetFloat(FillAmountID, 0f);
     }
 }
