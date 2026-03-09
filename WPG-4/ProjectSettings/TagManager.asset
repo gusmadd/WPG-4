@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Narrator
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Chair
     uniqueID: 2634887399
+    locked: 0
+  - name: narratorbox
+    uniqueID: 3764274467
     locked: 0
