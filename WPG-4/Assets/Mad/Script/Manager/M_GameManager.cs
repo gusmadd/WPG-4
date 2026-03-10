@@ -24,6 +24,8 @@ public class M_GameManager : MonoBehaviour
     [Header("Camera Zoom")]
     public Camera mainCamera;
 
+    public M_KeyboardController keyboard;
+
     public float normalSize = 5f;
     public float qteSize = 2f;
 
@@ -59,6 +61,7 @@ public class M_GameManager : MonoBehaviour
     {
         isSequenceRunning = true;
         currentState = GameState.QTE;
+        keyboard.HideKeyboard();
         // pause task saat QTE
         TaskManager.Instance?.PauseTimer();
         TaskUIController.Instance?.HideTaskInstant();
@@ -179,6 +182,40 @@ public class M_GameManager : MonoBehaviour
 
         // kunci input
         currentState = GameState.TaskOverlay;
+
+        // munculin panel game over
+        UI_Script.Instance?.ShowGameOver();
+    }
+    public IEnumerator QTEFail()
+    {
+        // kunci state
+        currentState = GameState.QTE;
+
+        // stop task + hide task ui
+        TaskManager.Instance?.StopTimer();
+        TaskUIController.Instance?.HideTaskInstant();
+
+        // pastikan QTE flag mati biar decay/noise normal jika perlu
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.isQTEActive = false;
+
+        // Fade to black
+        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
+
+        // Balikin kamera ke normal saat layar hitam
+        yield return StartCoroutine(
+            ZoomCamera(qteSize, normalSize, qtePosition, normalPosition)
+        );
+
+        // Fade balik
+        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
+
+        // set state overlay supaya input berhenti
+        currentState = GameState.TaskOverlay;
+
+        // Freeze noise supaya tidak berubah saat game over
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.FreezeNoise(true);
 
         // munculin panel game over
         UI_Script.Instance?.ShowGameOver();

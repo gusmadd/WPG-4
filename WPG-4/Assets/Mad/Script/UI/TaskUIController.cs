@@ -133,6 +133,8 @@ public class TaskUIController : MonoBehaviour
         firstStartDone = false;
         overlayActive = false;
         if (taskPanel != null) taskPanel.SetActive(false);
+        if (timerText != null)
+            timerText.gameObject.SetActive(true);
     }
     public void HideTaskInstant()
     {

@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class M_MainMenuController : MonoBehaviour
 {
- public string gameSceneName = "InGame";
+ public string gameSceneName = "Tutorial";
 
     public void Play()
     {
+        Debug.Log("Load scene: " + gameSceneName);
         SceneManager.LoadScene(gameSceneName);
     }
 

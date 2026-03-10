@@ -5,11 +5,16 @@ using UnityEngine;
 public class M_KeyArea : MonoBehaviour
 {
     public string keyValue;
-    public M_SearchInput searchField;
+    public M_KeyboardController keyboard;
+
     void OnMouseDown()
     {
-        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+        if (keyboard == null)
+        {
+            Debug.LogError("Keyboard belum di-assign di " + gameObject.name);
             return;
-        searchField.AddCharacter(keyValue);
+        }
+
+        keyboard.PressKey(keyValue);
     }
 }
