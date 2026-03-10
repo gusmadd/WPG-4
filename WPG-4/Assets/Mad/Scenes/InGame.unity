@@ -902,7 +902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: S
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &82004685
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3035,7 +3035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: O
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &143044323
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3127,7 +3127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: U
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &147281036
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4136,7 +4136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 0
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &220317157
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4442,7 +4442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: G
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &232088654
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5374,7 +5374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: M
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &286412763
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5961,7 +5961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: ','
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &336189309
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6448,7 +6448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: C
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &369173864
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6540,7 +6540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: P
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &380441576
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10352,7 +10352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 8
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &645363078
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11065,7 +11065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: R
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &674843160
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11336,7 +11336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: A
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &690755237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11483,7 +11483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 2
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &705858662
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12578,7 +12578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: Y
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &790863958
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12774,7 +12774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 1
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &795688907
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12866,7 +12866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: D
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &810608667
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13309,7 +13309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: B
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &893855886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13615,7 +13615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 6
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &895069929
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14102,7 +14102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: T
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &912230801
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14194,7 +14194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: ENTER
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &919648649
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14286,7 +14286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 7
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &919892750
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14378,7 +14378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: SPACE
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &937397503
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14795,7 +14795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: F
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &959666903
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14887,7 +14887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: V
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &978606763
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15550,7 +15550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: CAPS
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1005781208
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16327,7 +16327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: BACK
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1045409624
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18124,7 +18124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 4
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1201490307
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20315,7 +20315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: H
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1337050533
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20407,7 +20407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 9
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1353185628
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20583,7 +20583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: J
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1371319755
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20675,7 +20675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: K
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1376913044
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20767,7 +20767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 3
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1380202070
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20859,7 +20859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: I
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1381192875
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21655,7 +21655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: .
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1468000172
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -22272,7 +22272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: 5
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1515971624
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -22633,7 +22633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: Q
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1559552527
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -22725,7 +22725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: W
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1562506104
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -23503,7 +23503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: Z
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1682995276
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24544,7 +24544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: N
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1787634698
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -25599,7 +25599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: L
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1876837415
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -26194,7 +26194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: E
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1896726353
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -26926,7 +26926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyValue: x
-  searchField: {fileID: 1049357085}
+  keyboard: {fileID: 2135906904}
 --- !u!61 &1976238285
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -28347,8 +28347,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2135906901}
-  animDuration: 1
+  animDuration: 0.25
   isCaps: 0
+  gameplaySearchField: {fileID: 1049357085}
+  tutorialSearchField: {fileID: 0}
 --- !u!1 &2145364218
 GameObject:
   m_ObjectHideFlags: 0

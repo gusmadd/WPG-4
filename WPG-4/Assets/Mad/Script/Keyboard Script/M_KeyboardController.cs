@@ -9,11 +9,17 @@ public class M_KeyboardController : MonoBehaviour
 
     public bool isCaps = false;
 
+    [Header("Targets")]
+    public M_SearchInput gameplaySearchField;
+    public M_TutorialSearchField tutorialSearchField;
+
     public void ShowKeyboard()
     {
         M_AudioManager.Instance?.PlayShowKeyboard();
         gameObject.SetActive(true);
-        animator.SetTrigger("isIn");
+
+        if (animator != null)
+            animator.SetTrigger("isIn");
     }
 
     public void HideKeyboard()
@@ -24,9 +30,26 @@ public class M_KeyboardController : MonoBehaviour
     IEnumerator HideRoutine()
     {
         M_AudioManager.Instance?.PlayHideKeyboard();
-        animator.SetTrigger("isOut");
+
+        if (animator != null)
+            animator.SetTrigger("isOut");
+
         yield return new WaitForSeconds(animDuration);
         gameObject.SetActive(false);
+    }
+
+    public void PressKey(string value)
+    {
+        if (tutorialSearchField != null && tutorialSearchField.isActive)
+        {
+            tutorialSearchField.AddCharacter(value);
+            return;
+        }
+
+        if (gameplaySearchField != null)
+        {
+            gameplaySearchField.AddCharacter(value);
+        }
     }
 
     public void ToggleCaps()
