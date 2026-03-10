@@ -1,13 +1,11 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
     [Header("UI References")]
-    public TMP_Text narratorText;
+    public TMPro.TMP_Text narratorText;
     public Image backgroundImage;
     public GameObject task;
 
@@ -21,9 +19,6 @@ public class TutorialManager : MonoBehaviour
     public GameObject screenOn;
     public GameObject desktopIcon;
     public GameObject browserIcon;
-    public GameObject searchPage;
-    public GameObject petshopPage;
-    public M_NotFoundController notFoundController;
 
     [Header("Dialog Settings")]
     public string[] dialogs = new string[]
@@ -40,12 +35,11 @@ public class TutorialManager : MonoBehaviour
     [Header("Timing")]
     public float fadeSpeed = 1f;
 
-    int dialogIndex = 0;
-    bool taskShown = false;
-    bool taskClosed = false;
-    bool fading = false;
-
-    // Hold power variables
+    private int dialogIndex = 0;
+    private bool taskShown = false;
+    private bool taskClosed = false;
+    private bool fading = false;
+    private bool browserOpened = false;
     private bool isHoldingPower = false;
     private float holdTimer = 0f;
     private bool pcOn = false;
@@ -60,40 +54,47 @@ public class TutorialManager : MonoBehaviour
         if (screenOn) screenOn.SetActive(false);
         if (desktopIcon) desktopIcon.SetActive(false);
         if (browserIcon) browserIcon.SetActive(false);
-        if (searchPage) searchPage.SetActive(false);
-        if (petshopPage) petshopPage.SetActive(false);
 
         StartCoroutine(FadeIn());
     }
 
     void Update()
+{
+    // 🔹 kalau browser sudah dibuka, tutorial stop total
+    if (browserOpened)
+        return;
+
+    if (Input.GetMouseButtonDown(0))
     {
-        // Dialog navigation
-        if (Input.GetMouseButtonDown(0) && !taskShown && !fading)
-        {
+        if (!taskShown && !fading)
             NextDialog();
-        }
 
-        // Close task
-        if (taskShown && !taskClosed && Input.GetKeyDown(KeyCode.LeftShift))
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+        if (hit.collider != null)
         {
-            task.SetActive(false);
-            taskClosed = true;
-            StartPowerTutorial();
+            if (hit.collider.gameObject == desktopIcon)
+                ClickDesktop();
+            else if (hit.collider.gameObject == browserIcon)
+                ClickBrowser();
         }
-
-        if (!pcOn)
-            HandlePowerHold();
     }
 
-    // ================= Dialog / Task =================
+    if (taskShown && !taskClosed && Input.GetKeyDown(KeyCode.LeftShift))
+    {
+        task.SetActive(false);
+        taskClosed = true;
+        StartPowerTutorial();
+    }
+
+    if (!pcOn)
+        HandlePowerHold();
+}
     void NextDialog()
     {
         dialogIndex++;
         if (dialogIndex < dialogs.Length)
-        {
             narratorText.text = dialogs[dialogIndex];
-        }
         else
         {
             StartCoroutine(FadeOut());
@@ -107,7 +108,6 @@ public class TutorialManager : MonoBehaviour
         task.SetActive(true);
     }
 
-    // ================= Power Hold =================
     void StartPowerTutorial()
     {
         narratorText.text = "Hold the power button to turn on the PC!";
@@ -120,9 +120,7 @@ public class TutorialManager : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (powerCollider != null && powerCollider.OverlapPoint(mousePos))
-            {
                 isHoldingPower = true;
-            }
         }
         else
         {
@@ -137,9 +135,7 @@ public class TutorialManager : MonoBehaviour
             if (powerProgressFill) powerProgressFill.fillAmount = Mathf.Clamp01(holdTimer / holdTimeRequired);
 
             if (holdTimer >= holdTimeRequired)
-            {
                 PowerOnComplete();
-            }
         }
     }
 
@@ -152,12 +148,13 @@ public class TutorialManager : MonoBehaviour
 
         if (screenOff) screenOff.SetActive(false);
         if (screenOn) screenOn.SetActive(true);
-        if (desktopIcon) desktopIcon.SetActive(true);
 
-        narratorText.text = "PC is ON! Click the desktop icon to continue.";
+        if (desktopIcon) desktopIcon.SetActive(true);
+        if (browserIcon) browserIcon.SetActive(true);
+
+        narratorText.text = "PC is ON! Desktop is ready!";
     }
 
-    // ================= Desktop / Browser / Search =================
     public void ClickDesktop()
     {
         if (!pcOn) return;
@@ -167,66 +164,24 @@ public class TutorialManager : MonoBehaviour
         if (browserIcon) browserIcon.SetActive(true);
     }
 
-    public void ClickBrowser()
-    {
-        if (!pcOn) return;
+   public void ClickBrowser()
+{
+    if (!pcOn) return;
 
-        narratorText.text = "Browser opened. Type www.miawshopp.com to search!";
-        if (browserIcon) browserIcon.SetActive(false);
-        if (searchPage) searchPage.SetActive(true);
+    narratorText.text = "Browser opened. Click the search field to type!";
+    if (browserIcon) browserIcon.SetActive(false);
+
+    if (screenOn) screenOn.SetActive(false);
+
+    browserOpened = true; // 🔹 STOP tutorial click detection
+}
+
+    // 🔹 FUNCTION BARU UNTUK SEARCH SUCCESS
+    public void OnSearchSuccess()
+    {
+        narratorText.text = "Nice! You found PawShop. Let's buy something!";
     }
 
-    public void SearchWebsite(string url)
-    {
-        string cleanUrl = url.ToLower().Trim();
-        if (cleanUrl == "www.miawshopp.com")
-        {
-            OpenPetshop();
-        }
-        else
-        {
-            if (searchPage) searchPage.SetActive(false);
-            if (notFoundController) notFoundController.Show();
-        }
-    }
-
-    void OpenPetshop()
-    {
-        narratorText.text = "Petshop opened! Click an item to buy it.";
-        if (searchPage) searchPage.SetActive(false);
-        if (petshopPage) petshopPage.SetActive(true);
-    }
-
-    // ================= Buy Hold =================
-    public void HoldBuy(float holdDuration = 2f)
-    {
-        StartCoroutine(BuyHoldRoutine(holdDuration));
-    }
-
-    IEnumerator BuyHoldRoutine(float duration)
-    {
-        narratorText.text = "Hold the buy button until the order completes!";
-        float timer = 0f;
-
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        FinishOrder();
-    }
-
-    void FinishOrder()
-    {
-        narratorText.text = "Order SUCCESS! 🎉 Tutorial completed!";
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.EndTutorial();
-        }
-    }
-
-    // ================= Fade =================
     void SetAlpha(float a)
     {
         Color bg = backgroundImage.color;
