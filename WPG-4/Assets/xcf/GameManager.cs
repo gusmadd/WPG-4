@@ -1,192 +1,174 @@
+using System.Collections;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class MonitorManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
-    public GameState CurrentState;
-
-    private void Awake()
+    public enum MonitorState
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        Off,
+        Booting,
+        On
     }
 
-    private void Start()
+    [Header("Monitor State")]
+    public MonitorState currentState = MonitorState.Off;
+
+    [Header("Screens")]
+    public GameObject screenOff;
+    public GameObject screenOn;
+
+    [Header("Pages")]
+    public GameObject desktopPage;
+    public GameObject searchPage;
+    public GameObject petshopPage;
+
+    [Header("Boot Animation")]
+    public Animator loadingAnimator;
+    public GameObject loadingCircle;
+    public float circleSpinSpeed = 180f;
+
+    [Header("Boot Timing")]
+    public float bootDuration = 2f;
+
+    [Header("Power Button")]
+    public Collider2D powerCollider;
+
+    void Start()
     {
-        // Game selalu mulai dari tutorial
-        SetState(GameState.TUTORIAL);
+        Debug.Log("MonitorManager START");
+
+        SetMonitorOff();
     }
 
-    public void SetState(GameState newState)
+    void Update()
     {
-        CurrentState = newState;
-        Debug.Log("STATE CHANGE → " + newState);
+        if (GameManager.Instance == null)
+            return;
 
-        HandleState(newState);
+        // loading spin
+        if (loadingCircle != null && loadingCircle.activeSelf)
+        {
+            loadingCircle.transform.Rotate(0, 0, -circleSpinSpeed * Time.deltaTime);
+        }
+
+        HandleClick();
+
+        HandleGameState();
     }
 
-    void HandleState(GameState state)
+    void HandleClick()
     {
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        if (Camera.main == null)
+            return;
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (currentState == MonitorState.Off &&
+            powerCollider != null &&
+            powerCollider.OverlapPoint(mousePos))
+        {
+            Debug.Log("Power Button Clicked");
+
+            GameManager.Instance.PowerOn();
+        }
+    }
+
+    void HandleGameState()
+    {
+        GameState state = GameManager.Instance.CurrentState;
+
         switch (state)
         {
-            case GameState.TUTORIAL:
-                OnTutorial();
+            case GameState.FAILED:
+                if (currentState != MonitorState.Off)
+                    SetMonitorOff();
                 break;
 
             case GameState.BOOTING:
-                OnBooting();
+                if (currentState == MonitorState.Off)
+                    StartCoroutine(BootSequence());
                 break;
 
             case GameState.DESKTOP:
-                OnDesktop();
+                ShowDesktop();
                 break;
 
             case GameState.BROWSER:
-                OnBrowser();
-                break;
-
-            case GameState.SEARCHING:
-                OnSearching();
-                break;
-
-            case GameState.SELECTING:
-                OnSelecting();
-                break;
-
-            case GameState.PAYMENT:
-                OnPayment();
-                break;
-
-            case GameState.BUY_HOLD:
-                OnBuyHold();
-                break;
-
-            case GameState.SUCCESS:
-                OnSuccess();
-                break;
-
-            case GameState.FAILED:
-                OnFailed();
+                ShowBrowser();
                 break;
         }
     }
 
-    // ================= STATES =================
-
-    void OnTutorial()
+    void SetMonitorOff()
     {
-        Debug.Log("Tutorial Running...");
+        Debug.Log("Monitor OFF");
+
+        currentState = MonitorState.Off;
+
+        screenOff.SetActive(true);
+        screenOn.SetActive(false);
+
+        if (desktopPage) desktopPage.SetActive(false);
+        if (searchPage) searchPage.SetActive(false);
+        if (petshopPage) petshopPage.SetActive(false);
     }
 
-    void OnBooting()
+    IEnumerator BootSequence()
     {
-        Debug.Log("PC Booting...");
-        Invoke(nameof(ToDesktop), 2f);
+        currentState = MonitorState.Booting;
+
+        Debug.Log("Monitor Booting...");
+
+        screenOff.SetActive(false);
+        screenOn.SetActive(true);
+
+        if (loadingAnimator)
+            loadingAnimator.SetTrigger("isIn");
+
+        if (loadingCircle)
+            loadingCircle.SetActive(true);
+
+        yield return new WaitForSeconds(bootDuration);
+
+        if (loadingCircle)
+            loadingCircle.SetActive(false);
+
+        if (loadingAnimator)
+            loadingAnimator.SetTrigger("isOut");
+
+        currentState = MonitorState.On;
+
+        Debug.Log("Boot Finished");
     }
 
-    void ToDesktop()
+    void ShowDesktop()
     {
-        SetState(GameState.DESKTOP);
-    }
-
-    void OnDesktop()
-    {
-        Debug.Log("Desktop Active");
-    }
-
-    void OnBrowser()
-    {
-        Debug.Log("Browser Opened");
-    }
-
-    void OnSearching()
-    {
-        Debug.Log("Searching Food");
-    }
-
-    void OnSelecting()
-    {
-        Debug.Log("Selecting Item");
-    }
-
-    void OnPayment()
-    {
-        Debug.Log("Payment Screen");
-    }
-
-    void OnBuyHold()
-    {
-        Debug.Log("Holding Buy Button");
-    }
-
-    void OnSuccess()
-    {
-        Debug.Log("ORDER SUCCESS 🎉");
-    }
-
-    void OnFailed()
-    {
-        Debug.Log("PC OFF / IDLE STATE");
-    }
-
-    // ================= PUBLIC CONTROL =================
-
-    // dipanggil setelah tutorial selesai
-    public void EndTutorial()
-    {
-        SetState(GameState.FAILED);
-    }
-
-    // Dipanggil dari HoldPowerButton
-    public void PowerOn()
-    {
-        if (CurrentState == GameState.FAILED)
+        if (desktopPage != null)
         {
-            SetState(GameState.BOOTING);
+            desktopPage.SetActive(true);
         }
+
+        if (searchPage) searchPage.SetActive(false);
+        if (petshopPage) petshopPage.SetActive(false);
     }
 
-    public void ClickBrowser()
+    void ShowBrowser()
     {
-        if (CurrentState == GameState.DESKTOP)
-            SetState(GameState.BROWSER);
+        if (desktopPage) desktopPage.SetActive(false);
+
+        if (searchPage)
+            searchPage.SetActive(true);
     }
 
-    public void StartSearch()
+    public void OpenPetshop()
     {
-        if (CurrentState == GameState.BROWSER)
-            SetState(GameState.SEARCHING);
-    }
+        if (searchPage)
+            searchPage.SetActive(false);
 
-    public void SelectItem()
-    {
-        if (CurrentState == GameState.SEARCHING)
-            SetState(GameState.SELECTING);
-    }
-
-    public void GoPayment()
-    {
-        if (CurrentState == GameState.SELECTING)
-            SetState(GameState.PAYMENT);
-    }
-
-    public void HoldBuy()
-    {
-        if (CurrentState == GameState.PAYMENT)
-            SetState(GameState.BUY_HOLD);
-    }
-
-    public void FinishOrder()
-    {
-        if (CurrentState == GameState.BUY_HOLD)
-            SetState(GameState.SUCCESS);
-    }
-
-    public void Fail()
-    {
-        SetState(GameState.FAILED);
+        if (petshopPage)
+            petshopPage.SetActive(true);
     }
 }

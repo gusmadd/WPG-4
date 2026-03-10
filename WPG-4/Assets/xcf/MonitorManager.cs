@@ -3,91 +3,245 @@ using UnityEngine;
 
 public class MonitorManager : MonoBehaviour
 {
-    public static MonitorManager Instance;
-
-    [Header("Monitor Objects")]
-    public GameObject monitorScreen;   // mesh / canvas monitor
-    public GameObject bootScreen;      // layar boot
-    public GameObject desktopScreen;   // desktop utama
-    public GameObject offScreen;       // layar mati
-
-    [Header("Boot Settings")]
-    public float bootTime = 2f;
-
-    bool isOn = false;
-
-    void Awake()
+    public enum MonitorState
     {
-        Instance = this;
+        Off,
+        LoadingIn,
+        LoadingIdle,
+        LoadingOut,
+        On
     }
+
+    [Header("State")]
+    public MonitorState currentState = MonitorState.Off;
+
+    [Header("References")]
+    public Animator loadingAnimator;
+
+    [Header("Circle Spin")]
+    public float circleSpinSpeed = 180f;
+    public GameObject loadingCircle;
+
+    public GameObject screenOff;
+    public GameObject screenOn;
+
+    [Header("Pages")]
+    public GameObject searchPage;
+    public GameObject petshopPage;
+    public M_NotFoundController notFoundController;
+
+    [Header("Timing")]
+    public float delayBeforeIdle = 0.3f;
+    public float loadingDuration = 2f;
+    public float delayAfterOut = 0.1f;
+
+    [Header("Colliders")]
+    public Collider2D powerCollider;
+
+    bool booting = false;
 
     void Start()
     {
+        Debug.Log("MonitorManager START");
+
+        CheckReferences();
+
         SetMonitorOff();
     }
 
-    // =========================
-    // POWER CONTROL
-    // =========================
+    void Update()
+    {
+        if (GameManager.Instance == null)
+            return;
+
+        SpinCircle();
+        HandlePowerClick();
+        FollowGameState();
+    }
+
+    void SpinCircle()
+    {
+        if (loadingCircle != null && loadingCircle.activeSelf)
+        {
+            loadingCircle.transform.Rotate(0, 0, -circleSpinSpeed * Time.deltaTime);
+        }
+    }
+
+    void HandlePowerClick()
+    {
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        if (Camera.main == null)
+            return;
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (currentState == MonitorState.Off &&
+            powerCollider != null &&
+            powerCollider.OverlapPoint(mousePos))
+        {
+            Debug.Log("Power button clicked");
+            GameManager.Instance.PowerOn();
+        }
+    }
+
+    void FollowGameState()
+    {
+        GameState state = GameManager.Instance.CurrentState;
+
+        switch (state)
+        {
+            case GameState.FAILED:
+                if (currentState != MonitorState.Off)
+                    SetMonitorOff();
+                break;
+
+            case GameState.BOOTING:
+                if (!booting && currentState == MonitorState.Off)
+                    PowerOn();
+                break;
+
+            case GameState.DESKTOP:
+                if (currentState == MonitorState.On)
+                    ShowDesktop();
+                break;
+
+            case GameState.BROWSER:
+                if (currentState == MonitorState.On)
+                    ShowBrowser();
+                break;
+        }
+    }
+
+    void SetMonitorOff()
+    {
+        Debug.Log("Monitor OFF");
+
+        currentState = MonitorState.Off;
+        booting = false;
+
+        if (screenOff) screenOff.SetActive(true);
+        if (screenOn) screenOn.SetActive(false);
+
+        if (loadingCircle) loadingCircle.SetActive(false);
+
+        if (searchPage) searchPage.SetActive(false);
+        if (petshopPage) petshopPage.SetActive(false);
+    }
 
     public void PowerOn()
     {
-        if (isOn) return;
+        if (currentState != MonitorState.Off)
+            return;
 
-        isOn = true;
-        StartCoroutine(BootSequence());
+        Debug.Log("Monitor Power ON");
+        StartCoroutine(PowerOnSequence());
     }
 
-    public void PowerOff()
+    IEnumerator PowerOnSequence()
     {
-        isOn = false;
+        booting = true;
 
-        if (bootScreen != null) bootScreen.SetActive(false);
-        if (desktopScreen != null) desktopScreen.SetActive(false);
-        if (offScreen != null) offScreen.SetActive(true);
+        currentState = MonitorState.LoadingIn;
+        Debug.Log("State → LoadingIn");
+
+        if (screenOff) screenOff.SetActive(false);
+        if (screenOn) screenOn.SetActive(true);
+
+        if (loadingAnimator)
+            loadingAnimator.SetTrigger("isIn");
+
+        yield return new WaitForSeconds(delayBeforeIdle);
+
+        currentState = MonitorState.LoadingIdle;
+        Debug.Log("State → LoadingIdle");
+
+        if (loadingCircle)
+            loadingCircle.SetActive(true);
+
+        yield return new WaitForSeconds(loadingDuration);
+
+        currentState = MonitorState.LoadingOut;
+        Debug.Log("State → LoadingOut");
+
+        if (loadingCircle)
+            loadingCircle.SetActive(false);
+
+        if (loadingAnimator)
+            loadingAnimator.SetTrigger("isOut");
+
+        yield return new WaitForSeconds(delayAfterOut);
+
+        currentState = MonitorState.On;
+        booting = false;
+
+        Debug.Log("State → On");
+
+        ShowDesktop();
     }
 
-    // =========================
-    // BOOT SEQUENCE
-    // =========================
-
-    IEnumerator BootSequence()
+    void ShowDesktop()
     {
-        if (offScreen != null) offScreen.SetActive(false);
+        if (searchPage)
+            searchPage.SetActive(true);
 
-        if (bootScreen != null)
-            bootScreen.SetActive(true);
-
-        yield return new WaitForSeconds(bootTime);
-
-        if (bootScreen != null)
-            bootScreen.SetActive(false);
-
-        if (desktopScreen != null)
-            desktopScreen.SetActive(true);
+        if (petshopPage)
+            petshopPage.SetActive(false);
     }
 
-    // =========================
-    // MONITOR STATES
-    // =========================
-
-    public void SetMonitorOff()
+    void ShowBrowser()
     {
-        if (bootScreen != null) bootScreen.SetActive(false);
-        if (desktopScreen != null) desktopScreen.SetActive(false);
-        if (offScreen != null) offScreen.SetActive(true);
+        if (searchPage)
+            searchPage.SetActive(true);
     }
 
-    public void ShowDesktop()
+    void CheckReferences()
     {
-        if (!isOn) return;
+        if (loadingAnimator == null) Debug.LogError("loadingAnimator NOT assigned");
+        if (loadingCircle == null) Debug.LogError("loadingCircle NOT assigned");
 
-        if (bootScreen != null) bootScreen.SetActive(false);
-        if (desktopScreen != null) desktopScreen.SetActive(true);
+        if (screenOff == null) Debug.LogError("screenOff NOT assigned");
+        if (screenOn == null) Debug.LogError("screenOn NOT assigned");
+
+        if (searchPage == null) Debug.LogError("searchPage NOT assigned");
+        if (petshopPage == null) Debug.LogError("petshopPage NOT assigned");
+
+        if (notFoundController == null) Debug.LogWarning("notFoundController NOT assigned");
+
+        if (powerCollider == null) Debug.LogError("powerCollider NOT assigned");
     }
 
-    public bool IsMonitorOn()
+    public void HandleSearch(string url)
     {
-        return isOn;
+        string cleanUrl = url.ToLower().Trim();
+
+        Debug.Log("Search URL: " + cleanUrl);
+
+        if (cleanUrl == "www.miawshopp.com")
+        {
+            OpenPetshop();
+        }
+        else
+        {
+            Debug.Log("Website not found");
+
+            if (searchPage)
+                searchPage.SetActive(false);
+
+            if (notFoundController)
+                notFoundController.Show();
+        }
+    }
+
+    void OpenPetshop()
+    {
+        Debug.Log("Opening Petshop Page");
+
+        if (searchPage)
+            searchPage.SetActive(false);
+
+        if (petshopPage)
+            petshopPage.SetActive(true);
     }
 }
