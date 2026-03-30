@@ -285,15 +285,15 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator IntroSequence()
     {
+        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
+        ShowCatLine("(thinking)");
+        yield return new WaitForSecondsRealtime(0.4f);
+
         var lines1 = new List<VNTextController.Line>
         {
             new VNTextController.Line("Narrator", "Feeling abandoned in your owner friend's house? Not getting the good food or toys?")
         };
         yield return PlayVN(lines1);
-
-        if (catAnimator != null) catAnimator.SetTrigger(nodTrigger);
-        ShowCatLine("(nodding)");
-        yield return new WaitForSecondsRealtime(0.4f);
 
         var lines2 = new List<VNTextController.Line>
         {
@@ -301,17 +301,20 @@ public class M_TutorialManager : MonoBehaviour
         };
         yield return PlayVN(lines2);
 
-        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
-        ShowCatLine("(thinking)");
-        yield return new WaitForSecondsRealtime(0.4f);
-
         var lines3 = new List<VNTextController.Line>
         {
             new VNTextController.Line("Narrator", "I know it's kinda hard thinking with that head. Try to remember this, you'll get reminder each time you got ONE ORDER RIGHT.")
         };
         yield return PlayVN(lines3);
 
-        ShowCatLine("");
+        // pastikan thinking dihentikan
+        if (catAnimator != null)
+        {
+            catAnimator.ResetTrigger(thinkTrigger);
+            catAnimator.SetTrigger(nodTrigger);
+        }
+
+        ShowCatLine("(nodding)");
 
         yield return ShowTaskAndWaitForSpace();
         yield return PowerGuideSequence();
@@ -343,7 +346,7 @@ public class M_TutorialManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.1f);
 
-        while (!Input.GetKeyDown(KeyCode.Space))
+        while (!Input.GetMouseButtonDown(0))
             yield return null;
 
         if (taskPanel != null)
@@ -599,6 +602,8 @@ public class M_TutorialManager : MonoBehaviour
     IEnumerator BuySuccessEndSequence()
     {
         yield return new WaitForSecondsRealtime(continueMessageDelay);
+        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
+        ShowCatLine("(thinking)");
 
         bool done = false;
 
@@ -613,12 +618,18 @@ public class M_TutorialManager : MonoBehaviour
             yield return new WaitUntil(() => done);
         }
 
-        while (!Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.KeypadEnter))
-            yield return null;
+        // tunggu klik kiri
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+        // sembunyikan textbox
+        if (vn != null)
+            vn.HideInstant();
+
+        // delay sebelum masuk game
+        yield return new WaitForSecondsRealtime(1f);
 
         SceneManager.LoadScene(nextSceneName);
     }
-
     void StartHoldBuy()
     {
         isHoldingBuy = true;

@@ -42,7 +42,7 @@ public class TaskUIController : MonoBehaviour
 
         if (!overlayActive) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
             StartCoroutine(HideOverlay());
     }
 

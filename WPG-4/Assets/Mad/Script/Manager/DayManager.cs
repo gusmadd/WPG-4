@@ -37,6 +37,9 @@ public class DayManager : MonoBehaviour
 
     int currentDay;
     public string mainMenuSceneName = "MainMenu";
+    public string weekChoiceSceneName = "WeekChoice";
+
+    public string nextWeekSceneName = "NextWeekScene"; // Ganti dengan nama scene minggu berikutnya
 
     void Awake()
     {
@@ -192,6 +195,17 @@ public class DayManager : MonoBehaviour
     {
         SceneManager.LoadScene(mainMenuSceneName);
     }
+    
+    public void GoToWeekChoice()
+    {
+        SceneManager.LoadScene(weekChoiceSceneName);
+    }
+    
+    public void GoToNextWeek()
+    {
+        SceneManager.LoadScene(nextWeekSceneName);
+    }
+    
     void ResetPagesToDesktop()
     {
         if (pagesToDisable != null)
