@@ -5,7 +5,7 @@ using UnityEngine;
 public class M_QTEAdClean : MonoBehaviour
 {
     [Header("Ad Settings")]
-    public GameObject adPrefab;
+    public List<GameObject> adPrefab;
     public int totalAds = 15;
 
     [Header("Spawn Area (World)")]
@@ -17,15 +17,23 @@ public class M_QTEAdClean : MonoBehaviour
     [Header("Timer")]
     public float totalTime = 15f;
 
+    [Header("Ad Scaling")]
+    public int baseAds = 15;
+    public int adsIncreasePerQTE = 3;
+    public int maxAds = 30; // opsional
+
     float timer;
     bool isRunning = false;
-
     List<M_QTEPopUp> activeAds = new List<M_QTEPopUp>();
 
     void Start()
     {
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.QTE)
             return;
+
+        int qteIndex = Mathf.Max(1, M_GameManager.Instance.qteCount);
+        totalAds = baseAds + (qteIndex - 1) * adsIncreasePerQTE;
+        if (maxAds > 0) totalAds = Mathf.Min(totalAds, maxAds);
 
         timer = totalTime;
         isRunning = true;
@@ -61,17 +69,19 @@ public class M_QTEAdClean : MonoBehaviour
         for (int i = 0; i < totalAds; i++)
         {
             Vector2 pos = new Vector2(
-                Random.Range(minX, maxX),
-                Random.Range(minY, maxY)
+            Random.Range(minX, maxX),
+            Random.Range(minY, maxY)
             );
 
-            GameObject obj = Instantiate(adPrefab, pos, Quaternion.identity);
+            GameObject randomAd = adPrefab[Random.Range(0, adPrefab.Count)];
+            GameObject obj = Instantiate(randomAd, pos, Quaternion.identity);
 
             M_QTEPopUp popup = obj.GetComponent<M_QTEPopUp>();
             popup.Init(this);
 
             activeAds.Add(popup);
         }
+
     }
 
     public void AdClosed(M_QTEPopUp popup)
@@ -103,11 +113,25 @@ public class M_QTEAdClean : MonoBehaviour
     void Fail()
     {
         isRunning = false;
+        UI_Script.Instance?.StopTimer();
 
-        // 🔥 MATIKAN TIMER UI
-        UI_Script.Instance.StopTimer();
+        CleanupAds();
 
-        M_GameManager.Instance.GameOver();
+        StartCoroutine(FailRoutine());
+    }
+
+    IEnumerator FailRoutine()
+    {
+        yield return StartCoroutine(M_GameManager.Instance.QTEFail()); // kita buat function ini
         Destroy(gameObject);
+    }
+    public void CleanupAds()
+    {
+        for (int i = 0; i < activeAds.Count; i++)
+        {
+            if (activeAds[i] != null)
+                Destroy(activeAds[i].gameObject);
+        }
+        activeAds.Clear();
     }
 }

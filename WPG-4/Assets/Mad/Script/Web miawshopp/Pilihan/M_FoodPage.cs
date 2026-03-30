@@ -4,87 +4,201 @@ using UnityEngine;
 
 public class M_FoodPage : MonoBehaviour
 {
-    [Header("Navigation")]
-    public GameObject homePage; //halaman utama
-    public GameObject searchPage; //search page
-    public GameObject catFoodPage;   // 🔥 halaman makanan kucing
+    [Header("Pages")]
+    public GameObject homePage;
+    public GameObject servicePage;
+    public GameObject productPage;
+    public GameObject desktopPage;
 
-    [Header("Search")]
-    public M_SearchInput searchField;
+    [Header("Item Pages Prefab")]
+    public GameObject item1DetailPrefab;
+    public GameObject item2DetailPrefab;
+    public GameObject item3DetailPrefab;
+    public GameObject item4DetailPrefab;
+    public GameObject item5DetailPrefab;
+    public GameObject item6DetailPrefab;
+
+    [Header("Item Sprites")]
+    public SpriteRenderer item1Sprite;
+    public SpriteRenderer item2Sprite;
+    public SpriteRenderer item3Sprite;
+    public SpriteRenderer item4Sprite;
+    public SpriteRenderer item5Sprite;
+    public SpriteRenderer item6Sprite;
 
     [Header("Buttons")]
-    public Collider2D backButtonCollider; // colider balik ke halam utama
-    public Collider2D closeButtonCollider; // colider close
-    public Collider2D catButtonCollider;   //  collider gambar kucing
+    public Collider2D closeButtonCollider;
+    public Collider2D homeButtonCollider;
+    public Collider2D serviceButtonCollider;
+    public Collider2D backButtonCollider;
+    public Collider2D viewButtonCollider;
+
+    [Header("Item Colliders")]
+    public Collider2D item1Collider;
+    public Collider2D item2Collider;
+    public Collider2D item3Collider;
+    public Collider2D item4Collider;
+    public Collider2D item5Collider;
+    public Collider2D item6Collider;
+
+    [Header("View Button")]
+    public GameObject viewButton;
+
+    GameObject selectedItemPrefab = null;
+    SpriteRenderer selectedSprite = null;
+    public M_SearchInput homeSearchInput;
 
     void Awake()
     {
-        gameObject.SetActive(false);
+        if (viewButton != null) viewButton.SetActive(false);
     }
 
     void Update()
     {
         if (!gameObject.activeSelf) return;
+        Debug.Log("M_FoodPage Update running");
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay) return;
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
-                return;
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            // 🐱 CAT
-            if (catButtonCollider != null && catButtonCollider.OverlapPoint(mousePos))
+            Debug.Log("Mouse clicked at " + mousePos);
+            if (closeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-                OpenCatFood();
+                if (homeSearchInput != null) homeSearchInput.ResetToDefault();
+                CloseToDesktop();
                 return;
             }
 
-            // 🔙 BACK → ke homepage
-            if (backButtonCollider != null && backButtonCollider.OverlapPoint(mousePos))
+            if (homeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-                BackToHome();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
+                GoToHome();
                 return;
             }
 
-            // ❌ CLOSE → ke search page
-            if (closeButtonCollider != null && closeButtonCollider.OverlapPoint(mousePos))
+            if (serviceButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-                CloseToSearch();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
+                GoToService();
                 return;
             }
+
+            if (backButtonCollider.OverlapPoint(mousePos))
+            {
+                M_AudioManager.Instance?.PlayCursorClick();
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
+                BackToProduct();
+                return;
+            }
+
+            if (viewButtonCollider != null && viewButtonCollider.OverlapPoint(mousePos))
+            {
+                DayManager.Instance?.TryShowAdsFromPawshoppClick();
+                OpenSelectedItem();
+                return;
+            }
+
+            if (item1Collider.OverlapPoint(mousePos)) SelectItem(item1Sprite, item1DetailPrefab);
+            else if (item2Collider.OverlapPoint(mousePos)) SelectItem(item2Sprite, item2DetailPrefab);
+            else if (item3Collider.OverlapPoint(mousePos)) SelectItem(item3Sprite, item3DetailPrefab);
+            else if (item4Collider.OverlapPoint(mousePos)) SelectItem(item4Sprite, item4DetailPrefab);
+            else if (item5Collider.OverlapPoint(mousePos)) SelectItem(item5Sprite, item5DetailPrefab);
+            else if (item6Collider.OverlapPoint(mousePos)) SelectItem(item6Sprite, item6DetailPrefab);
         }
     }
 
-    void OpenCatFood()
+    void SelectItem(SpriteRenderer sprite, GameObject prefab)
     {
-        gameObject.SetActive(false);
+        M_AudioManager.Instance?.PlayCursorClick();
 
-        if (catFoodPage != null)
-            catFoodPage.SetActive(true);
-    }
-
-    void BackToHome()
-    {
-        gameObject.SetActive(false);
-
-        if (homePage != null)
-            homePage.SetActive(true);
-    }
-
-    void CloseToSearch()
-    {
-        gameObject.SetActive(false);
-
-        if (searchPage != null)
-            searchPage.SetActive(true);
-
-        if (searchField != null)
+        // Klik item yang sama → toggle warna
+        if (selectedSprite == sprite)
         {
-            searchField.gameObject.SetActive(true);
-            searchField.ForceTyping();
+            // Kembalikan warna normal
+            selectedSprite.color = Color.white;
+            selectedSprite = null;
+            // Tetap simpan prefab jika ingin view button tetap aktif
+            selectedItemPrefab = prefab;
+            if (viewButton != null)
+                viewButton.SetActive(false); // matikan view button jika item tidak dipilih
+            return;
         }
+
+        // Klik item baru → reset warna semua item
+        ResetAllItemColors();
+
+        selectedSprite = sprite;
+        selectedItemPrefab = prefab;
+
+        if (selectedSprite != null)
+            selectedSprite.color = new Color(0.7f, 0.7f, 0.7f, 1f);
+
+        if (viewButton != null)
+            viewButton.SetActive(true);
+    }
+
+    void ResetAllItemColors()
+    {
+        item1Sprite.color = Color.white;
+        item2Sprite.color = Color.white;
+        item3Sprite.color = Color.white;
+        item4Sprite.color = Color.white;
+        item5Sprite.color = Color.white;
+        item6Sprite.color = Color.white;
+    }
+
+    void OpenSelectedItem()
+    {
+        if (selectedItemPrefab == null)
+        {
+            Debug.LogError("Tidak ada item yang dipilih");
+            return;
+        }
+
+        M_AudioManager.Instance?.PlayCursorClick();
+
+        // Nonaktifkan halaman utama
+        gameObject.SetActive(false);
+        ResetAllItemColors();
+        selectedSprite = null;
+
+        // Aktifkan detail item di scene
+        selectedItemPrefab.SetActive(true);
+    }
+
+    void GoToHome()
+    {
+        gameObject.SetActive(false);
+        if (homePage != null) homePage.SetActive(true);
+    }
+
+    void GoToService()
+    {
+        gameObject.SetActive(false);
+        if (servicePage != null)
+        {
+            servicePage.SetActive(true);
+            Debug.Log("servicePage aktif? " + servicePage.activeSelf);
+        }
+    }
+
+    void BackToProduct()
+    {
+        if (productPage != null)
+        {
+            productPage.SetActive(true);
+        }
+
+        gameObject.SetActive(false);
+    }
+
+    void CloseToDesktop()
+    {
+        gameObject.SetActive(false);
+        if (desktopPage != null) desktopPage.SetActive(true);
     }
 }
