@@ -110,10 +110,6 @@ public class M_NoiseSystem : MonoBehaviour
             noiseTriggered = true;
             OnNoiseFull?.Invoke();
         }
-        if (!noiseTriggered && currentNoise >= maxNoise - 0.1f)
-        {
-            noiseTriggered = true;
-        }
     }
     void HandleAdsNoise()
     {
@@ -129,10 +125,6 @@ public class M_NoiseSystem : MonoBehaviour
             currentNoise = maxNoise;
             noiseTriggered = true;
             OnNoiseFull?.Invoke();
-        }
-        if (!noiseTriggered && currentNoise >= maxNoise - 0.1f)
-        {
-            noiseTriggered = true;
         }
     }
 

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class M_QTEPopUp : MonoBehaviour
 {
-    M_QTEAdClean manager;
+    M_QTEAddClean manager;
     bool isClosed = false;
 
-    public void Init(M_QTEAdClean qteManager)
+    public void Init(M_QTEAddClean qteManager)
     {
         manager = qteManager;
     }

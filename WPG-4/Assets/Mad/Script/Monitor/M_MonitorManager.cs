@@ -52,7 +52,7 @@ public class M_MonitorManager : MonoBehaviour
     public Collider2D powerCollider;
 
     [Header("Ads")]
-    public M_AdsPopup[] adsPopups; // isi 8 di Inspector
+    public M_AdsPopup[] adsPopups;
 
     public M_KeyboardController keyboard;
 
@@ -71,6 +71,8 @@ public class M_MonitorManager : MonoBehaviour
 
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
+
+        DisableAllAds();
     }
 
     void Update()
@@ -94,7 +96,6 @@ public class M_MonitorManager : MonoBehaviour
                 return;
             }
 
-            // selain power, baru dibatasi GameState
             if (M_GameManager.Instance != null &&
                 M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
                 return;
@@ -174,16 +175,34 @@ public class M_MonitorManager : MonoBehaviour
 
     void ShowRandomAds()
     {
+        // Ads hanya boleh muncul saat gameplay
+        if (M_GameManager.Instance == null) return;
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            return;
+
         if (adsPopups == null || adsPopups.Length == 0) return;
 
         int pick = Random.Range(0, adsPopups.Length);
 
         for (int i = 0; i < adsPopups.Length; i++)
+        {
             if (adsPopups[i] != null)
                 adsPopups[i].gameObject.SetActive(false);
+        }
 
         if (adsPopups[pick] != null)
             adsPopups[pick].gameObject.SetActive(true);
+    }
+
+    void DisableAllAds()
+    {
+        if (adsPopups == null) return;
+
+        for (int i = 0; i < adsPopups.Length; i++)
+        {
+            if (adsPopups[i] != null)
+                adsPopups[i].gameObject.SetActive(false);
+        }
     }
 
     void CloseSearch()
@@ -215,26 +234,25 @@ public class M_MonitorManager : MonoBehaviour
         }
         else
         {
-            // HomeSearch tetap aktif supaya terlihat
             if (searchHomePage != null) searchHomePage.SetActive(true);
-
-            // Pastikan result tidak tampil
             if (searchResultPage != null) searchResultPage.SetActive(false);
 
-            // Munculkan ads overlay
             ShowRandomAds();
         }
     }
+
     public void ShowRandomAdsFromExternal()
     {
         ShowRandomAds();
     }
+
     public void OpenPetshopFromResult()
     {
         if (desktopPage != null) desktopPage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(true);
     }
+
     public void ResetToOff()
     {
         StopAllCoroutines();
@@ -252,6 +270,8 @@ public class M_MonitorManager : MonoBehaviour
 
         if (homeSearchInput != null) homeSearchInput.ResetToDefault();
         if (resultSearchInput != null) resultSearchInput.ResetToDefault();
+
+        DisableAllAds();
 
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;

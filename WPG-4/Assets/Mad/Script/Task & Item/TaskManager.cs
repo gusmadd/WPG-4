@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;  // 
+using System;
 
 public class TaskManager : MonoBehaviour
 {
@@ -33,6 +33,7 @@ public class TaskManager : MonoBehaviour
         if (completed) return;
 
         timer -= Time.deltaTime;
+
         if (timer <= 0f)
         {
             timer = 0f;
@@ -42,6 +43,8 @@ public class TaskManager : MonoBehaviour
 
     public void SetupNewDay(int newItemsPerTask, float durationSeconds)
     {
+        StopTimer();
+
         itemsPerTask = newItemsPerTask;
         dayDurationSeconds = durationSeconds;
 
@@ -50,7 +53,7 @@ public class TaskManager : MonoBehaviour
         completed = false;
 
         timer = dayDurationSeconds;
-        timerRunning = false;
+
         Debug.Log("SetupNewDay done. itemsPerTask=" + itemsPerTask + " timer=" + GetTimeLeft());
 
         CreateTaskList();
@@ -101,15 +104,18 @@ public class TaskManager : MonoBehaviour
 
         purchasedSet.Add(itemId);
 
-        if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ShowTaskOverlay(false);
-
         if (purchasedSet.Count >= targetItemIds.Count)
         {
             completed = true;
             timerRunning = false;
             OnDaySuccess?.Invoke();
+            return;
         }
+
+        if (TaskUIController.Instance != null)
+            TaskUIController.Instance.ShowReminderOverlay(
+                DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1
+            );
     }
 
     public bool IsPurchased(string itemId) => purchasedSet.Contains(itemId);
@@ -122,6 +128,7 @@ public class TaskManager : MonoBehaviour
         int r = sec % 60;
         return m.ToString("00") + ":" + r.ToString("00");
     }
+
     public void PauseTimer()
     {
         StopTimer();
