@@ -30,7 +30,6 @@ public class DayManager : MonoBehaviour
     public float day3AdsChance = 0.15f;
     public float adsChanceAfterDay3 = 0.2f;
 
-
     [Header("Week End")]
     public int maxDay = 5;
     public GameObject weekCompletePanel;
@@ -38,8 +37,7 @@ public class DayManager : MonoBehaviour
     int currentDay;
     public string mainMenuSceneName = "MainMenu";
     public string weekChoiceSceneName = "WeekChoice";
-
-    public string nextWeekSceneName = "NextWeekScene"; // Ganti dengan nama scene minggu berikutnya
+    public string nextWeekSceneName = "NextWeekScene";
 
     void Awake()
     {
@@ -62,7 +60,7 @@ public class DayManager : MonoBehaviour
         HideWeekComplete();
 
         if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ResetForNewDay();
+            TaskUIController.Instance.ResetForNewDay(currentDay);
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.ResetForNewDay();
@@ -91,16 +89,15 @@ public class DayManager : MonoBehaviour
         HideWeekComplete();
 
         if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ResetForNewDay();
+            TaskUIController.Instance.ResetForNewDay(day);
 
-        // saat boot, player belum boleh klik apa apa
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.Boot;
 
         yield return new WaitForSecondsRealtime(bootDelay);
 
         if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ShowTaskOverlay(true);
+            TaskUIController.Instance.ShowStartDayOverlay(day);
 
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
@@ -159,7 +156,17 @@ public class DayManager : MonoBehaviour
 
         ResetPagesToDesktop();
 
+        if (TaskManager.Instance != null)
+            TaskManager.Instance.StopTimer();
+
+        if (TaskUIController.Instance != null)
+            TaskUIController.Instance.ResetForNewDay(currentDay);
+
         StopAllCoroutines();
+
+        if (monitorManager != null)
+            monitorManager.ResetToOff();
+
         StartCoroutine(StartDayRoutine(currentDay));
     }
 
@@ -172,7 +179,7 @@ public class DayManager : MonoBehaviour
             TaskManager.Instance.StopTimer();
 
         if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ResetForNewDay();
+            TaskUIController.Instance.ResetForNewDay(startDay);
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.ResetForNewDay();
@@ -189,23 +196,24 @@ public class DayManager : MonoBehaviour
             M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
 
         StopAllCoroutines();
-        StartCoroutine(StartDayRoutine(currentDay)); // balik ke flow awal lagi
+        StartCoroutine(StartDayRoutine(currentDay));
     }
+
     public void GoHome()
     {
         SceneManager.LoadScene(mainMenuSceneName);
     }
-    
+
     public void GoToWeekChoice()
     {
         SceneManager.LoadScene(weekChoiceSceneName);
     }
-    
+
     public void GoToNextWeek()
     {
         SceneManager.LoadScene(nextWeekSceneName);
     }
-    
+
     void ResetPagesToDesktop()
     {
         if (pagesToDisable != null)
@@ -224,6 +232,7 @@ public class DayManager : MonoBehaviour
         if (resultSearchInput != null)
             resultSearchInput.ResetToDefault();
     }
+
     public float GetAdsChanceForCurrentDay()
     {
         if (currentDay <= 1) return Mathf.Clamp01(day1AdsChance);
@@ -237,6 +246,7 @@ public class DayManager : MonoBehaviour
         float chance = GetAdsChanceForCurrentDay();
         return Random.value < chance;
     }
+
     public void TryShowAdsFromPawshoppClick()
     {
         if (monitorManager == null) return;
@@ -244,11 +254,13 @@ public class DayManager : MonoBehaviour
         if (TrySpawnAdsOnPawshoppClick())
             monitorManager.ShowRandomAdsFromExternal();
     }
+
     public void HideWeekComplete()
     {
         if (weekCompletePanel != null)
             weekCompletePanel.SetActive(false);
     }
+
     public void StartNewGameFromMenu()
     {
         StopAllCoroutines();
@@ -263,7 +275,7 @@ public class DayManager : MonoBehaviour
             TaskManager.Instance.StopTimer();
 
         if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ResetForNewDay();
+            TaskUIController.Instance.ResetForNewDay(currentDay);
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.ResetForNewDay();
@@ -277,5 +289,10 @@ public class DayManager : MonoBehaviour
             M_GameManager.Instance.currentState = M_GameManager.GameState.Boot;
 
         StartCoroutine(StartDayRoutine(currentDay));
+    }
+
+    public int GetCurrentDay()
+    {
+        return currentDay;
     }
 }
