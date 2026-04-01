@@ -22,6 +22,9 @@ public class M_QTEAddClean : MonoBehaviour
     public int adsIncreasePerQTE = 3;
     public int maxAds = 30; // opsional
 
+    [Header("Spawn Timing")]
+    public float spawnInterval = 0.08f; // cepat, bisa diatur di Inspector
+
     float timer;
     bool isRunning = false;
     List<M_QTEPopUp> activeAds = new List<M_QTEPopUp>();
@@ -41,7 +44,7 @@ public class M_QTEAddClean : MonoBehaviour
         // 🔥 AKTIFKAN TIMER UI
         UI_Script.Instance.StartTimer(totalTime);
 
-        SpawnAds();
+        StartCoroutine(SpawnAdsRoutine());
     }
 
     void Update()
@@ -64,24 +67,28 @@ public class M_QTEAddClean : MonoBehaviour
         }
     }
 
-    void SpawnAds()
+    IEnumerator SpawnAdsRoutine()
     {
         for (int i = 0; i < totalAds; i++)
         {
             Vector2 pos = new Vector2(
-            Random.Range(minX, maxX),
-            Random.Range(minY, maxY)
+                Random.Range(minX, maxX),
+                Random.Range(minY, maxY)
             );
 
             GameObject randomAd = adPrefab[Random.Range(0, adPrefab.Count)];
             GameObject obj = Instantiate(randomAd, pos, Quaternion.identity);
 
             M_QTEPopUp popup = obj.GetComponent<M_QTEPopUp>();
-            popup.Init(this);
+            if (popup != null)
+            {
+                popup.Init(this);
+                activeAds.Add(popup);
+            }
 
-            activeAds.Add(popup);
+            if (spawnInterval > 0f)
+                yield return new WaitForSecondsRealtime(spawnInterval);
         }
-
     }
 
     public void AdClosed(M_QTEPopUp popup)
@@ -122,9 +129,10 @@ public class M_QTEAddClean : MonoBehaviour
 
     IEnumerator FailRoutine()
     {
-        yield return StartCoroutine(M_GameManager.Instance.QTEFail()); // kita buat function ini
+        yield return StartCoroutine(M_GameManager.Instance.QTEFail());
         Destroy(gameObject);
     }
+
     public void CleanupAds()
     {
         for (int i = 0; i < activeAds.Count; i++)
