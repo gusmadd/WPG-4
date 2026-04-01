@@ -13512,7 +13512,7 @@ MonoBehaviour:
   continueMessage: you already know what needs to be done. press enter to continue
     the first week's task
   continueMessageDelay: 1
-  nextSceneName: Week
+  nextSceneName: MainMenu
   screenOff: {fileID: 680393074}
   screenOn: {fileID: 707549170}
   desktopPage: {fileID: 707549170}

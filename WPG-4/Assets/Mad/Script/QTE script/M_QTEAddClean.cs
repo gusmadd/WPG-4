@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_QTEAdClean : MonoBehaviour
+public class M_QTEAddClean : MonoBehaviour
 {
     [Header("Ad Settings")]
     public List<GameObject> adPrefab;
