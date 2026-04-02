@@ -24,6 +24,10 @@ public class M_KeyboardController : MonoBehaviour
 
     public void HideKeyboard()
     {
+        // ✅ FIX: prevent starting coroutine when object is inactive
+        if (!gameObject.activeInHierarchy)
+            return;
+
         StartCoroutine(HideRoutine());
     }
 
