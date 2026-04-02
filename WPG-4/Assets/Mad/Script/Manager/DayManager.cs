@@ -122,6 +122,7 @@ public class DayManager : MonoBehaviour
 
         if (currentDay >= maxDay)
         {
+            M_ProgressManager.CompleteWeek(currentWeek);
             if (weekCompletePanel != null)
                 weekCompletePanel.SetActive(true);
             yield break;

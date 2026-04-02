@@ -4054,7 +4054,7 @@ MonoBehaviour:
   startDay: 1
   startTasks: 3
   tasksIncreasePerDay: 1
-  dayDurationSeconds: 90
+  dayDurationSeconds: 120
   bootDelay: 1
   successDelay: 1
   desktopPage: {fileID: 1749184489}
@@ -8481,6 +8481,7 @@ MonoBehaviour:
   baseAds: 12
   adsIncreasePerQTE: 3
   maxAds: 30
+  spawnInterval: 0.08
 --- !u!1 &474899088
 GameObject:
   m_ObjectHideFlags: 0
@@ -37095,4 +37096,3 @@ SceneRoots:
   - {fileID: 2033995597}
   - {fileID: 791470751}
   - {fileID: 12683883}
-  - {fileID: 930434926}

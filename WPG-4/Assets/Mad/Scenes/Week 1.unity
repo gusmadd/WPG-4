@@ -4054,7 +4054,7 @@ MonoBehaviour:
   startDay: 1
   startTasks: 3
   tasksIncreasePerDay: 1
-  dayDurationSeconds: 90
+  dayDurationSeconds: 120
   bootDelay: 1
   successDelay: 1
   desktopPage: {fileID: 1749184489}
@@ -4084,10 +4084,10 @@ MonoBehaviour:
   monitorManager: {fileID: 1011755573}
   homeSearchInput: {fileID: 1049357085}
   resultSearchInput: {fileID: 1013896587}
-  day1AdsChance: 0
-  day2AdsChance: 0.03
-  day3AdsChance: 0.08
-  adsChanceAfterDay3: 0.07
+  day1AdsChance: 0.01
+  day2AdsChance: 0.02
+  day3AdsChance: 0.03
+  adsChanceAfterDay3: 0.05
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
   mainMenuSceneName: MainMenu
@@ -7036,7 +7036,6 @@ Transform:
   - {fileID: 1386594057}
   - {fileID: 466507498}
   - {fileID: 186899317}
-  - {fileID: 1721368626}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &363214034
@@ -8482,6 +8481,7 @@ MonoBehaviour:
   baseAds: 12
   adsIncreasePerQTE: 3
   maxAds: 30
+  spawnInterval: 0.08
 --- !u!1 &474899088
 GameObject:
   m_ObjectHideFlags: 0
@@ -31546,9 +31546,9 @@ MonoBehaviour:
   ownerAnimator: {fileID: 1915268737}
   ownerRenderers:
   - {fileID: 1915268735}
-  stageFadeOutTime: 0.3
-  stageInvisibleDelay: 0.3
-  stageFadeInTime: 0.3
+  stageFadeOutTime: 0.1
+  stageInvisibleDelay: 0.2
+  stageFadeInTime: 0.1
   isQTEActive: 0
 --- !u!1 &1810558524 stripped
 GameObject:

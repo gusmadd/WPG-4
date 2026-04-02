@@ -5986,11 +5986,11 @@ Transform:
   m_GameObject: {fileID: 531779874}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -989.1336, y: -506.2009, z: -4.377055}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1037830999}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &557436642
 GameObject:
@@ -12667,6 +12667,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1724917992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1037830998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1037830999}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1037830999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037830998}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 989.1336, y: 506.2009, z: 4.377055}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1149515196}
+  - {fileID: 531779876}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1039617526
 GameObject:
   m_ObjectHideFlags: 0
@@ -13609,12 +13642,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149515194}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1120.4293, y: 523.0715, z: 4.231314}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 131.29572, y: 16.870575, z: -0.14574099}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1037830999}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1149515197
 MonoBehaviour:
@@ -13662,7 +13695,7 @@ MonoBehaviour:
   continueMessage: you already know what needs to be done. press enter to continue
     the first week's task
   continueMessageDelay: 1
-  nextSceneName: MainMenu
+  nextSceneName: Week
   screenOff: {fileID: 680393074}
   screenOn: {fileID: 707549170}
   desktopPage: {fileID: 707549170}
@@ -22249,14 +22282,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7e352e68c666e408e06d908134682c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  desktopPage: {fileID: 707549170}
-  closeCollider: {fileID: 690815324}
   homePage: {fileID: 1103018424}
   servicePage: {fileID: 697275355}
   productPage: {fileID: 1776645071}
-  homeCollider: {fileID: 2088999039}
-  serviceCollider: {fileID: 1954668708}
-  backCollider: {fileID: 2122724998}
+  desktopPage: {fileID: 707549170}
+  item1DetailPrefab: {fileID: 0}
+  item2DetailPrefab: {fileID: 0}
+  item3DetailPrefab: {fileID: 0}
+  item4DetailPrefab: {fileID: 0}
+  item5DetailPrefab: {fileID: 0}
+  item6DetailPrefab: {fileID: 0}
+  item1Sprite: {fileID: 0}
+  item2Sprite: {fileID: 0}
+  item3Sprite: {fileID: 0}
+  item4Sprite: {fileID: 0}
+  item5Sprite: {fileID: 0}
+  item6Sprite: {fileID: 0}
+  closeButtonCollider: {fileID: 0}
+  homeButtonCollider: {fileID: 0}
+  serviceButtonCollider: {fileID: 0}
+  backButtonCollider: {fileID: 0}
+  viewButtonCollider: {fileID: 0}
+  item1Collider: {fileID: 0}
+  item2Collider: {fileID: 0}
+  item3Collider: {fileID: 0}
+  item4Collider: {fileID: 0}
+  item5Collider: {fileID: 0}
+  item6Collider: {fileID: 0}
+  viewButton: {fileID: 0}
   homeSearchInput: {fileID: 0}
 --- !u!212 &2023075290
 SpriteRenderer:
@@ -23944,7 +23997,6 @@ SceneRoots:
   - {fileID: 1862776892}
   - {fileID: 1185102576}
   - {fileID: 997948936}
-  - {fileID: 1149515196}
   - {fileID: 134990156}
   - {fileID: 138823730}
-  - {fileID: 531779876}
+  - {fileID: 1037830999}

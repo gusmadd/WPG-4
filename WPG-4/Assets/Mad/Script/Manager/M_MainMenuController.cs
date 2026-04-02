@@ -6,7 +6,6 @@ public class M_MainMenuController : MonoBehaviour
 {
     [Header("Scene")]
     public string gameSceneName = "Week";
-    public string tutorialSceneName = "Tutorial";
     public float actionDelay = 0.35f;
 
     [Header("Animators")]
@@ -70,12 +69,6 @@ public class M_MainMenuController : MonoBehaviour
         StartCoroutine(ExitRoutine());
     }
 
-    public void ClickTutorial()
-    {
-        if (isBusy) return;
-        StartCoroutine(TutorialRoutine());
-    }
-
     // =========================
     // ROUTINES
     // =========================
@@ -99,15 +92,6 @@ public class M_MainMenuController : MonoBehaviour
 #else
         Application.Quit();
 #endif
-    }
-
-    IEnumerator TutorialRoutine()
-    {
-        isBusy = true;
-
-        yield return StartCoroutine(CloseOpenButtonIfAny());
-
-        SceneManager.LoadScene(tutorialSceneName);
     }
 
     // =========================

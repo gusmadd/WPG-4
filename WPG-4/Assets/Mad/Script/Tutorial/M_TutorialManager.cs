@@ -628,6 +628,7 @@ public class M_TutorialManager : MonoBehaviour
         // delay sebelum masuk game
         yield return new WaitForSecondsRealtime(1f);
 
+        M_ProgressManager.CompleteTutorial();
         SceneManager.LoadScene(nextSceneName);
     }
     void StartHoldBuy()
