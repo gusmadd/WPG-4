@@ -34,6 +34,10 @@ public class M_DetailFoodPage : MonoBehaviour
     Material runtimeBuyMat;
     static readonly int FillAmountID = Shader.PropertyToID("_FillAmount");
 
+    static bool hasPendingBuy = false;
+    static string pendingItemId = "";
+    static GameObject pendingBuySuccessPage = null;
+
     void Awake()
     {
         if (buySprite != null && buySprite.sharedMaterial != null)
@@ -57,6 +61,7 @@ public class M_DetailFoodPage : MonoBehaviour
     void Update()
     {
         if (!gameObject.activeSelf) return;
+        if (M_GameManager.Instance == null) return;
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay) return;
 
         Vector2 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -119,7 +124,7 @@ public class M_DetailFoodPage : MonoBehaviour
 
             if (holdTimer >= holdToBuySeconds)
             {
-                CompleteBuy();
+                TryCompleteBuy();
                 return;
             }
         }
@@ -143,18 +148,34 @@ public class M_DetailFoodPage : MonoBehaviour
         ResetHoldState();
     }
 
-    void CompleteBuy()
+    void TryCompleteBuy()
+    {
+        if (M_GameManager.Instance != null &&
+            M_GameManager.Instance.currentState == M_GameManager.GameState.QTE)
+        {
+            hasPendingBuy = true;
+            pendingItemId = itemId;
+            pendingBuySuccessPage = buySuccessPage;
+
+            ResetHoldState();
+            gameObject.SetActive(false);
+            return;
+        }
+
+        CompleteBuyNow(itemId, buySuccessPage);
+        ResetHoldState();
+        gameObject.SetActive(false);
+    }
+
+    static void CompleteBuyNow(string finalItemId, GameObject successPage)
     {
         M_AudioManager.Instance?.PlayPayment();
 
-        if (TaskManager.Instance != null)
-            TaskManager.Instance.OnItemPurchased(itemId);
+        if (TaskManager.Instance != null && !string.IsNullOrEmpty(finalItemId))
+            TaskManager.Instance.OnItemPurchased(finalItemId);
 
-        if (buySuccessPage != null)
-            buySuccessPage.SetActive(true);
-
-        ResetHoldState();
-        gameObject.SetActive(false);
+        if (successPage != null)
+            successPage.SetActive(true);
     }
 
     void UpdateBuyFill()
@@ -172,5 +193,26 @@ public class M_DetailFoodPage : MonoBehaviour
 
         if (runtimeBuyMat != null)
             runtimeBuyMat.SetFloat(FillAmountID, 0f);
+    }
+
+    public static void CompletePendingBuyIfAny()
+    {
+        if (!hasPendingBuy) return;
+
+        string finalItemId = pendingItemId;
+        GameObject successPage = pendingBuySuccessPage;
+
+        hasPendingBuy = false;
+        pendingItemId = "";
+        pendingBuySuccessPage = null;
+
+        CompleteBuyNow(finalItemId, successPage);
+    }
+
+    public static void ClearPendingBuy()
+    {
+        hasPendingBuy = false;
+        pendingItemId = "";
+        pendingBuySuccessPage = null;
     }
 }

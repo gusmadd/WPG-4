@@ -61,7 +61,14 @@ public class M_GameManager : MonoBehaviour
     {
         isSequenceRunning = true;
         currentState = GameState.QTE;
+
+        // FIX: force-close monitor/shop state before QTE takeover
+        M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
+        if (monitor != null)
+            monitor.ResetToOff();
+
         keyboard.HideKeyboard();
+
         // pause task saat QTE
         TaskManager.Instance?.PauseTimer();
         TaskUIController.Instance?.HideTaskInstant();
@@ -109,6 +116,7 @@ public class M_GameManager : MonoBehaviour
         M_NoiseSystem.Instance.ResetAfterQTE();
 
         currentState = GameState.Gameplay;
+        M_DetailFoodPage.CompletePendingBuyIfAny();
 
         if (catAnimator != null)
             catAnimator.SetTrigger("OnBackToIdle");
@@ -183,9 +191,13 @@ public class M_GameManager : MonoBehaviour
         // kunci input
         currentState = GameState.TaskOverlay;
 
+        // clear pending buy on game over too
+        M_DetailFoodPage.ClearPendingBuy();
+
         // munculin panel game over
         UI_Script.Instance?.ShowGameOver();
     }
+
     public IEnumerator QTEFail()
     {
         // kunci state
@@ -212,6 +224,9 @@ public class M_GameManager : MonoBehaviour
 
         // set state overlay supaya input berhenti
         currentState = GameState.TaskOverlay;
+
+        // clear pending buy if QTE fails
+        M_DetailFoodPage.ClearPendingBuy();
 
         // Freeze noise supaya tidak berubah saat game over
         if (M_NoiseSystem.Instance != null)
