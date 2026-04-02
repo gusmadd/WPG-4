@@ -125,20 +125,19 @@ public class TaskUIController : MonoBehaviour
         canClick = false;
         overlayTimer = overlayBlockTime;
 
-        ShowCanvasInstant();
-
         if (dayText != null)
             dayText.text = "Day " + currentShownDay;
 
         UpdateIconsProgress();
 
-        yield return null;
         PlayInAnimation();
+        ShowCanvasInstant();
 
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
 
         overlayRoutine = null;
+        yield break;
     }
 
     void PlayInAnimation()
@@ -231,7 +230,7 @@ public class TaskUIController : MonoBehaviour
             if (data != null)
                 itemIcons[i].sprite = data.icon;
 
-            bool done = TaskManager.Instance.IsPurchased(id);
+            bool done = TaskManager.Instance.IsPurchasedAtIndex(i);
             itemIcons[i].color = done ? doneColor : notDoneColor;
         }
     }

@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Mad/Scenes/Week 2.unity
     guid: 895146cb7a8b2374e9ed7debb29a6f0f
+  - enabled: 1
+    path: Assets/Mad/Scenes/Week 3.unity
+    guid: 490e5f7f57ef83543b032e8b11d634a4
+  - enabled: 1
+    path: Assets/Mad/Scenes/Week 4.unity
+    guid: 5df6457df66592940b66f8b19233c55a
   m_configObjects: {}

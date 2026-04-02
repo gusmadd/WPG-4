@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class TaskManager : MonoBehaviour
 {
@@ -13,7 +12,7 @@ public class TaskManager : MonoBehaviour
     [Header("Runtime")]
     public int itemsPerTask = 3;
     public List<string> targetItemIds = new List<string>();
-    public HashSet<string> purchasedSet = new HashSet<string>();
+    public List<string> purchasedItemIds = new List<string>();
     public bool completed;
 
     float timer;
@@ -49,7 +48,7 @@ public class TaskManager : MonoBehaviour
         dayDurationSeconds = durationSeconds;
 
         targetItemIds.Clear();
-        purchasedSet.Clear();
+        purchasedItemIds.Clear();
         completed = false;
 
         timer = dayDurationSeconds;
@@ -67,17 +66,76 @@ public class TaskManager : MonoBehaviour
             return;
         }
 
-        int safety = 999;
-        while (targetItemIds.Count < itemsPerTask && safety-- > 0)
-        {
-            ItemData pick = ItemDatabase.Instance.GetRandom();
-            if (pick == null) break;
+        List<ItemCategory> allowedCategories = GetAllowedCategoriesForCurrentWeek();
+        List<ItemData> allowedItems = ItemDatabase.Instance.GetItemsByCategories(allowedCategories);
 
-            if (!targetItemIds.Contains(pick.id))
-                targetItemIds.Add(pick.id);
+        if (allowedItems.Count == 0)
+        {
+            Debug.LogError("Tidak ada item yang cocok untuk week ini.");
+            return;
         }
 
-        Debug.Log("Task list: " + string.Join(",", targetItemIds));
+        List<ItemData> shuffledPool = new List<ItemData>(allowedItems);
+        Shuffle(shuffledPool);
+
+        int uniqueTargetCount = Mathf.Min(itemsPerTask, shuffledPool.Count);
+
+        for (int i = 0; i < uniqueTargetCount; i++)
+            targetItemIds.Add(shuffledPool[i].id);
+
+        while (targetItemIds.Count < itemsPerTask)
+        {
+            ItemData duplicatePick = allowedItems[UnityEngine.Random.Range(0, allowedItems.Count)];
+            targetItemIds.Add(duplicatePick.id);
+        }
+
+        Debug.Log("Week " + GetCurrentWeek() + " task list: " + string.Join(",", targetItemIds));
+    }
+
+    List<ItemCategory> GetAllowedCategoriesForCurrentWeek()
+    {
+        int week = GetCurrentWeek();
+        List<ItemCategory> result = new List<ItemCategory>();
+
+        switch (week)
+        {
+            case 1:
+                result.Add(ItemCategory.Food);
+                break;
+            case 2:
+                result.Add(ItemCategory.Toys);
+                break;
+            case 3:
+            case 4:
+                result.Add(ItemCategory.Food);
+                result.Add(ItemCategory.Toys);
+                break;
+            default:
+                result.Add(ItemCategory.Food);
+                result.Add(ItemCategory.Toys);
+                break;
+        }
+
+        return result;
+    }
+
+    int GetCurrentWeek()
+    {
+        if (DayManager.Instance == null)
+            return 1;
+
+        return DayManager.Instance.GetCurrentWeek();
+    }
+
+    void Shuffle(List<ItemData> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(i, list.Count);
+            ItemData temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 
     public void StartTimer()
@@ -100,11 +158,16 @@ public class TaskManager : MonoBehaviour
     public void OnItemPurchased(string itemId)
     {
         if (completed) return;
-        if (!targetItemIds.Contains(itemId)) return;
 
-        purchasedSet.Add(itemId);
+        int targetCount = GetTargetCount(itemId);
+        int purchasedCount = GetPurchasedCount(itemId);
 
-        if (purchasedSet.Count >= targetItemIds.Count)
+        if (targetCount <= 0) return;
+        if (purchasedCount >= targetCount) return;
+
+        purchasedItemIds.Add(itemId);
+
+        if (purchasedItemIds.Count >= targetItemIds.Count)
         {
             completed = true;
             timerRunning = false;
@@ -118,7 +181,39 @@ public class TaskManager : MonoBehaviour
             );
     }
 
-    public bool IsPurchased(string itemId) => purchasedSet.Contains(itemId);
+    int GetTargetCount(string itemId)
+    {
+        int count = 0;
+        for (int i = 0; i < targetItemIds.Count; i++)
+            if (targetItemIds[i] == itemId)
+                count++;
+        return count;
+    }
+
+    int GetPurchasedCount(string itemId)
+    {
+        int count = 0;
+        for (int i = 0; i < purchasedItemIds.Count; i++)
+            if (purchasedItemIds[i] == itemId)
+                count++;
+        return count;
+    }
+
+    public bool IsPurchasedAtIndex(int targetIndex)
+    {
+        if (targetIndex < 0 || targetIndex >= targetItemIds.Count)
+            return false;
+
+        string targetId = targetItemIds[targetIndex];
+        int requiredCopiesUpToIndex = 0;
+
+        for (int i = 0; i <= targetIndex; i++)
+            if (targetItemIds[i] == targetId)
+                requiredCopiesUpToIndex++;
+
+        return GetPurchasedCount(targetId) >= requiredCopiesUpToIndex;
+    }
+
     public float GetTimeLeft() => Mathf.Max(0f, timer);
 
     public static string FormatTime(float t)

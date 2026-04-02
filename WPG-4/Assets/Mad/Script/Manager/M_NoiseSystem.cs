@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;  // 🔥 TAMBAH INI
+using System;
 
 public class M_NoiseSystem : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class M_NoiseSystem : MonoBehaviour
     public float paymentNoise = 8f;
 
     [Header("Ads Noise")]
-    public float adsNoisePerSecond = 2f; // 2 per detik
+    public float adsNoisePerSecond = 2f;
     bool adsNoiseActive = false;
 
     [Header("Stage Threshold")]
@@ -35,6 +35,12 @@ public class M_NoiseSystem : MonoBehaviour
     [Header("Animator")]
     public Animator ownerAnimator;
 
+    [Header("BigSis Visual")]
+    public List<SpriteRenderer> ownerRenderers = new List<SpriteRenderer>();
+    public float stageFadeOutTime = 0.03f;
+    public float stageInvisibleDelay = 0.03f;
+    public float stageFadeInTime = 0.05f;
+
     [HideInInspector] public bool isQTEActive = false;
 
     public event Action OnNoiseFull;
@@ -42,6 +48,9 @@ public class M_NoiseSystem : MonoBehaviour
     private int currentStage = 0;
     private bool noiseTriggered = false;
     bool freezeNoise = false;
+
+    bool isStageSwitching = false;
+    Coroutine switchRoutine;
 
     void Awake()
     {
@@ -62,13 +71,13 @@ public class M_NoiseSystem : MonoBehaviour
             currentDecayRate = 0f;
             return;
         }
+
         if (isQTEActive)
         {
             currentDecayRate = 0f;
             return;
         }
 
-        // kalau ads lagi tampil, jangan decay
         if (adsNoiseActive)
         {
             currentDecayRate = 0f;
@@ -111,6 +120,7 @@ public class M_NoiseSystem : MonoBehaviour
             OnNoiseFull?.Invoke();
         }
     }
+
     void HandleAdsNoise()
     {
         if (freezeNoise) return;
@@ -148,6 +158,7 @@ public class M_NoiseSystem : MonoBehaviour
     void UpdateOwnerState()
     {
         if (ownerAnimator == null) return;
+        if (isStageSwitching) return;
 
         int newStage = currentStage;
 
@@ -165,19 +176,82 @@ public class M_NoiseSystem : MonoBehaviour
 
         if (newStage != currentStage)
         {
-            currentStage = newStage;
-            ownerAnimator.SetInteger("OwnerState", currentStage);
+            if (switchRoutine != null)
+                StopCoroutine(switchRoutine);
+
+            switchRoutine = StartCoroutine(SwitchOwnerStageRoutine(newStage));
         }
     }
+
+    IEnumerator SwitchOwnerStageRoutine(int newStage)
+    {
+        isStageSwitching = true;
+
+        yield return StartCoroutine(FadeOwnerAlpha(1f, 0f, stageFadeOutTime));
+
+        currentStage = newStage;
+        ownerAnimator.SetInteger("OwnerState", currentStage);
+
+        yield return null;
+
+        if (stageInvisibleDelay > 0f)
+            yield return new WaitForSeconds(stageInvisibleDelay);
+
+        yield return StartCoroutine(FadeOwnerAlpha(0f, 1f, stageFadeInTime));
+
+        isStageSwitching = false;
+        switchRoutine = null;
+    }
+
+    IEnumerator FadeOwnerAlpha(float from, float to, float duration)
+    {
+        if (ownerRenderers == null || ownerRenderers.Count == 0)
+            yield break;
+
+        if (duration <= 0f)
+        {
+            SetOwnerAlpha(to);
+            yield break;
+        }
+
+        float t = 0f;
+        SetOwnerAlpha(from);
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float p = Mathf.Clamp01(t / duration);
+            float a = Mathf.Lerp(from, to, p);
+            SetOwnerAlpha(a);
+            yield return null;
+        }
+
+        SetOwnerAlpha(to);
+    }
+
+    void SetOwnerAlpha(float alpha)
+    {
+        for (int i = 0; i < ownerRenderers.Count; i++)
+        {
+            if (ownerRenderers[i] == null) continue;
+
+            Color c = ownerRenderers[i].color;
+            c.a = alpha;
+            ownerRenderers[i].color = c;
+        }
+    }
+
     public void ResetNoiseTrigger()
     {
         noiseTriggered = false;
     }
+
     public void ResetAfterQTE()
     {
         noiseTriggered = false;
         isQTEActive = false;
     }
+
     public void FreezeNoise(bool freeze)
     {
         freezeNoise = freeze;
@@ -192,8 +266,16 @@ public class M_NoiseSystem : MonoBehaviour
         adsNoiseActive = false;
         freezeNoise = false;
 
+        if (switchRoutine != null)
+        {
+            StopCoroutine(switchRoutine);
+            switchRoutine = null;
+        }
+
+        isStageSwitching = false;
+        SetOwnerAlpha(1f);
+
         if (ownerAnimator != null)
             ownerAnimator.SetInteger("OwnerState", 0);
     }
 }
-
