@@ -4049,7 +4049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2770fb64375b8464aa5c69b7e0cfdc36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeek: 1
+  currentWeek: 3
   startDay: 1
   startTasks: 3
   tasksIncreasePerDay: 1
@@ -4084,14 +4084,14 @@ MonoBehaviour:
   homeSearchInput: {fileID: 1049357085}
   resultSearchInput: {fileID: 1013896587}
   day1AdsChance: 0
-  day2AdsChance: 0.03
+  day2AdsChance: 0.05
   day3AdsChance: 0.08
-  adsChanceAfterDay3: 0.07
+  adsChanceAfterDay3: 0.12
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
   mainMenuSceneName: MainMenu
   weekChoiceSceneName: Week
-  nextWeekSceneName: Week 2
+  nextWeekSceneName: Week 4
 --- !u!1 &187171627 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 867681955063408266, guid: d537ee6ad553825489860f57f043ae98, type: 3}

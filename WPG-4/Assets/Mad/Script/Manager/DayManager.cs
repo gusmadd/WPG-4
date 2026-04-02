@@ -1,11 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class DayManager : MonoBehaviour
 {
     public static DayManager Instance;
+
+    [Header("Week Setup")]
+    [Range(1, 4)] public int currentWeek = 1;
 
     public int startDay = 1;
     public int startTasks = 3;
@@ -294,5 +296,10 @@ public class DayManager : MonoBehaviour
     public int GetCurrentDay()
     {
         return currentDay;
+    }
+
+    public int GetCurrentWeek()
+    {
+        return currentWeek;
     }
 }
