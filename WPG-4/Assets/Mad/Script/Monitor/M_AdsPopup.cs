@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class M_AdsPopup : MonoBehaviour
@@ -19,19 +18,48 @@ public class M_AdsPopup : MonoBehaviour
     private M_GameManager.GameState previousState = M_GameManager.GameState.Gameplay;
     private bool hasStoredPreviousState = false;
 
+    // simpan transform awal popup
+    Vector3 initialLocalScale;
+    Vector3 initialLocalPosition;
+    Quaternion initialLocalRotation;
+
+    RectTransform rectTransform;
+    Vector2 initialAnchoredPosition;
+    Vector2 initialSizeDelta;
+
+    void Awake()
+    {
+        initialLocalScale = transform.localScale;
+        initialLocalPosition = transform.localPosition;
+        initialLocalRotation = transform.localRotation;
+
+        rectTransform = transform as RectTransform;
+        if (rectTransform != null)
+        {
+            initialAnchoredPosition = rectTransform.anchoredPosition;
+            initialSizeDelta = rectTransform.sizeDelta;
+        }
+    }
+
     void OnEnable()
     {
+        StopAllCoroutines();
+        ResetVisualState();
         ShowAds();
     }
 
     void OnDisable()
     {
+        StopAllCoroutines();
+
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.StopAdsNoise();
 
         isOpen = false;
         isClosing = false;
         hasStoredPreviousState = false;
+
+        ResetVisualState();
     }
 
     void Update()
@@ -41,6 +69,8 @@ public class M_AdsPopup : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (Camera.main == null) return;
+
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             if (closeCollider != null && closeCollider.OverlapPoint(mousePos))
@@ -48,6 +78,27 @@ public class M_AdsPopup : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 CloseAds();
             }
+        }
+    }
+
+    void ResetVisualState()
+    {
+        transform.localScale = initialLocalScale;
+        transform.localPosition = initialLocalPosition;
+        transform.localRotation = initialLocalRotation;
+
+        if (rectTransform != null)
+        {
+            rectTransform.anchoredPosition = initialAnchoredPosition;
+            rectTransform.sizeDelta = initialSizeDelta;
+            rectTransform.localScale = initialLocalScale;
+            rectTransform.localRotation = initialLocalRotation;
+        }
+
+        if (adsAnimator != null)
+        {
+            adsAnimator.Rebind();
+            adsAnimator.Update(0f);
         }
     }
 
@@ -60,6 +111,8 @@ public class M_AdsPopup : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+
+        ResetVisualState();
 
         isOpen = true;
         isClosing = false;
