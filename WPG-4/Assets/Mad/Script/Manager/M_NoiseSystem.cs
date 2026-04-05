@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class M_NoiseSystem : MonoBehaviour
 {
@@ -47,13 +47,19 @@ public class M_NoiseSystem : MonoBehaviour
 
     private int currentStage = 0;
     private bool noiseTriggered = false;
-    bool freezeNoise = false;
+    private bool freezeNoise = false;
 
-    bool isStageSwitching = false;
-    Coroutine switchRoutine;
+    private bool isStageSwitching = false;
+    private Coroutine switchRoutine;
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
     }
 
@@ -62,6 +68,25 @@ public class M_NoiseSystem : MonoBehaviour
         HandleDecay();
         HandleAdsNoise();
         UpdateOwnerState();
+    }
+
+    bool IsDayResolved()
+    {
+        return TaskManager.Instance != null && TaskManager.Instance.IsDayResolved();
+    }
+
+    bool IsNoiseBlocked()
+    {
+        if (freezeNoise) return true;
+        if (isQTEActive) return true;
+        if (IsDayResolved()) return true;
+
+        if (M_GameManager.Instance == null) return false;
+
+        // noise boleh berjalan saat gameplay biasa dan ads overlay
+        return M_GameManager.Instance.currentState == M_GameManager.GameState.Boot
+            || M_GameManager.Instance.currentState == M_GameManager.GameState.TaskOverlay
+            || M_GameManager.Instance.currentState == M_GameManager.GameState.QTE;
     }
 
     void HandleDecay()
@@ -84,13 +109,19 @@ public class M_NoiseSystem : MonoBehaviour
             return;
         }
 
-        if (currentNoise > 0)
+        if (IsDayResolved())
+        {
+            currentDecayRate = 0f;
+            return;
+        }
+
+        if (currentNoise > 0f)
         {
             float decayAmount = GetCurrentDecay();
             currentDecayRate = decayAmount;
 
             currentNoise -= decayAmount * Time.deltaTime;
-            currentNoise = Mathf.Clamp(currentNoise, 0, maxNoise);
+            currentNoise = Mathf.Clamp(currentNoise, 0f, maxNoise);
         }
         else
         {
@@ -107,39 +138,44 @@ public class M_NoiseSystem : MonoBehaviour
 
     public void AddNoise(float amount)
     {
-        if (freezeNoise) return;
-        if (isQTEActive) return;
+        if (amount <= 0f) return;
+        if (IsNoiseBlocked()) return;
 
         currentNoise += amount;
-        currentNoise = Mathf.Clamp(currentNoise, 0, maxNoise);
+        currentNoise = Mathf.Clamp(currentNoise, 0f, maxNoise);
 
-        if (!noiseTriggered && currentNoise >= maxNoise)
-        {
-            currentNoise = maxNoise;
-            noiseTriggered = true;
-            OnNoiseFull?.Invoke();
-        }
+        TryTriggerNoiseFull();
     }
 
     void HandleAdsNoise()
     {
-        if (freezeNoise) return;
         if (!adsNoiseActive) return;
-        if (isQTEActive) return;
+        if (IsNoiseBlocked()) return;
 
         currentNoise += adsNoisePerSecond * Time.deltaTime;
-        currentNoise = Mathf.Clamp(currentNoise, 0, maxNoise);
+        currentNoise = Mathf.Clamp(currentNoise, 0f, maxNoise);
 
-        if (!noiseTriggered && currentNoise >= maxNoise)
-        {
-            currentNoise = maxNoise;
-            noiseTriggered = true;
-            OnNoiseFull?.Invoke();
-        }
+        TryTriggerNoiseFull();
+    }
+
+    void TryTriggerNoiseFull()
+    {
+        if (noiseTriggered) return;
+        if (maxNoise <= 0f) return;
+        if (currentNoise < maxNoise) return;
+        if (IsNoiseBlocked()) return;
+
+        currentNoise = maxNoise;
+        noiseTriggered = true;
+        OnNoiseFull?.Invoke();
     }
 
     public void StartAdsNoise()
     {
+        if (IsDayResolved()) return;
+        if (freezeNoise) return;
+        if (isQTEActive) return;
+
         adsNoiseActive = true;
     }
 
@@ -153,6 +189,7 @@ public class M_NoiseSystem : MonoBehaviour
         currentNoise = 0f;
         noiseTriggered = false;
         isQTEActive = false;
+        adsNoiseActive = false;
     }
 
     void UpdateOwnerState()
@@ -250,12 +287,16 @@ public class M_NoiseSystem : MonoBehaviour
     {
         noiseTriggered = false;
         isQTEActive = false;
+        adsNoiseActive = false;
     }
 
     public void FreezeNoise(bool freeze)
     {
         freezeNoise = freeze;
         currentDecayRate = 0f;
+
+        if (freeze)
+            adsNoiseActive = false;
     }
 
     public void ResetForNewDay()
@@ -265,6 +306,8 @@ public class M_NoiseSystem : MonoBehaviour
         currentStage = 0;
         adsNoiseActive = false;
         freezeNoise = false;
+        isQTEActive = false;
+        currentDecayRate = 0f;
 
         if (switchRoutine != null)
         {
