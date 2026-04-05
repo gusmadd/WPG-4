@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class M_GameManager : MonoBehaviour
@@ -34,6 +35,7 @@ public class M_GameManager : MonoBehaviour
     public float zoomDuration = 0.3f;
 
     private bool isSequenceRunning = false;
+    private readonly List<Collider2D> disabledColliders = new List<Collider2D>();
 
     public GameState currentState = GameState.Boot;
 
@@ -62,12 +64,46 @@ public class M_GameManager : MonoBehaviour
             StartCoroutine(NoiseFullSequence());
     }
 
+    void DisableAllCollidersExceptQTE()
+    {
+        disabledColliders.Clear();
+
+        Collider2D[] allColliders = FindObjectsOfType<Collider2D>(true);
+
+        for (int i = 0; i < allColliders.Length; i++)
+        {
+            Collider2D col = allColliders[i];
+            if (col == null) continue;
+            if (!col.enabled) continue;
+
+            // biarkan collider popup QTE tetap aktif
+            if (col.GetComponent<M_QTEPopUp>() != null)
+                continue;
+
+            col.enabled = false;
+            disabledColliders.Add(col);
+        }
+    }
+
+    void RestoreColliders()
+    {
+        for (int i = 0; i < disabledColliders.Count; i++)
+        {
+            if (disabledColliders[i] != null)
+                disabledColliders[i].enabled = true;
+        }
+
+        disabledColliders.Clear();
+    }
+
     public void ForceEndQTEState()
     {
         StopAllCoroutines();
 
         Time.timeScale = 1f;
         isSequenceRunning = false;
+
+        RestoreColliders();
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.isQTEActive = false;
@@ -102,6 +138,8 @@ public class M_GameManager : MonoBehaviour
         TaskManager.Instance?.PauseTimer();
         TaskUIController.Instance?.HideTaskInstant();
         qteCount++;
+
+        DisableAllCollidersExceptQTE();
 
         Time.timeScale = 0f;
 
@@ -166,6 +204,8 @@ public class M_GameManager : MonoBehaviour
             ForceEndQTEState();
             yield break;
         }
+
+        RestoreColliders();
 
         TaskUIController.Instance?.ShowTaskAfterQTE();
         TaskManager.Instance?.ResumeTimer();
@@ -246,6 +286,8 @@ public class M_GameManager : MonoBehaviour
 
         Time.timeScale = 1f;
 
+        RestoreColliders();
+
         TaskManager.Instance?.StopTimer();
         TaskUIController.Instance?.HideTaskInstant();
 
@@ -284,6 +326,8 @@ public class M_GameManager : MonoBehaviour
 
         if (UI_Script.Instance != null)
             yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
+
+        RestoreColliders();
 
         currentState = GameState.TaskOverlay;
 
