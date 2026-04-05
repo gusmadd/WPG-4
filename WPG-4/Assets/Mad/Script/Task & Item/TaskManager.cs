@@ -17,6 +17,7 @@ public class TaskManager : MonoBehaviour
 
     float timer;
     bool timerRunning = false;
+    bool dayResolved = false;
 
     public event Action OnDaySuccess;
     public event Action OnDayFailed;
@@ -30,6 +31,7 @@ public class TaskManager : MonoBehaviour
     {
         if (!timerRunning) return;
         if (completed) return;
+        if (dayResolved) return;
 
         timer -= Time.deltaTime;
 
@@ -50,6 +52,7 @@ public class TaskManager : MonoBehaviour
         targetItemIds.Clear();
         purchasedItemIds.Clear();
         completed = false;
+        dayResolved = false;
 
         timer = dayDurationSeconds;
 
@@ -140,6 +143,9 @@ public class TaskManager : MonoBehaviour
 
     public void StartTimer()
     {
+        if (dayResolved) return;
+        if (completed) return;
+
         timerRunning = true;
     }
 
@@ -148,9 +154,26 @@ public class TaskManager : MonoBehaviour
         timerRunning = false;
     }
 
+    public void PauseTimer()
+    {
+        timerRunning = false;
+    }
+
+    public void ResumeTimer()
+    {
+        if (dayResolved) return;
+        if (completed) return;
+        if (timer <= 0f) return;
+
+        timerRunning = true;
+    }
+
     void FailDay()
     {
         if (completed) return;
+        if (dayResolved) return;
+
+        dayResolved = true;
         timerRunning = false;
         OnDayFailed?.Invoke();
     }
@@ -158,6 +181,7 @@ public class TaskManager : MonoBehaviour
     public void OnItemPurchased(string itemId)
     {
         if (completed) return;
+        if (dayResolved) return;
 
         int targetCount = GetTargetCount(itemId);
         int purchasedCount = GetPurchasedCount(itemId);
@@ -170,6 +194,7 @@ public class TaskManager : MonoBehaviour
         if (purchasedItemIds.Count >= targetItemIds.Count)
         {
             completed = true;
+            dayResolved = true;
             timerRunning = false;
             OnDaySuccess?.Invoke();
             return;
@@ -216,21 +241,16 @@ public class TaskManager : MonoBehaviour
 
     public float GetTimeLeft() => Mathf.Max(0f, timer);
 
+    public bool IsDayResolved()
+    {
+        return dayResolved;
+    }
+
     public static string FormatTime(float t)
     {
         int sec = Mathf.CeilToInt(t);
-        int m = sec / 60;
-        int r = sec % 60;
-        return m.ToString("00") + ":" + r.ToString("00");
-    }
-
-    public void PauseTimer()
-    {
-        StopTimer();
-    }
-
-    public void ResumeTimer()
-    {
-        StartTimer();
+        int min = sec / 60;
+        sec %= 60;
+        return min.ToString("00") + ":" + sec.ToString("00");
     }
 }

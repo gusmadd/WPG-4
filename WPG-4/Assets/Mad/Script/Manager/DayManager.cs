@@ -37,6 +37,7 @@ public class DayManager : MonoBehaviour
     public GameObject weekCompletePanel;
 
     int currentDay;
+
     public string mainMenuSceneName = "MainMenu";
     public string weekChoiceSceneName = "WeekChoice";
     public string nextWeekSceneName = "NextWeekScene";
@@ -107,6 +108,7 @@ public class DayManager : MonoBehaviour
 
     void HandleDaySuccess()
     {
+        M_GameManager.Instance?.ForceEndQTEState();
         StartCoroutine(SuccessRoutine());
     }
 
@@ -133,6 +135,8 @@ public class DayManager : MonoBehaviour
 
     void HandleDayFailed()
     {
+        M_GameManager.Instance?.ForceEndQTEState();
+
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.FreezeNoise(true);
 
@@ -288,19 +292,16 @@ public class DayManager : MonoBehaviour
         if (monitorManager != null)
             monitorManager.ResetToOff();
 
-        if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.Boot;
-
         StartCoroutine(StartDayRoutine(currentDay));
-    }
-
-    public int GetCurrentDay()
-    {
-        return currentDay;
     }
 
     public int GetCurrentWeek()
     {
         return currentWeek;
+    }
+
+    public int GetCurrentDay()
+    {
+        return currentDay;
     }
 }

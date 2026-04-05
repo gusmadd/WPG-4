@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class M_GameManager : MonoBehaviour
@@ -47,41 +46,78 @@ public class M_GameManager : MonoBehaviour
 
     void Start()
     {
-        M_NoiseSystem.Instance.OnNoiseFull += HandleNoiseFull;
-        normalPosition = mainCamera.transform.position;
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.OnNoiseFull += HandleNoiseFull;
+
+        if (mainCamera != null)
+            normalPosition = mainCamera.transform.position;
     }
 
     void HandleNoiseFull()
     {
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+            return;
+
         if (!isSequenceRunning)
             StartCoroutine(NoiseFullSequence());
     }
 
+    public void ForceEndQTEState()
+    {
+        StopAllCoroutines();
+
+        Time.timeScale = 1f;
+        isSequenceRunning = false;
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.isQTEActive = false;
+
+        if (mainCamera != null)
+        {
+            mainCamera.orthographicSize = normalSize;
+            mainCamera.transform.position = normalPosition;
+        }
+
+        if (catAnimator != null)
+            catAnimator.SetTrigger("OnBackToIdle");
+
+        currentState = GameState.TaskOverlay;
+    }
+
     IEnumerator NoiseFullSequence()
     {
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+            yield break;
+
         isSequenceRunning = true;
         currentState = GameState.QTE;
 
-        // FIX: force-close monitor/shop state before QTE takeover
         M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
         if (monitor != null)
             monitor.ResetToOff();
 
-        keyboard.HideKeyboard();
+        if (keyboard != null)
+            keyboard.HideKeyboard();
 
-        // pause task saat QTE
         TaskManager.Instance?.PauseTimer();
         TaskUIController.Instance?.HideTaskInstant();
         qteCount++;
 
         Time.timeScale = 0f;
-        M_NoiseSystem.Instance.isQTEActive = true;
 
-        // Shake (UI_Script)
-        yield return StartCoroutine(UI_Script.Instance.Shake());
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.isQTEActive = true;
 
-        // Fade (UI_Script)
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.Shake());
+
         yield return StartCoroutine(FadeAndZoom(true));
+
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
 
         yield return new WaitForSecondsRealtime(0.2f);
 
@@ -90,30 +126,57 @@ public class M_GameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
-        Instantiate(qtePrefab);
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
+
+        if (qtePrefab != null)
+            Instantiate(qtePrefab);
 
         Time.timeScale = 1f;
-
         isSequenceRunning = false;
     }
 
     public IEnumerator QTESuccess()
     {
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
+
         yield return new WaitForSecondsRealtime(1f);
+
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
 
         yield return StartCoroutine(FadeAndZoom(false));
 
         yield return new WaitForSecondsRealtime(0.5f);
 
         yield return StartCoroutine(ReduceNoiseSmoothly(31f));
-        // setelah kamera normal, tampilkan task lagi dan lanjut timer
+
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
+
         TaskUIController.Instance?.ShowTaskAfterQTE();
         TaskManager.Instance?.ResumeTimer();
 
         yield return new WaitForSecondsRealtime(1f);
 
-        M_NoiseSystem.Instance.isQTEActive = false;
-        M_NoiseSystem.Instance.ResetAfterQTE();
+        if (M_NoiseSystem.Instance != null)
+        {
+            M_NoiseSystem.Instance.isQTEActive = false;
+            M_NoiseSystem.Instance.ResetAfterQTE();
+        }
 
         currentState = GameState.Gameplay;
         M_DetailFoodPage.CompletePendingBuyIfAny();
@@ -124,6 +187,9 @@ public class M_GameManager : MonoBehaviour
 
     IEnumerator ReduceNoiseSmoothly(float targetValue)
     {
+        if (M_NoiseSystem.Instance == null)
+            yield break;
+
         float speed = 40f;
 
         while (M_NoiseSystem.Instance.currentNoise > targetValue)
@@ -137,6 +203,9 @@ public class M_GameManager : MonoBehaviour
 
     IEnumerator ZoomCamera(float fromSize, float toSize, Vector3 fromPos, Vector3 toPos)
     {
+        if (mainCamera == null)
+            yield break;
+
         float elapsed = 0f;
 
         while (elapsed < zoomDuration)
@@ -162,16 +231,13 @@ public class M_GameManager : MonoBehaviour
         Vector3 fromPos = toQTE ? normalPosition : qtePosition;
         Vector3 toPos = toQTE ? qtePosition : normalPosition;
 
-        // 1️⃣ Fade to black
-        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
 
-        // 2️⃣ Zoom saat layar hitam
-        yield return StartCoroutine(
-            ZoomCamera(fromSize, toSize, fromPos, toPos)
-        );
+        yield return StartCoroutine(ZoomCamera(fromSize, toSize, fromPos, toPos));
 
-        // 3️⃣ Fade back (lebih smooth)
-        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
     }
 
     public void GameOver()
@@ -180,59 +246,47 @@ public class M_GameManager : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        // stop task + hide task UI
         TaskManager.Instance?.StopTimer();
         TaskUIController.Instance?.HideTaskInstant();
 
-        // pastikan noise tidak jalan lagi
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.FreezeNoise(true);
 
-        // kunci input
         currentState = GameState.TaskOverlay;
 
-        // clear pending buy on game over too
         M_DetailFoodPage.ClearPendingBuy();
 
-        // munculin panel game over
         UI_Script.Instance?.ShowGameOver();
     }
 
     public IEnumerator QTEFail()
     {
-        // kunci state
+        if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
+        {
+            ForceEndQTEState();
+            yield break;
+        }
+
         currentState = GameState.QTE;
 
-        // stop task + hide task ui
         TaskManager.Instance?.StopTimer();
         TaskUIController.Instance?.HideTaskInstant();
 
-        // pastikan QTE flag mati biar decay/noise normal jika perlu
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.isQTEActive = false;
 
-        // Fade to black
-        yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
 
-        // Balikin kamera ke normal saat layar hitam
         yield return StartCoroutine(
             ZoomCamera(qteSize, normalSize, qtePosition, normalPosition)
         );
 
-        // Fade balik
-        yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
 
-        // set state overlay supaya input berhenti
         currentState = GameState.TaskOverlay;
 
-        // clear pending buy if QTE fails
-        M_DetailFoodPage.ClearPendingBuy();
-
-        // Freeze noise supaya tidak berubah saat game over
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.FreezeNoise(true);
-
-        // munculin panel game over
-        UI_Script.Instance?.ShowGameOver();
+        GameOver();
     }
 }
