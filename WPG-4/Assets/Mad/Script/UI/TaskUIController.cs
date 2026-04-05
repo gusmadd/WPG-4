@@ -40,6 +40,10 @@ public class TaskUIController : MonoBehaviour
     OverlayMode currentMode = OverlayMode.None;
     Coroutine overlayRoutine;
 
+    // ===== NEW: pending reminder after QTE =====
+    bool pendingReminderAfterQTE = false;
+    int pendingReminderDay = 1;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -100,9 +104,34 @@ public class TaskUIController : MonoBehaviour
         RestartOverlayRoutine();
     }
 
+    bool ShouldDelayReminder()
+    {
+        if (M_GameManager.Instance == null) return false;
+
+        return M_GameManager.Instance.currentState == M_GameManager.GameState.QTE;
+    }
+
     public void ShowReminderOverlay(int day)
     {
+        // Jika QTE sedang aktif, simpan reminder untuk nanti
+        if (ShouldDelayReminder())
+        {
+            pendingReminderAfterQTE = true;
+            pendingReminderDay = day;
+            return;
+        }
+
         currentShownDay = day;
+        currentMode = OverlayMode.Reminder;
+        RestartOverlayRoutine();
+    }
+
+    public void ShowPendingReminderAfterQTE()
+    {
+        if (!pendingReminderAfterQTE) return;
+
+        pendingReminderAfterQTE = false;
+        currentShownDay = pendingReminderDay;
         currentMode = OverlayMode.Reminder;
         RestartOverlayRoutine();
     }
@@ -252,6 +281,10 @@ public class TaskUIController : MonoBehaviour
         currentShownDay = day;
         currentMode = OverlayMode.None;
 
+        // reset pending reminder
+        pendingReminderAfterQTE = false;
+        pendingReminderDay = day;
+
         HideCanvasInstant();
 
         if (timerText != null)
@@ -295,6 +328,14 @@ public class TaskUIController : MonoBehaviour
         if (timerText != null)
             timerText.gameObject.SetActive(true);
 
+        // Jika ada reminder yang tertunda karena bentrok dengan QTE, tampilkan itu
+        if (pendingReminderAfterQTE)
+        {
+            ShowPendingReminderAfterQTE();
+            return;
+        }
+
+        // fallback ke reminder biasa
         ShowReminderOverlay(currentShownDay);
     }
 }
