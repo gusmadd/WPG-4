@@ -74,9 +74,16 @@ public class M_TutorialManager : MonoBehaviour
     [Header("Loading")]
     public Animator loadingAnimator;
     public GameObject loadingCircle;
-    public float circleSpinSpeed = 180f;
     public float loadingDuration = 2f;
     public float delayAfterOut = 0.1f;
+
+    [Header("Loading Animation (Frame)")]
+    public Sprite[] loadingFrames;
+    public float frameRate = 10f;
+
+    private SpriteRenderer loadingRenderer;
+    private int currentFrame = 0;
+    private float frameTimer = 0f;
 
     bool waitingPowerClick = false;
     bool powerClicked = false;
@@ -130,8 +137,20 @@ public class M_TutorialManager : MonoBehaviour
 
     void Update()
     {
-        if (loadingCircle != null && loadingCircle.activeSelf)
-            loadingCircle.transform.Rotate(0, 0, -circleSpinSpeed * Time.deltaTime);
+        if (loadingCircle != null && loadingCircle.activeSelf && loadingFrames != null && loadingFrames.Length > 0)
+        {
+            frameTimer += Time.deltaTime;
+
+            if (frameRate > 0 && frameTimer >= 1f / frameRate)
+            {
+                frameTimer = 0f;
+
+                currentFrame = (currentFrame + 1) % loadingFrames.Length;
+
+                if (loadingRenderer != null)
+                    loadingRenderer.sprite = loadingFrames[currentFrame];
+            }
+        }
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -143,6 +162,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (powerCollider != null && powerCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         powerClicked = true;
                         return;
                     }
@@ -152,6 +172,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (browserCollider != null && browserCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         browserClicked = true;
                         return;
                     }
@@ -161,6 +182,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (homeSearchCollider != null && homeSearchCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         homeSearchClicked = true;
                         return;
                     }
@@ -170,6 +192,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (resultLinkCollider != null && resultLinkCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         resultLinkClicked = true;
                         return;
                     }
@@ -179,6 +202,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (productCollider != null && productCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         productClicked = true;
                         return;
                     }
@@ -188,6 +212,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (foodCollider != null && foodCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         foodClicked = true;
                         return;
                     }
@@ -197,6 +222,7 @@ public class M_TutorialManager : MonoBehaviour
                 {
                     if (itemCollider != null && itemCollider.OverlapPoint(mousePos))
                     {
+                        M_AudioManager.Instance?.PlayCursorClick();
                         itemClicked = true;
                         return;
                     }
@@ -270,6 +296,8 @@ public class M_TutorialManager : MonoBehaviour
         if (buySuccessPage != null) buySuccessPage.SetActive(false);
 
         if (loadingCircle != null) loadingCircle.SetActive(false);
+        if (loadingCircle != null)
+            loadingRenderer = loadingCircle.GetComponent<SpriteRenderer>();
 
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
@@ -378,6 +406,12 @@ public class M_TutorialManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.1f);
 
+        currentFrame = 0;
+        frameTimer = 0f;
+
+        if (loadingRenderer != null && loadingFrames != null && loadingFrames.Length > 0)
+            loadingRenderer.sprite = loadingFrames[0];
+
         if (loadingCircle != null)
             loadingCircle.SetActive(true);
 
@@ -385,6 +419,8 @@ public class M_TutorialManager : MonoBehaviour
 
         if (loadingCircle != null)
             loadingCircle.SetActive(false);
+        currentFrame = 0;
+        frameTimer = 0f;
 
         if (loadingAnimator != null)
             loadingAnimator.SetTrigger("isOut");

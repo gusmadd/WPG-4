@@ -20,8 +20,13 @@ public class M_MonitorManager : MonoBehaviour
     public Animator loadingAnimator;
 
     [Header("Circle Spin")]
-    public float circleSpinSpeed = 180f;
     public GameObject loadingCircle;
+    public Sprite[] loadingFrames; // isi 8 sprite di inspector
+    public float frameRate = 10f;
+
+    private SpriteRenderer loadingRenderer;
+    private int currentFrame = 0;
+    private float frameTimer = 0f;
 
     public GameObject screenOff;
     public GameObject screenOn;
@@ -63,6 +68,8 @@ public class M_MonitorManager : MonoBehaviour
         if (screenOff != null) screenOff.SetActive(true);
         if (screenOn != null) screenOn.SetActive(false);
         if (loadingCircle != null) loadingCircle.SetActive(false);
+        if (loadingCircle != null)
+            loadingRenderer = loadingCircle.GetComponent<SpriteRenderer>();
 
         if (desktopPage != null) desktopPage.SetActive(false);
         if (searchHomePage != null) searchHomePage.SetActive(false);
@@ -77,8 +84,22 @@ public class M_MonitorManager : MonoBehaviour
 
     void Update()
     {
-        if (loadingCircle != null && loadingCircle.activeSelf)
-            loadingCircle.transform.Rotate(0, 0, -circleSpinSpeed * Time.deltaTime);
+        if (loadingCircle != null && loadingCircle.activeSelf && loadingFrames.Length > 0)
+        {
+            frameTimer += Time.deltaTime;
+
+            if (frameTimer >= 1f / frameRate)
+            {
+                frameTimer = 0f;
+
+                currentFrame++;
+                if (currentFrame >= loadingFrames.Length)
+                    currentFrame = 0;
+
+                if (loadingRenderer != null)
+                    loadingRenderer.sprite = loadingFrames[currentFrame];
+            }
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -131,6 +152,8 @@ public class M_MonitorManager : MonoBehaviour
 
     IEnumerator PowerOnSequence()
     {
+        if (powerSprite != null && powerOnSprite != null)
+            powerSprite.sprite = powerOnSprite;
         currentState = MonitorState.LoadingIn;
         if (loadingAnimator != null) loadingAnimator.SetTrigger("isIn");
 
@@ -143,6 +166,11 @@ public class M_MonitorManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         currentState = MonitorState.LoadingIdle;
+        currentFrame = 0;
+        frameTimer = 0f;
+
+        if (loadingRenderer != null && loadingFrames.Length > 0)
+            loadingRenderer.sprite = loadingFrames[0];
         if (loadingCircle != null) loadingCircle.SetActive(true);
 
         yield return new WaitForSeconds(loadingDuration);
@@ -162,8 +190,6 @@ public class M_MonitorManager : MonoBehaviour
         if (searchHomePage != null) searchHomePage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
 
-        if (powerSprite != null && powerOnSprite != null)
-            powerSprite.sprite = powerOnSprite;
     }
 
     void OpenBrowser()
@@ -255,6 +281,8 @@ public class M_MonitorManager : MonoBehaviour
 
     public void ResetToOff()
     {
+        currentFrame = 0;
+        frameTimer = 0f;
         StopAllCoroutines();
 
         currentState = MonitorState.Off;

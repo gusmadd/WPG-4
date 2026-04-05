@@ -10706,8 +10706,8 @@ Transform:
   m_GameObject: {fileID: 844421943}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: 0, w: -1}
-  m_LocalPosition: {x: -4.5515847, y: 0.86, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: -1.98, y: 1.05, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1657775345}
@@ -10753,7 +10753,7 @@ SpriteRenderer:
   m_SortingLayerID: -1661438145
   m_SortingLayer: 1
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: f78102ad465647b499fe617bae35ec40, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 53377f55068a63d459a6eca5df0c836f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -13707,9 +13707,18 @@ MonoBehaviour:
   detailItemPage: {fileID: 817231969}
   loadingAnimator: {fileID: 1657775346}
   loadingCircle: {fileID: 844421943}
-  circleSpinSpeed: 180
   loadingDuration: 4
   delayAfterOut: 0.1
+  loadingFrames:
+  - {fileID: 21300000, guid: 53377f55068a63d459a6eca5df0c836f, type: 3}
+  - {fileID: 21300000, guid: 3fd6ab4daad11b54cb1c7b1b9ba2c883, type: 3}
+  - {fileID: 21300000, guid: a902a4d715f12bc489778bc53e0de299, type: 3}
+  - {fileID: 21300000, guid: c089a4de21336b143bc32393193f91b5, type: 3}
+  - {fileID: 21300000, guid: aeebc472cccd68a468a3e20588b8d257, type: 3}
+  - {fileID: 21300000, guid: 55636469167e03d4da66ef7f4b360d09, type: 3}
+  - {fileID: 21300000, guid: 959ca3af4cc5e9143878e4f8fe0425da, type: 3}
+  - {fileID: 21300000, guid: 2eec9f0783715fe48909dac723aee527, type: 3}
+  frameRate: 10
 --- !u!1 &1156223050
 GameObject:
   m_ObjectHideFlags: 0
