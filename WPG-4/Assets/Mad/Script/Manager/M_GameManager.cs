@@ -94,7 +94,6 @@ public class M_GameManager : MonoBehaviour
 
         M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
         if (monitor != null)
-            monitor.ResetToOff();
 
         if (keyboard != null)
             keyboard.HideKeyboard();

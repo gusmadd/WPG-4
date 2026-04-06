@@ -312,7 +312,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Menu
+  m_text: 'Home
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -419,8 +421,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -558,7 +560,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 10625220}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &12683879
 GameObject:
   m_ObjectHideFlags: 0
@@ -4668,8 +4670,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4807,7 +4809,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 193454821}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &195352670
 GameObject:
   m_ObjectHideFlags: 0
@@ -4838,8 +4840,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4977,7 +4979,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 195352672}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &196108519
 GameObject:
   m_ObjectHideFlags: 0
@@ -6085,8 +6087,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6224,7 +6226,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 259315308}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &265297952
 GameObject:
   m_ObjectHideFlags: 0
@@ -8775,8 +8777,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8914,7 +8916,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 439510361}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &451917055
 GameObject:
   m_ObjectHideFlags: 0
@@ -12340,9 +12342,9 @@ Transform:
   m_GameObject: {fileID: 583702726}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12470,7 +12472,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 583702728}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.75
+  outAnimDelay: 0.5
 --- !u!1 &611849032
 GameObject:
   m_ObjectHideFlags: 0
@@ -19988,8 +19990,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20127,7 +20129,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 1004936575}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &1005094894
 GameObject:
   m_ObjectHideFlags: 0
@@ -22307,8 +22309,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0752689, y: 1.0752689, z: 1.0752689}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 650952166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -22446,7 +22448,7 @@ MonoBehaviour:
   adsAnimator: {fileID: 1104093667}
   inStateName: in
   outTriggerName: AdsOut
-  outAnimDelay: 0.25
+  outAnimDelay: 0.5
 --- !u!1 &1114034325
 GameObject:
   m_ObjectHideFlags: 0
