@@ -65,7 +65,6 @@ public class M_GameManager : MonoBehaviour
         // FIX: force-close monitor/shop state before QTE takeover
         M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
         if (monitor != null)
-            monitor.ResetToOff();
 
         keyboard.HideKeyboard();
 
