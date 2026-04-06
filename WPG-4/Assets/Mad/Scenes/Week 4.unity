@@ -8359,7 +8359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 209c036ea6bca3d4e8181a5ddb16c13f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 0, y: 0}
+  offset: {x: -20, y: 20}
+  pivotX: 0
+  pivotY: 1
 --- !u!114 &420357762
 MonoBehaviour:
   m_ObjectHideFlags: 0
