@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PauseManager : MonoBehaviour
 {
@@ -10,13 +11,68 @@ public class PauseManager : MonoBehaviour
     [Header("UI")]
     public GameObject pausePanel;
     public Animator pauseAnimator;
+    public GameObject pauseButton;
+
+    [Header("Day Info")]
+    public TMP_Text dayText;
 
     private bool isPaused = false;
     private bool isTransitioning = false;
 
+    private M_GameManager.GameState stateBeforePause;
+
     void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        RefreshPauseButton();
+    }
+
+    void Update()
+    {
+        RefreshPauseButton();
+    }
+
+    void RefreshPauseButton()
+    {
+        if (pauseButton == null) return;
+
+        bool shouldShow = true;
+
+        if (M_GameManager.Instance != null)
+        {
+            var state = M_GameManager.Instance.currentState;
+
+            if (state == M_GameManager.GameState.QTE ||
+                state == M_GameManager.GameState.TaskOverlay)
+            {
+                shouldShow = false;
+            }
+        }
+
+        if (isPaused)
+            shouldShow = false;
+
+        if (pauseButton.activeSelf != shouldShow)
+            pauseButton.SetActive(shouldShow);
+    }
+
+    bool CanPause()
+    {
+        if (M_GameManager.Instance == null) return true;
+
+        var state = M_GameManager.Instance.currentState;
+
+        if (state == M_GameManager.GameState.QTE) return false;
+        if (state == M_GameManager.GameState.TaskOverlay) return false;
+
+        return true;
     }
 
     public void TogglePause()
@@ -30,31 +86,36 @@ public class PauseManager : MonoBehaviour
     public void Pause()
     {
         if (isPaused || isTransitioning) return;
-
-        // ❗ block kondisi tertentu
-        if (M_GameManager.Instance != null &&
-            M_GameManager.Instance.currentState == M_GameManager.GameState.QTE)
-            return;
+        if (!CanPause()) return;
 
         isPaused = true;
         isTransitioning = true;
 
-        pausePanel.SetActive(true);
-        pauseAnimator.SetTrigger("In");
+        if (dayText != null && DayManager.Instance != null)
+            dayText.text = "" + DayManager.Instance.GetCurrentDay();
+
+        if (M_GameManager.Instance != null)
+            stateBeforePause = M_GameManager.Instance.currentState;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
+
+        if (pauseAnimator != null)
+        {
+            pauseAnimator.ResetTrigger("Out");
+            pauseAnimator.SetTrigger("In");
+        }
 
         Time.timeScale = 0f;
         TaskManager.Instance?.PauseTimer();
 
-        if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
-
+        RefreshPauseButton();
         StartCoroutine(FinishTransition());
     }
 
     public void Resume()
     {
         if (!isPaused || isTransitioning) return;
-
         StartCoroutine(ResumeRoutine());
     }
 
@@ -62,26 +123,33 @@ public class PauseManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        pauseAnimator.SetTrigger("Out");
+        if (pauseAnimator != null)
+        {
+            pauseAnimator.ResetTrigger("In");
+            pauseAnimator.SetTrigger("Out");
+        }
 
-        yield return new WaitForSecondsRealtime(0.45f);
-
-        pausePanel.SetActive(false);
+        yield return new WaitForSecondsRealtime(1f);
 
         Time.timeScale = 1f;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
         TaskManager.Instance?.ResumeTimer();
 
         if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
+            M_GameManager.Instance.currentState = stateBeforePause;
 
         isPaused = false;
         isTransitioning = false;
+
+        RefreshPauseButton();
     }
 
     public void Restart()
     {
         if (!isPaused || isTransitioning) return;
-
         StartCoroutine(RestartRoutine());
     }
 
@@ -89,24 +157,31 @@ public class PauseManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        pauseAnimator.SetTrigger("Out");
+        if (pauseAnimator != null)
+        {
+            pauseAnimator.ResetTrigger("In");
+            pauseAnimator.SetTrigger("Out");
+        }
 
         yield return new WaitForSecondsRealtime(0.45f);
 
         Time.timeScale = 1f;
 
-        pausePanel.SetActive(false);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
 
         isPaused = false;
         isTransitioning = false;
 
-        DayManager.Instance.RestartGame();
+        DayManager.Instance?.RestartGame();
+
+        RefreshPauseButton();
     }
 
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Week");
     }
 
     IEnumerator FinishTransition()
