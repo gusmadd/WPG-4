@@ -24,6 +24,9 @@ public class M_AudioManager : MonoBehaviour
     [Header("Ads")]
     public AudioClip[] adsSfx; // isi 2 variasi
 
+    [Header("Wrong Purchase")]
+    public AudioClip wrongSfx;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -112,5 +115,13 @@ public class M_AudioManager : MonoBehaviour
         if (hideKeyboardSfx == null) return;
 
         sfxSource.PlayOneShot(hideKeyboardSfx);
+    }
+
+    public void PlayWrongSfx()
+    {
+        if (sfxSource == null) return;
+        if (wrongSfx == null) return;
+
+        sfxSource.PlayOneShot(wrongSfx);
     }
 }

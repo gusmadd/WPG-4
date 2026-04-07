@@ -17,6 +17,12 @@ public class UI_Script : MonoBehaviour
     public float shakeDuration = 0.4f;
     public float shakeMagnitude = 0.2f;
 
+    [Header("Wrong Purchase Effect")]
+    public Animator wrongPurchaseAnimator;
+    public bool useShakeOnWrongPurchase = true;
+    public float wrongShakeDuration = 0.15f;
+    public float wrongShakeMagnitude = 0.08f;
+
     [Header("QTE Timer")]
     public GameObject timerUI;
     public Image timerFill;
@@ -79,6 +85,39 @@ public class UI_Script : MonoBehaviour
         {
             float x = Random.Range(-1f, 1f) * shakeMagnitude;
             float y = Random.Range(-1f, 1f) * shakeMagnitude;
+
+            cameraTransform.localPosition = originalPos + new Vector3(x, y, 0);
+
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        cameraTransform.localPosition = originalPos;
+    }
+
+    public void PlayWrongEffect()
+    {
+        if (wrongPurchaseAnimator != null)
+        {
+            wrongPurchaseAnimator.ResetTrigger("Play");
+            wrongPurchaseAnimator.SetTrigger("Play");
+        }
+
+        if (useShakeOnWrongPurchase)
+            StartCoroutine(ShakeWrongPurchase());
+    }
+
+    IEnumerator ShakeWrongPurchase()
+    {
+        if (cameraTransform == null) yield break;
+
+        Vector3 originalPos = cameraTransform.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < wrongShakeDuration)
+        {
+            float x = Random.Range(-1f, 1f) * wrongShakeMagnitude;
+            float y = Random.Range(-1f, 1f) * wrongShakeMagnitude;
 
             cameraTransform.localPosition = originalPos + new Vector3(x, y, 0);
 

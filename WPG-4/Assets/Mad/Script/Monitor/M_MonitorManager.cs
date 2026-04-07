@@ -304,4 +304,17 @@ public class M_MonitorManager : MonoBehaviour
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
     }
+    public void ForceCloseAllAdsForQTE()
+    {
+        if (adsPopups == null) return;
+
+        for (int i = 0; i < adsPopups.Length; i++)
+        {
+            if (adsPopups[i] != null && adsPopups[i].gameObject.activeSelf)
+                adsPopups[i].ForceCloseAdsInstant();
+        }
+
+        if (keyboard != null)
+            keyboard.HideKeyboard();
+    }
 }

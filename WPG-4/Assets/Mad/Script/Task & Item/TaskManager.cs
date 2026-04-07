@@ -186,9 +186,16 @@ public class TaskManager : MonoBehaviour
         int targetCount = GetTargetCount(itemId);
         int purchasedCount = GetPurchasedCount(itemId);
 
-        if (targetCount <= 0) return;
+        // ❌ SALAH
+        if (targetCount <= 0)
+        {
+            OnWrongPurchase(itemId);
+            return;
+        }
+
         if (purchasedCount >= targetCount) return;
 
+        // ✅ BENAR
         purchasedItemIds.Add(itemId);
 
         if (purchasedItemIds.Count >= targetItemIds.Count)
@@ -200,10 +207,23 @@ public class TaskManager : MonoBehaviour
             return;
         }
 
-        if (TaskUIController.Instance != null)
-            TaskUIController.Instance.ShowReminderOverlay(
-                DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1
-            );
+        TaskUIController.Instance?.ShowReminderOverlay(
+            DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1
+        );
+    }
+
+    void OnWrongPurchase(string itemId)
+    {
+        Debug.Log("WRONG ITEM: " + itemId);
+
+        // 🔊 SFX
+        M_AudioManager.Instance?.PlayWrongSfx();
+
+        // 💥 Visual
+        UI_Script.Instance?.PlayWrongEffect();
+
+        // (opsional) tambah noise biar punish
+        M_NoiseSystem.Instance?.AddNoise(10f);
     }
 
     int GetTargetCount(string itemId)

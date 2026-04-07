@@ -143,21 +143,35 @@ public class M_AdsPopup : MonoBehaviour
     {
         isClosing = true;
 
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.StopAdsNoise();
+
         if (adsAnimator != null && !string.IsNullOrEmpty(outTriggerName))
             adsAnimator.SetTrigger(outTriggerName);
 
         yield return new WaitForSecondsRealtime(outAnimDelay);
 
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.StopAdsNoise();
-
-        if (M_GameManager.Instance != null)
+        if (M_GameManager.Instance != null &&
+            M_GameManager.Instance.currentState == M_GameManager.GameState.AdsOverlay)
         {
             if (hasStoredPreviousState)
                 M_GameManager.Instance.currentState = previousState;
             else
                 M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
         }
+
+        isOpen = false;
+        isClosing = false;
+        hasStoredPreviousState = false;
+
+        gameObject.SetActive(false);
+    }
+    public void ForceCloseAdsInstant()
+    {
+        StopAllCoroutines();
+
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.StopAdsNoise();
 
         isOpen = false;
         isClosing = false;
