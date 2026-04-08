@@ -75,6 +75,7 @@ public class M_SearchPage : MonoBehaviour
     void OnClickLink(LinkSlot slot)
     {
         M_AudioManager.Instance?.PlayCursorClick();
+        M_PlayerController.Instance?.PlayTyping();
 
         if (slot.isCorrect)
         {

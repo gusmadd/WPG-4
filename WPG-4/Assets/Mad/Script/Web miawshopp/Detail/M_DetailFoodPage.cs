@@ -71,6 +71,7 @@ public class M_DetailFoodPage : MonoBehaviour
             if (backCollider != null && backCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (catFoodPage != null) catFoodPage.SetActive(true);
                 gameObject.SetActive(false);
@@ -80,6 +81,7 @@ public class M_DetailFoodPage : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (petshopHomePage != null) petshopHomePage.SetActive(true);
                 gameObject.SetActive(false);
@@ -89,6 +91,7 @@ public class M_DetailFoodPage : MonoBehaviour
             if (closeCollider != null && closeCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 if (desktopPage != null) desktopPage.SetActive(true);
                 if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 gameObject.SetActive(false);
@@ -98,6 +101,7 @@ public class M_DetailFoodPage : MonoBehaviour
             if (serviceCollider != null && serviceCollider.OverlapPoint(mousePosWorld))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicePage != null) servicePage.SetActive(true);
                 gameObject.SetActive(false);

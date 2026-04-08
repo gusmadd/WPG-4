@@ -131,13 +131,13 @@ public class UI_Script : MonoBehaviour
     public void StartTimer(float maxTime)
     {
         if (timerUI != null) timerUI.SetActive(true);
-        if (timerFill != null) timerFill.fillAmount = 1f;
+        if (timerFill != null) timerFill.fillAmount = 0f;
     }
 
     public void UpdateTimer(float current, float max)
     {
         if (timerFill != null)
-            timerFill.fillAmount = Mathf.Clamp01(current / max);
+            timerFill.fillAmount = 1f - Mathf.Clamp01(current / max);
     }
 
     public void StopTimer()
