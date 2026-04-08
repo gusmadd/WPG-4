@@ -8363,6 +8363,22 @@ MonoBehaviour:
   offset: {x: -20, y: 20}
   pivotX: 0
   pivotY: 1
+  noiseSystem: {fileID: 1806175189}
+  normalFollowSpeed: 25
+  stage1FollowSpeed: 14
+  stage2FollowSpeed: 8
+  stage3FollowSpeed: 4
+  stage0ShakeAmount: 0
+  stage1ShakeAmount: 6
+  stage2ShakeAmount: 12
+  stage3ShakeAmount: 20
+  stage1ShakeSpeed: 35
+  stage2ShakeSpeed: 55
+  stage3ShakeSpeed: 80
+  burstDuration: 0.15
+  stage1BurstAmount: 10
+  stage2BurstAmount: 18
+  stage3BurstAmount: 28
 --- !u!114 &420357762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27265,7 +27281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   qtePrefab: {fileID: 466507497}
-  catAnimator: {fileID: 345401905}
   mainCamera: {fileID: 519420031}
   keyboard: {fileID: 2135906904}
   normalSize: 5
