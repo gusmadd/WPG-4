@@ -14,6 +14,8 @@ public class M_TutorialManager : MonoBehaviour
     public Animator catAnimator;
     public string nodTrigger = "Nod";
     public string thinkTrigger = "Think";
+    public string clickTrigger = "Click";
+    public float clickToThinkDelay = 0.12f;
 
     [Header("Task UI")]
     public GameObject taskPanel;
@@ -144,7 +146,6 @@ public class M_TutorialManager : MonoBehaviour
             if (frameRate > 0 && frameTimer >= 1f / frameRate)
             {
                 frameTimer = 0f;
-
                 currentFrame = (currentFrame + 1) % loadingFrames.Length;
 
                 if (loadingRenderer != null)
@@ -313,7 +314,7 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator IntroSequence()
     {
-        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
+        PlayCatThink();
         ShowCatLine("(thinking)");
         yield return new WaitForSecondsRealtime(0.4f);
 
@@ -334,14 +335,9 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "I know it's kinda hard thinking with that head. Try to remember this, you'll get reminder each time you got ONE ORDER RIGHT.")
         };
         yield return PlayVN(lines3);
+        yield return new WaitForSecondsRealtime(clickToThinkDelay);
 
-        // pastikan thinking dihentikan
-        if (catAnimator != null)
-        {
-            catAnimator.ResetTrigger(thinkTrigger);
-            catAnimator.SetTrigger(nodTrigger);
-        }
-
+        PlayCatNod();
         ShowCatLine("(nodding)");
 
         yield return ShowTaskAndWaitForSpace();
@@ -359,9 +355,31 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator PlayVN(List<VNTextController.Line> lines)
     {
+        if (vn == null) yield break;
+
         bool done = false;
+
+        PlayCatThink();
+        ShowCatLine("(thinking)");
+
         vn.PlayLines(lines, () => done = true);
-        yield return new WaitUntil(() => done);
+
+        while (!done)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                PlayCatClick();
+                yield return new WaitForSecondsRealtime(clickToThinkDelay);
+
+                if (!done)
+                {
+                    PlayCatThink();
+                    ShowCatLine("(thinking)");
+                }
+            }
+
+            yield return null;
+        }
     }
 
     IEnumerator ShowTaskAndWaitForSpace()
@@ -638,35 +656,28 @@ public class M_TutorialManager : MonoBehaviour
     IEnumerator BuySuccessEndSequence()
     {
         yield return new WaitForSecondsRealtime(continueMessageDelay);
-        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
-        ShowCatLine("(thinking)");
-
-        bool done = false;
 
         var endLines = new List<VNTextController.Line>
-    {
-        new VNTextController.Line("Narrator", continueMessage)
-    };
-
-        if (vn != null)
         {
-            vn.PlayLines(endLines, () => done = true);
-            yield return new WaitUntil(() => done);
-        }
+            new VNTextController.Line("Narrator", continueMessage)
+        };
 
-        // tunggu klik kiri
+        yield return PlayVN(endLines);
+
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
 
-        // sembunyikan textbox
         if (vn != null)
             vn.HideInstant();
 
-        // delay sebelum masuk game
         yield return new WaitForSecondsRealtime(1f);
 
         M_ProgressManager.CompleteTutorial();
         SceneManager.LoadScene(nextSceneName);
     }
+
     void StartHoldBuy()
     {
         isHoldingBuy = true;
@@ -706,5 +717,32 @@ public class M_TutorialManager : MonoBehaviour
     {
         if (catLineText != null)
             catLineText.text = s;
+    }
+
+    void PlayCatThink()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(nodTrigger);
+        catAnimator.ResetTrigger(clickTrigger);
+        catAnimator.SetTrigger(thinkTrigger);
+    }
+
+    void PlayCatClick()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(thinkTrigger);
+        catAnimator.ResetTrigger(nodTrigger);
+        catAnimator.SetTrigger(clickTrigger);
+    }
+
+    void PlayCatNod()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(thinkTrigger);
+        catAnimator.ResetTrigger(clickTrigger);
+        catAnimator.SetTrigger(nodTrigger);
     }
 }
