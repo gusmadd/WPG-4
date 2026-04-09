@@ -14,6 +14,8 @@ public class M_TutorialManager : MonoBehaviour
     public Animator catAnimator;
     public string nodTrigger = "Nod";
     public string thinkTrigger = "Think";
+    public string clickTrigger = "Click";
+    public float clickToThinkDelay = 0.12f;
 
     [Header("Task UI")]
     public GameObject taskPanel;
@@ -56,7 +58,7 @@ public class M_TutorialManager : MonoBehaviour
     public GameObject buySuccessPage;
 
     [Header("Buy Success End")]
-    [TextArea] public string continueMessage = "You already know what needs to be done. Press Enter to continue the first week's task.";
+    [TextArea] public string continueMessage = "See? You already know what to do.\nNow don't mess it up when I'm not helping.";
     public float continueMessageDelay = 1f;
     public string nextSceneName = "InGame";
 
@@ -144,7 +146,6 @@ public class M_TutorialManager : MonoBehaviour
             if (frameRate > 0 && frameTimer >= 1f / frameRate)
             {
                 frameTimer = 0f;
-
                 currentFrame = (currentFrame + 1) % loadingFrames.Length;
 
                 if (loadingRenderer != null)
@@ -313,38 +314,41 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator IntroSequence()
     {
-        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
+        PlayCatThink();
         ShowCatLine("(thinking)");
         yield return new WaitForSecondsRealtime(0.4f);
 
         var lines1 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "Feeling abandoned in your owner friend's house? Not getting the good food or toys?")
+            new VNTextController.Line("Narrator", "Feeling abandoned in your owner's house? Not getting the good food or toys?")
         };
         yield return PlayVN(lines1);
 
         var lines2 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "Do you have something that you want to get there?")
+            new VNTextController.Line("Narrator", "Do you see something here that you want?")
         };
         yield return PlayVN(lines2);
 
         var lines3 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "I know it's kinda hard thinking with that head. Try to remember this, you'll get reminder each time you got ONE ORDER RIGHT.")
+            new VNTextController.Line("Narrator", "I know it's hard thinking with that tiny little head, so I'll help you. Just this once.")
         };
         yield return PlayVN(lines3);
+        yield return new WaitForSecondsRealtime(clickToThinkDelay);
 
-        // pastikan thinking dihentikan
-        if (catAnimator != null)
-        {
-            catAnimator.ResetTrigger(thinkTrigger);
-            catAnimator.SetTrigger(nodTrigger);
-        }
-
+        PlayCatNod();
         ShowCatLine("(nodding)");
 
         yield return ShowTaskAndWaitForSpace();
+
+        var lines4 = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "That little bubble? That's what you want."),
+            new VNTextController.Line("Narrator", "Remember it. You'll need to find it yourself.")
+        };
+        yield return PlayVN(lines4);
+
         yield return PowerGuideSequence();
         yield return BrowserGuideSequence();
         yield return HomeSearchGuideSequence();
@@ -359,9 +363,31 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator PlayVN(List<VNTextController.Line> lines)
     {
+        if (vn == null) yield break;
+
         bool done = false;
+
+        PlayCatThink();
+        ShowCatLine("(thinking)");
+
         vn.PlayLines(lines, () => done = true);
-        yield return new WaitUntil(() => done);
+
+        while (!done)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                PlayCatClick();
+                yield return new WaitForSecondsRealtime(clickToThinkDelay);
+
+                if (!done)
+                {
+                    PlayCatThink();
+                    ShowCatLine("(thinking)");
+                }
+            }
+
+            yield return null;
+        }
     }
 
     IEnumerator ShowTaskAndWaitForSpace()
@@ -385,6 +411,14 @@ public class M_TutorialManager : MonoBehaviour
     {
         if (ghPower != null)
             ghPower.SetActive(true);
+
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "First, turn that thing on.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingPowerClick = true;
         powerClicked = false;
@@ -445,6 +479,14 @@ public class M_TutorialManager : MonoBehaviour
         if (ghMeawser != null)
             ghMeawser.SetActive(true);
 
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Good. Now open Meowser.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         waitingBrowserClick = true;
         browserClicked = false;
 
@@ -474,6 +516,15 @@ public class M_TutorialManager : MonoBehaviour
 
         if (tutorialSearchField != null)
             tutorialSearchField.ActivateField();
+
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Now type what you're looking for."),
+            new VNTextController.Line("Narrator", "Use the search bar. That long little box.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingHomeSearchClick = true;
         homeSearchClicked = false;
@@ -509,6 +560,15 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator ResultLinkGuideSequence()
     {
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Pick the right website."),
+            new VNTextController.Line("Narrator", "Not every link is worth your paw.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         waitingResultLinkClick = true;
         resultLinkClicked = false;
 
@@ -563,6 +623,15 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator FoodGuideSequence()
     {
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Now find the item you wanted."),
+            new VNTextController.Line("Narrator", "Look carefully. Don't buy random junk.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         waitingFoodClick = true;
         foodClicked = false;
 
@@ -617,6 +686,17 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator BuyGuideSequence()
     {
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Once you find it, hold the buy button."),
+            new VNTextController.Line("Narrator", "Don't just tap it. Hold it."),
+            new VNTextController.Line("Narrator", "Hurry up. You don't have much time."),
+            new VNTextController.Line("Narrator", "Stay quiet... and don't draw attention.")
+        };
+        yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         waitingBuyHold = true;
         buyCompleted = false;
         ResetHoldState();
@@ -638,35 +718,28 @@ public class M_TutorialManager : MonoBehaviour
     IEnumerator BuySuccessEndSequence()
     {
         yield return new WaitForSecondsRealtime(continueMessageDelay);
-        if (catAnimator != null) catAnimator.SetTrigger(thinkTrigger);
-        ShowCatLine("(thinking)");
-
-        bool done = false;
 
         var endLines = new List<VNTextController.Line>
-    {
-        new VNTextController.Line("Narrator", continueMessage)
-    };
-
-        if (vn != null)
         {
-            vn.PlayLines(endLines, () => done = true);
-            yield return new WaitUntil(() => done);
-        }
+            new VNTextController.Line("Narrator", continueMessage)
+        };
 
-        // tunggu klik kiri
+        yield return PlayVN(endLines);
+
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
 
-        // sembunyikan textbox
         if (vn != null)
             vn.HideInstant();
 
-        // delay sebelum masuk game
         yield return new WaitForSecondsRealtime(1f);
 
         M_ProgressManager.CompleteTutorial();
         SceneManager.LoadScene(nextSceneName);
     }
+
     void StartHoldBuy()
     {
         isHoldingBuy = true;
@@ -706,5 +779,32 @@ public class M_TutorialManager : MonoBehaviour
     {
         if (catLineText != null)
             catLineText.text = s;
+    }
+
+    void PlayCatThink()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(nodTrigger);
+        catAnimator.ResetTrigger(clickTrigger);
+        catAnimator.SetTrigger(thinkTrigger);
+    }
+
+    void PlayCatClick()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(thinkTrigger);
+        catAnimator.ResetTrigger(nodTrigger);
+        catAnimator.SetTrigger(clickTrigger);
+    }
+
+    void PlayCatNod()
+    {
+        if (catAnimator == null) return;
+
+        catAnimator.ResetTrigger(thinkTrigger);
+        catAnimator.ResetTrigger(clickTrigger);
+        catAnimator.SetTrigger(nodTrigger);
     }
 }

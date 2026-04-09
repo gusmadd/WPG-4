@@ -10592,7 +10592,7 @@ SpriteRenderer:
   m_SortingLayerID: 277198089
   m_SortingLayer: 3
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 64b97e72622abd449876f6aa6b998af0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17b9be6ce535f4f4b97aa492cf2285b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -13668,6 +13668,7 @@ MonoBehaviour:
   catAnimator: {fileID: 826701163}
   nodTrigger: Nod
   thinkTrigger: Think
+  clickTrigger: Click
   taskPanel: {fileID: 997948933}
   taskAnimator: {fileID: 997948934}
   taskShowTrigger: Show

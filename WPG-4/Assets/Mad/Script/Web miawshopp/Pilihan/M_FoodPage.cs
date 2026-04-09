@@ -66,6 +66,7 @@ public class M_FoodPage : MonoBehaviour
             if (closeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 CloseToDesktop();
                 return;
@@ -74,6 +75,7 @@ public class M_FoodPage : MonoBehaviour
             if (homeButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 GoToHome();
                 return;
@@ -82,6 +84,7 @@ public class M_FoodPage : MonoBehaviour
             if (serviceButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 GoToService();
                 return;
@@ -90,6 +93,7 @@ public class M_FoodPage : MonoBehaviour
             if (backButtonCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 BackToProduct();
                 return;

@@ -43,6 +43,9 @@ public class M_WeekSelectButton : MonoBehaviour
         if (!M_ProgressManager.IsWeekUnlocked(weekNumber))
             return;
 
-        SceneManager.LoadScene(sceneName);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(sceneName);
+        else
+            SceneManager.LoadScene(sceneName);
     }
 }

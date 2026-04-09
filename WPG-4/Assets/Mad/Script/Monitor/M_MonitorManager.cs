@@ -113,6 +113,7 @@ public class M_MonitorManager : MonoBehaviour
                 powerCollider != null &&
                 powerCollider.OverlapPoint(mousePos))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 PowerOn();
                 return;
             }
@@ -129,6 +130,7 @@ public class M_MonitorManager : MonoBehaviour
                     if (closeSearchCollider != null && closeSearchCollider.OverlapPoint(mousePos))
                     {
                         M_AudioManager.Instance?.PlayCursorClick();
+                        M_PlayerController.Instance?.PlayTyping();
                         CloseSearch();
                         return;
                     }
@@ -137,6 +139,7 @@ public class M_MonitorManager : MonoBehaviour
                 if (browserCollider != null && browserCollider.OverlapPoint(mousePos))
                 {
                     M_AudioManager.Instance?.PlayCursorClick();
+                    M_PlayerController.Instance?.PlayTyping();
                     OpenBrowser();
                     return;
                 }

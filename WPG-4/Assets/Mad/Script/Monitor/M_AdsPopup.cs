@@ -76,6 +76,7 @@ public class M_AdsPopup : MonoBehaviour
             if (closeCollider != null && closeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 CloseAds();
             }
         }

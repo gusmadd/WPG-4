@@ -20,15 +20,29 @@ public class M_MainMenuController : MonoBehaviour
     public string inTrigger = "In";
     public string outTrigger = "Out";
 
+    [Header("Reset Data Panel")]
+    public GameObject resetDataPanel;
+    public Animator resetDataPanelAnimator;
+    public float resetPanelOutDelay = 0.3f;
+    public bool reloadCurrentSceneAfterReset = true;
+    public string mainMenuSceneName = "MainMenu";
+
     private string currentOpenButton = "";
     private bool isBusy = false;
+    private bool isResetPanelOpen = false;
+
+    private void Start()
+    {
+        if (resetDataPanel != null)
+            resetDataPanel.SetActive(false);
+    }
 
     // =========================
     // HOVER
     // =========================
     public void HoverStart()
     {
-        if (isBusy) return;
+        if (isBusy || isResetPanelOpen) return;
 
         if (currentOpenButton == "Exit")
             HideExit();
@@ -42,7 +56,7 @@ public class M_MainMenuController : MonoBehaviour
 
     public void HoverExit()
     {
-        if (isBusy) return;
+        if (isBusy || isResetPanelOpen) return;
 
         if (currentOpenButton == "Start")
             HideStart();
@@ -59,14 +73,32 @@ public class M_MainMenuController : MonoBehaviour
     // =========================
     public void ClickStart()
     {
-        if (isBusy) return;
+        if (isBusy || isResetPanelOpen) return;
         StartCoroutine(StartRoutine());
     }
 
     public void ClickExit()
     {
-        if (isBusy) return;
+        if (isBusy || isResetPanelOpen) return;
         StartCoroutine(ExitRoutine());
+    }
+
+    public void ClickResetData()
+    {
+        if (isBusy || isResetPanelOpen) return;
+        StartCoroutine(OpenResetPanelRoutine());
+    }
+
+    public void ClickCancelReset()
+    {
+        if (isBusy || !isResetPanelOpen) return;
+        StartCoroutine(CloseResetPanelRoutine());
+    }
+
+    public void ClickConfirmReset()
+    {
+        if (isBusy || !isResetPanelOpen) return;
+        StartCoroutine(ConfirmResetRoutine());
     }
 
     // =========================
@@ -89,9 +121,68 @@ public class M_MainMenuController : MonoBehaviour
 
 #if UNITY_EDITOR
         Debug.Log("Quit Game");
+        isBusy = false;
 #else
         Application.Quit();
 #endif
+    }
+
+    IEnumerator OpenResetPanelRoutine()
+    {
+        isBusy = true;
+
+        yield return StartCoroutine(CloseOpenButtonIfAny());
+
+        if (resetDataPanel != null)
+            resetDataPanel.SetActive(true);
+
+        if (resetDataPanelAnimator != null)
+        {
+            resetDataPanelAnimator.ResetTrigger(outTrigger);
+            resetDataPanelAnimator.SetTrigger(inTrigger);
+        }
+
+        isResetPanelOpen = true;
+        isBusy = false;
+    }
+
+    IEnumerator CloseResetPanelRoutine()
+    {
+        isBusy = true;
+
+        if (resetDataPanelAnimator != null)
+        {
+            resetDataPanelAnimator.ResetTrigger(inTrigger);
+            resetDataPanelAnimator.SetTrigger(outTrigger);
+        }
+
+        yield return new WaitForSecondsRealtime(resetPanelOutDelay);
+
+        if (resetDataPanel != null)
+            resetDataPanel.SetActive(false);
+
+        isResetPanelOpen = false;
+        isBusy = false;
+    }
+
+    IEnumerator ConfirmResetRoutine()
+    {
+        isBusy = true;
+
+        if (resetDataPanelAnimator != null)
+        {
+            resetDataPanelAnimator.ResetTrigger(inTrigger);
+            resetDataPanelAnimator.SetTrigger(outTrigger);
+        }
+
+        yield return new WaitForSecondsRealtime(resetPanelOutDelay);
+
+        M_ProgressManager.ResetProgress();
+
+        if (reloadCurrentSceneAfterReset)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        else
+            SceneManager.LoadScene(mainMenuSceneName);
     }
 
     // =========================
@@ -149,7 +240,7 @@ public class M_MainMenuController : MonoBehaviour
     // =========================
     void Update()
     {
-        if (isBusy) return;
+        if (isBusy || isResetPanelOpen) return;
 
         if (Input.GetMouseButtonDown(0))
         {
