@@ -75,10 +75,49 @@ public class FakeCursor : MonoBehaviour
 
         Vector2 finalPos = smoothedPosition;
 
-        finalPos += GetContinuousShake();
-        finalPos += GetBurstShake();
+        if (CanShakeCursor())
+        {
+            finalPos += GetContinuousShake();
+            finalPos += GetBurstShake();
+        }
+        else
+        {
+            // matikan burst kalau UI prioritas kebuka
+            burstTimeLeft = 0f;
+        }
 
         transform.position = finalPos;
+    }
+
+    bool CanShakeCursor()
+    {
+        if (M_GameManager.Instance == null) return false;
+
+        // shake cuma saat gameplay normal
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+            return false;
+
+        // pause panel kebuka
+        if (PauseManager.Instance != null)
+        {
+            if (PauseManager.Instance.pausePanel != null &&
+                PauseManager.Instance.pausePanel.activeInHierarchy)
+                return false;
+        }
+
+        // game over / day success kebuka
+        if (UI_Script.Instance != null)
+        {
+            if (UI_Script.Instance.gameOverPanel != null &&
+                UI_Script.Instance.gameOverPanel.activeInHierarchy)
+                return false;
+
+            if (UI_Script.Instance.daySuccessPanel != null &&
+                UI_Script.Instance.daySuccessPanel.activeInHierarchy)
+                return false;
+        }
+
+        return true;
     }
 
     void CheckStateTransition()
@@ -89,8 +128,12 @@ public class FakeCursor : MonoBehaviour
 
         if (currentState != lastState)
         {
-            burstTimeLeft = burstDuration;
-            currentBurstAmount = GetBurstAmountForState(currentState);
+            if (CanShakeCursor())
+            {
+                burstTimeLeft = burstDuration;
+                currentBurstAmount = GetBurstAmountForState(currentState);
+            }
+
             lastState = currentState;
         }
     }
@@ -113,6 +156,9 @@ public class FakeCursor : MonoBehaviour
 
     float GetCurrentFollowSpeed()
     {
+        if (!CanShakeCursor())
+            return normalFollowSpeed;
+
         switch (GetNoiseState())
         {
             case 1: return stage1FollowSpeed;
