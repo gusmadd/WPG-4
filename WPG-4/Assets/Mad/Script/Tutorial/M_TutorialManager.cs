@@ -417,6 +417,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "First, turn that thing on.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingPowerClick = true;
         powerClicked = false;
@@ -482,6 +484,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Good. Now open Meowser.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingBrowserClick = true;
         browserClicked = false;
@@ -519,6 +523,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Use the search bar. That long little box.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingHomeSearchClick = true;
         homeSearchClicked = false;
@@ -560,6 +566,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Not every link is worth your paw.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingResultLinkClick = true;
         resultLinkClicked = false;
@@ -621,6 +629,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Look carefully. Don't buy random junk.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingFoodClick = true;
         foodClicked = false;
@@ -684,6 +694,8 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Stay quiet... and don't draw attention.")
         };
         yield return PlayVN(lines);
+        PlayCatNod();
+        ShowCatLine("(nodding)");
 
         waitingBuyHold = true;
         buyCompleted = false;
