@@ -32,6 +32,7 @@ public class M_AccessorisPage : MonoBehaviour
             if(closeCollider != null && closeCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 if (dekstopPage != null) dekstopPage.SetActive(true);
                 if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 gameObject.SetActive(false);
@@ -41,6 +42,7 @@ public class M_AccessorisPage : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (homePage != null) homePage.SetActive(true);
                 gameObject.SetActive(false);
@@ -50,6 +52,7 @@ public class M_AccessorisPage : MonoBehaviour
             if (servicesCollider != null && servicesCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicesPage != null) servicesPage.SetActive(true);
                 gameObject.SetActive(false);
@@ -59,6 +62,7 @@ public class M_AccessorisPage : MonoBehaviour
             if (backCollider != null && backCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (productsPage != null) productsPage.SetActive(true);
                 gameObject.SetActive(false);

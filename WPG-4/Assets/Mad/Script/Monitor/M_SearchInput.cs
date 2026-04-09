@@ -36,6 +36,7 @@ public class M_SearchInput : MonoBehaviour
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
             return;
         M_AudioManager.Instance?.PlayCursorClick();
+        M_PlayerController.Instance?.PlayTyping();
         keyboard.ShowKeyboard();
         ForceTyping();
     }
@@ -46,6 +47,7 @@ public class M_SearchInput : MonoBehaviour
         if (c == "CAPS")
         {
             M_AudioManager.Instance?.PlayKeyboardClick();
+            M_PlayerController.Instance?.PlayTyping();
             keyboard.ToggleCaps();
             return;
         }
@@ -73,6 +75,7 @@ public class M_SearchInput : MonoBehaviour
         if (c == "ENTER")
         {
             M_AudioManager.Instance?.PlayKeyboardClick();
+            M_PlayerController.Instance?.PlayTyping();
             Submit();
             return;
         }
@@ -81,6 +84,7 @@ public class M_SearchInput : MonoBehaviour
         if (c == "SPACE")
         {
             M_AudioManager.Instance?.PlaySpacebar();
+            M_PlayerController.Instance?.PlayTyping();
             if (isFirstInput)
             {
                 currentText = "";
@@ -98,6 +102,7 @@ public class M_SearchInput : MonoBehaviour
         if (currentText.Length < maxCharacter)
         {
             M_AudioManager.Instance?.PlayKeyboardClick();
+            M_PlayerController.Instance?.PlayTyping();
             // 🔥 Hapus default saat huruf pertama diketik
             if (isFirstInput)
             {

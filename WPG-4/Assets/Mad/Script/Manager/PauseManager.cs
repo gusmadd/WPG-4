@@ -163,7 +163,7 @@ public class PauseManager : MonoBehaviour
             pauseAnimator.SetTrigger("Out");
         }
 
-        yield return new WaitForSecondsRealtime(0.45f);
+        yield return new WaitForSecondsRealtime(1f);
 
         Time.timeScale = 1f;
 

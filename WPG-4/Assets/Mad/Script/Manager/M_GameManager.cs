@@ -17,9 +17,6 @@ public class M_GameManager : MonoBehaviour
     [Header("QTE")]
     public GameObject qtePrefab;
 
-    [Header("Animators")]
-    public Animator catAnimator;
-
     [Header("Camera Zoom")]
     public Camera mainCamera;
 
@@ -78,8 +75,7 @@ public class M_GameManager : MonoBehaviour
             mainCamera.transform.position = normalPosition;
         }
 
-        if (catAnimator != null)
-            catAnimator.SetTrigger("OnBackToIdle");
+        M_PlayerController.Instance?.BackToIdle();
 
         currentState = GameState.TaskOverlay;
     }
@@ -121,8 +117,7 @@ public class M_GameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.2f);
 
-        if (catAnimator != null)
-            catAnimator.SetTrigger("OnNoiseFull");
+        M_PlayerController.Instance?.PlayNoiseFull();
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -184,8 +179,7 @@ public class M_GameManager : MonoBehaviour
 
         M_DetailFoodPage.CompletePendingBuyIfAny();
 
-        if (catAnimator != null)
-            catAnimator.SetTrigger("OnBackToIdle");
+        M_PlayerController.Instance?.BackToIdle();
     }
 
     IEnumerator ReduceNoiseSmoothly(float targetValue)

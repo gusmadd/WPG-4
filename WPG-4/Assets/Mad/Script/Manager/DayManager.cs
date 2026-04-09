@@ -192,7 +192,7 @@ public class DayManager : MonoBehaviour
             M_NoiseSystem.Instance.ResetForNewDay();
 
         ResetPagesToDesktop();
-        M_GameManager.Instance?.catAnimator?.SetTrigger("OnBackToIdle");
+        M_PlayerController.Instance?.BackToIdle();
 
         currentDay = startDay;
 
