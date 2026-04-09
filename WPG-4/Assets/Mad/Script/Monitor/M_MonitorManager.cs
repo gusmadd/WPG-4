@@ -21,7 +21,7 @@ public class M_MonitorManager : MonoBehaviour
 
     [Header("Circle Spin")]
     public GameObject loadingCircle;
-    public Sprite[] loadingFrames; // isi 8 sprite di inspector
+    public Sprite[] loadingFrames;
     public float frameRate = 10f;
 
     private SpriteRenderer loadingRenderer;
@@ -68,6 +68,7 @@ public class M_MonitorManager : MonoBehaviour
         if (screenOff != null) screenOff.SetActive(true);
         if (screenOn != null) screenOn.SetActive(false);
         if (loadingCircle != null) loadingCircle.SetActive(false);
+
         if (loadingCircle != null)
             loadingRenderer = loadingCircle.GetComponent<SpriteRenderer>();
 
@@ -79,16 +80,18 @@ public class M_MonitorManager : MonoBehaviour
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
 
+        ResetLoadingVisual();
+        ResetLoadingAnimator();
         DisableAllAds();
     }
 
     void Update()
     {
-        if (loadingCircle != null && loadingCircle.activeSelf && loadingFrames.Length > 0)
+        if (loadingCircle != null && loadingCircle.activeSelf && loadingFrames != null && loadingFrames.Length > 0)
         {
             frameTimer += Time.deltaTime;
 
-            if (frameTimer >= 1f / frameRate)
+            if (frameRate > 0f && frameTimer >= 1f / frameRate)
             {
                 frameTimer = 0f;
 
@@ -106,6 +109,8 @@ public class M_MonitorManager : MonoBehaviour
             if (M_GameManager.Instance != null &&
                 M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
                 return;
+
+            if (Camera.main == null) return;
 
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -150,6 +155,11 @@ public class M_MonitorManager : MonoBehaviour
     public void PowerOn()
     {
         if (currentState != MonitorState.Off) return;
+
+        StopAllCoroutines();
+        ResetLoadingVisual();
+        ResetLoadingAnimator();
+
         StartCoroutine(PowerOnSequence());
     }
 
@@ -157,32 +167,47 @@ public class M_MonitorManager : MonoBehaviour
     {
         if (powerSprite != null && powerOnSprite != null)
             powerSprite.sprite = powerOnSprite;
+
         currentState = MonitorState.LoadingIn;
-        if (loadingAnimator != null) loadingAnimator.SetTrigger("isIn");
 
-        yield return new WaitUntil(() =>
-            loadingAnimator != null &&
-            loadingAnimator.GetCurrentAnimatorStateInfo(0).IsName("in") &&
-            loadingAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
-        );
+        if (loadingAnimator != null)
+        {
+            loadingAnimator.ResetTrigger("isOut");
+            loadingAnimator.ResetTrigger("isIn");
+            loadingAnimator.SetTrigger("isIn");
+        }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        if (loadingAnimator != null)
+        {
+            yield return new WaitUntil(() =>
+                loadingAnimator.GetCurrentAnimatorStateInfo(0).IsName("in") &&
+                loadingAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
+            );
+        }
 
         currentState = MonitorState.LoadingIdle;
-        currentFrame = 0;
-        frameTimer = 0f;
+        ResetLoadingVisual();
 
-        if (loadingRenderer != null && loadingFrames.Length > 0)
-            loadingRenderer.sprite = loadingFrames[0];
-        if (loadingCircle != null) loadingCircle.SetActive(true);
+        if (loadingCircle != null)
+            loadingCircle.SetActive(true);
 
-        yield return new WaitForSeconds(loadingDuration);
+        yield return new WaitForSecondsRealtime(loadingDuration);
 
         currentState = MonitorState.LoadingOut;
-        if (loadingCircle != null) loadingCircle.SetActive(false);
-        if (loadingAnimator != null) loadingAnimator.SetTrigger("isOut");
 
-        yield return new WaitForSeconds(delayAfterOut);
+        if (loadingCircle != null)
+            loadingCircle.SetActive(false);
+
+        if (loadingAnimator != null)
+        {
+            loadingAnimator.ResetTrigger("isIn");
+            loadingAnimator.ResetTrigger("isOut");
+            loadingAnimator.SetTrigger("isOut");
+        }
+
+        yield return new WaitForSecondsRealtime(delayAfterOut);
 
         currentState = MonitorState.On;
 
@@ -192,7 +217,7 @@ public class M_MonitorManager : MonoBehaviour
         if (desktopPage != null) desktopPage.SetActive(true);
         if (searchHomePage != null) searchHomePage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
-
+        if (petshopPage != null) petshopPage.SetActive(false);
     }
 
     void OpenBrowser()
@@ -204,7 +229,6 @@ public class M_MonitorManager : MonoBehaviour
 
     void ShowRandomAds()
     {
-        // Ads hanya boleh muncul saat gameplay
         if (M_GameManager.Instance == null) return;
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
             return;
@@ -236,7 +260,9 @@ public class M_MonitorManager : MonoBehaviour
 
     void CloseSearch()
     {
-        keyboard.HideKeyboard();
+        if (keyboard != null)
+            keyboard.HideKeyboard();
+
         if (searchHomePage != null) searchHomePage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(false);
@@ -284,11 +310,12 @@ public class M_MonitorManager : MonoBehaviour
 
     public void ResetToOff()
     {
-        currentFrame = 0;
-        frameTimer = 0f;
         StopAllCoroutines();
 
         currentState = MonitorState.Off;
+
+        ResetLoadingVisual();
+        ResetLoadingAnimator();
 
         if (screenOff != null) screenOff.SetActive(true);
         if (screenOn != null) screenOn.SetActive(false);
@@ -302,11 +329,34 @@ public class M_MonitorManager : MonoBehaviour
         if (homeSearchInput != null) homeSearchInput.ResetToDefault();
         if (resultSearchInput != null) resultSearchInput.ResetToDefault();
 
+        if (keyboard != null)
+            keyboard.HideKeyboard();
+
         DisableAllAds();
 
         if (powerSprite != null && powerOffSprite != null)
             powerSprite.sprite = powerOffSprite;
     }
+
+    void ResetLoadingVisual()
+    {
+        currentFrame = 0;
+        frameTimer = 0f;
+
+        if (loadingRenderer != null && loadingFrames != null && loadingFrames.Length > 0)
+            loadingRenderer.sprite = loadingFrames[0];
+    }
+
+    void ResetLoadingAnimator()
+    {
+        if (loadingAnimator == null) return;
+
+        loadingAnimator.ResetTrigger("isIn");
+        loadingAnimator.ResetTrigger("isOut");
+        loadingAnimator.Rebind();
+        loadingAnimator.Update(0f);
+    }
+
     public void ForceCloseAllAdsForQTE()
     {
         if (adsPopups == null) return;
