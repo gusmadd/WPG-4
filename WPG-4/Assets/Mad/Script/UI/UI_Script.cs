@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,12 +16,6 @@ public class UI_Script : MonoBehaviour
     public float shakeDuration = 0.4f;
     public float shakeMagnitude = 0.2f;
 
-    [Header("Wrong Purchase Effect")]
-    public Animator wrongPurchaseAnimator;
-    public bool useShakeOnWrongPurchase = true;
-    public float wrongShakeDuration = 0.15f;
-    public float wrongShakeMagnitude = 0.08f;
-
     [Header("QTE Timer")]
     public GameObject timerUI;
     public Image timerFill;
@@ -38,6 +31,12 @@ public class UI_Script : MonoBehaviour
     public Button gameOverHomeButton;
     public Button gameOverRestartButton;
 
+    // anti double trigger
+    bool isProcessingDayNext = false;
+    bool isProcessingDayHome = false;
+    bool isProcessingGameOverHome = false;
+    bool isProcessingGameOverRestart = false;
+
     void Awake()
     {
         Instance = this;
@@ -48,11 +47,29 @@ public class UI_Script : MonoBehaviour
         if (daySuccessPanel != null) daySuccessPanel.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
-        if (dayHomeButton != null) dayHomeButton.onClick.AddListener(OnClickDayHome);
-        if (dayNextButton != null) dayNextButton.onClick.AddListener(OnClickDayNext);
+        if (dayHomeButton != null)
+        {
+            dayHomeButton.onClick.RemoveListener(OnClickDayHome);
+            dayHomeButton.onClick.AddListener(OnClickDayHome);
+        }
 
-        if (gameOverHomeButton != null) gameOverHomeButton.onClick.AddListener(OnClickGameOverHome);
-        if (gameOverRestartButton != null) gameOverRestartButton.onClick.AddListener(OnClickGameOverRestart);
+        if (dayNextButton != null)
+        {
+            dayNextButton.onClick.RemoveListener(OnClickDayNext);
+            dayNextButton.onClick.AddListener(OnClickDayNext);
+        }
+
+        if (gameOverHomeButton != null)
+        {
+            gameOverHomeButton.onClick.RemoveListener(OnClickGameOverHome);
+            gameOverHomeButton.onClick.AddListener(OnClickGameOverHome);
+        }
+
+        if (gameOverRestartButton != null)
+        {
+            gameOverRestartButton.onClick.RemoveListener(OnClickGameOverRestart);
+            gameOverRestartButton.onClick.AddListener(OnClickGameOverRestart);
+        }
     }
 
     public IEnumerator Fade(float from, float to)
@@ -95,49 +112,16 @@ public class UI_Script : MonoBehaviour
         cameraTransform.localPosition = originalPos;
     }
 
-    public void PlayWrongEffect()
-    {
-        if (wrongPurchaseAnimator != null)
-        {
-            wrongPurchaseAnimator.ResetTrigger("Play");
-            wrongPurchaseAnimator.SetTrigger("Play");
-        }
-
-        if (useShakeOnWrongPurchase)
-            StartCoroutine(ShakeWrongPurchase());
-    }
-
-    IEnumerator ShakeWrongPurchase()
-    {
-        if (cameraTransform == null) yield break;
-
-        Vector3 originalPos = cameraTransform.localPosition;
-        float elapsed = 0f;
-
-        while (elapsed < wrongShakeDuration)
-        {
-            float x = Random.Range(-1f, 1f) * wrongShakeMagnitude;
-            float y = Random.Range(-1f, 1f) * wrongShakeMagnitude;
-
-            cameraTransform.localPosition = originalPos + new Vector3(x, y, 0);
-
-            elapsed += Time.unscaledDeltaTime;
-            yield return null;
-        }
-
-        cameraTransform.localPosition = originalPos;
-    }
-
     public void StartTimer(float maxTime)
     {
         if (timerUI != null) timerUI.SetActive(true);
-        if (timerFill != null) timerFill.fillAmount = 0f;
+        if (timerFill != null) timerFill.fillAmount = 1f;
     }
 
     public void UpdateTimer(float current, float max)
     {
         if (timerFill != null)
-            timerFill.fillAmount = 1f - Mathf.Clamp01(current / max);
+            timerFill.fillAmount = Mathf.Clamp01(current / max);
     }
 
     public void StopTimer()
@@ -147,21 +131,47 @@ public class UI_Script : MonoBehaviour
 
     public void ShowDaySuccess(int day)
     {
+        isProcessingDayNext = false;
+        isProcessingDayHome = false;
+
         if (daySuccessPanel != null) daySuccessPanel.SetActive(true);
         if (daySuccessText != null) daySuccessText.text = "Day " + day + " Success";
+
+        if (dayNextButton != null) dayNextButton.interactable = true;
+        if (dayHomeButton != null) dayHomeButton.interactable = true;
 
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
     }
+public void PlayWrongEffect()
+{
+    // play sound
+    M_AudioManager.Instance?.PlayWrongSfx();
 
+    // optional: camera shake (small)
+    if (cameraTransform != null)
+        StartCoroutine(Shake());
+}
     public void HideDaySuccess()
     {
         if (daySuccessPanel != null) daySuccessPanel.SetActive(false);
+
+        if (dayNextButton != null) dayNextButton.interactable = true;
+        if (dayHomeButton != null) dayHomeButton.interactable = true;
+
+        isProcessingDayNext = false;
+        isProcessingDayHome = false;
     }
 
     public void ShowGameOver()
     {
+        isProcessingGameOverHome = false;
+        isProcessingGameOverRestart = false;
+
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
+
+        if (gameOverHomeButton != null) gameOverHomeButton.interactable = true;
+        if (gameOverRestartButton != null) gameOverRestartButton.interactable = true;
 
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
@@ -170,16 +180,40 @@ public class UI_Script : MonoBehaviour
     public void HideGameOver()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
+
+        if (gameOverHomeButton != null) gameOverHomeButton.interactable = true;
+        if (gameOverRestartButton != null) gameOverRestartButton.interactable = true;
+
+        isProcessingGameOverHome = false;
+        isProcessingGameOverRestart = false;
     }
 
     void OnClickDayHome()
     {
+        if (isProcessingDayHome) return;
+        isProcessingDayHome = true;
+
+        if (dayHomeButton != null)
+            dayHomeButton.interactable = false;
+
+        if (dayNextButton != null)
+            dayNextButton.interactable = false;
+
         M_AudioManager.Instance?.PlayCursorClick();
         DayManager.Instance?.GoHome();
     }
 
     void OnClickDayNext()
     {
+        if (isProcessingDayNext) return;
+        isProcessingDayNext = true;
+
+        if (dayNextButton != null)
+            dayNextButton.interactable = false;
+
+        if (dayHomeButton != null)
+            dayHomeButton.interactable = false;
+
         M_AudioManager.Instance?.PlayCursorClick();
         HideDaySuccess();
         DayManager.Instance?.NextDay();
@@ -187,12 +221,30 @@ public class UI_Script : MonoBehaviour
 
     void OnClickGameOverHome()
     {
+        if (isProcessingGameOverHome) return;
+        isProcessingGameOverHome = true;
+
+        if (gameOverHomeButton != null)
+            gameOverHomeButton.interactable = false;
+
+        if (gameOverRestartButton != null)
+            gameOverRestartButton.interactable = false;
+
         M_AudioManager.Instance?.PlayCursorClick();
         DayManager.Instance?.GoHome();
     }
 
     void OnClickGameOverRestart()
     {
+        if (isProcessingGameOverRestart) return;
+        isProcessingGameOverRestart = true;
+
+        if (gameOverRestartButton != null)
+            gameOverRestartButton.interactable = false;
+
+        if (gameOverHomeButton != null)
+            gameOverHomeButton.interactable = false;
+
         M_AudioManager.Instance?.PlayCursorClick();
         HideGameOver();
         DayManager.Instance?.RestartGame();
