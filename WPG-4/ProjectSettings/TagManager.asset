@@ -56,3 +56,6 @@ TagManager:
   - name: narratorbox
     uniqueID: 3764274467
     locked: 0
+  - name: Light
+    uniqueID: 2476362875
+    locked: 0
