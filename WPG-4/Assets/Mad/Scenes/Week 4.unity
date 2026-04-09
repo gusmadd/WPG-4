@@ -3983,27 +3983,27 @@ MonoBehaviour:
     category: 0
   - id: Toys_01
     displayName: Mouse
-    icon: {fileID: 21300000, guid: d0d364dcb4dc310489cf91904608710d, type: 3}
+    icon: {fileID: 21300000, guid: fd0f4d1f39d2e694aace310fc34bf766, type: 3}
     category: 1
   - id: Toys_02
     displayName: Yarn Ball
-    icon: {fileID: 21300000, guid: e8e9e33cdac5af545b15673682076875, type: 3}
+    icon: {fileID: 21300000, guid: 362af0e41fe60e64d8af317d827ea537, type: 3}
     category: 1
   - id: Toys_03
     displayName: Set Balls
-    icon: {fileID: 21300000, guid: 75b815598dc01c94aa559b5f39a5ad78, type: 3}
+    icon: {fileID: 21300000, guid: fcb83bc912ca7f448babbddfd0d7d104, type: 3}
     category: 1
   - id: Toys_04
     displayName: Catnip Kicker
-    icon: {fileID: 21300000, guid: e91a7f202ef5b2643b7d4469f168e8b9, type: 3}
+    icon: {fileID: 21300000, guid: 3541fbae53430c9459e4c86d725cf139, type: 3}
     category: 1
   - id: Toys_05
     displayName: Spring Base
-    icon: {fileID: 21300000, guid: ee63f261486ada34faa3852038ea7d28, type: 3}
+    icon: {fileID: 21300000, guid: a826ae98d81c82640b207bd6839a491b, type: 3}
     category: 1
   - id: Toys_06
     displayName: Cat Wand
-    icon: {fileID: 21300000, guid: 7991875609586be4d94ae1ac48cb160d, type: 3}
+    icon: {fileID: 21300000, guid: 0af0983a5aa4b5245a09c31e1a3f4cef, type: 3}
     category: 1
 --- !u!114 &186899319
 MonoBehaviour:
