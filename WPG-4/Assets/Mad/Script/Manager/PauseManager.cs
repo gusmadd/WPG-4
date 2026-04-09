@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -165,14 +164,26 @@ public class PauseManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
+        // pastikan game jalan normal lagi sebelum reset
         Time.timeScale = 1f;
 
+        // paksa tutup panel pause dulu
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
+        // paksa stop input / loading state yang mungkin masih nyangkut
+        if (M_GameManager.Instance != null && M_GameManager.Instance.keyboard != null)
+            M_GameManager.Instance.keyboard.HideKeyboard();
+
+        M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
+        if (monitor != null)
+            monitor.ResetToOff();
+
+        // reset flag pause
         isPaused = false;
         isTransitioning = false;
 
+        // baru restart day/game
         DayManager.Instance?.RestartGame();
 
         RefreshPauseButton();
@@ -181,6 +192,11 @@ public class PauseManager : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
+
+        M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
+        if (monitor != null)
+            monitor.ResetToOff();
+
         SceneManager.LoadScene("Week");
     }
 
