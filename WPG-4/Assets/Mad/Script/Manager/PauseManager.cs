@@ -196,8 +196,9 @@ public class PauseManager : MonoBehaviour
         M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
         if (monitor != null)
             monitor.ResetToOff();
-
-        SceneManager.LoadScene("Week");
+    
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition("Week");
     }
 
     IEnumerator FinishTransition()

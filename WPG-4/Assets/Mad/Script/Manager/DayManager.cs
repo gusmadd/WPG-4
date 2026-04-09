@@ -49,6 +49,8 @@ public class DayManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Max Day: " + maxDay + ", Current Day: " + currentDay);
+
         currentDay = startDay;
 
         if (TaskManager.Instance != null)
@@ -79,6 +81,8 @@ public class DayManager : MonoBehaviour
 
     IEnumerator StartDayRoutine(int day)
     {
+        Debug.Log("Starting Day: " + day);  // Debug untuk memeriksa apakah StartDayRoutine dipanggil
+
         int tasks = startTasks + (day - 1) * tasksIncreasePerDay;
 
         if (M_NoiseSystem.Instance != null)
@@ -148,6 +152,8 @@ public class DayManager : MonoBehaviour
 
     public void NextDay()
     {
+        Debug.Log("Current Day before increment: " + currentDay);  // Tambahkan debug
+
         if (currentDay >= maxDay)
         {
             if (weekCompletePanel != null)
@@ -155,7 +161,8 @@ public class DayManager : MonoBehaviour
             return;
         }
 
-        currentDay++;
+        currentDay++;  // Increment currentDay
+        Debug.Log("Current Day after increment: " + currentDay);  // Tambahkan debug untuk memeriksa increment
 
         UI_Script.Instance?.HideDaySuccess();
         UI_Script.Instance?.HideGameOver();
@@ -169,11 +176,12 @@ public class DayManager : MonoBehaviour
         if (TaskUIController.Instance != null)
             TaskUIController.Instance.ResetForNewDay(currentDay);
 
-        StopAllCoroutines();
+        StopAllCoroutines();  // Pastikan tidak ada coroutine yang berjalan
 
         if (monitorManager != null)
             monitorManager.ResetToOff();
 
+        // Panggil StartDayRoutine untuk memulai hari baru
         StartCoroutine(StartDayRoutine(currentDay));
     }
 
@@ -208,17 +216,20 @@ public class DayManager : MonoBehaviour
 
     public void GoHome()
     {
-        SceneManager.LoadScene(mainMenuSceneName);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(mainMenuSceneName);
     }
 
     public void GoToWeekChoice()
     {
-        SceneManager.LoadScene(weekChoiceSceneName);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(weekChoiceSceneName);
     }
 
     public void GoToNextWeek()
     {
-        SceneManager.LoadScene(nextWeekSceneName);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(nextWeekSceneName);
     }
 
     void ResetPagesToDesktop()

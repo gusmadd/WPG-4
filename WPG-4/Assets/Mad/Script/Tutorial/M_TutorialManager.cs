@@ -737,7 +737,8 @@ public class M_TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
 
         M_ProgressManager.CompleteTutorial();
-        SceneManager.LoadScene(nextSceneName);
+                if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(nextSceneName);
     }
 
     void StartHoldBuy()

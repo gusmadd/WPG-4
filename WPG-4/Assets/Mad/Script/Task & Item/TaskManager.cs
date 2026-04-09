@@ -114,7 +114,7 @@ public class TaskManager : MonoBehaviour
                 result.Add(ItemCategory.Toys);
                 break;
             default:
-                result.Add(ItemCategory.Food);
+                result.Add(ItemCategory.Food);  
                 result.Add(ItemCategory.Toys);
                 break;
         }

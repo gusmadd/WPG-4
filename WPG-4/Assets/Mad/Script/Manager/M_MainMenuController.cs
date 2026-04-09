@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class M_MainMenuController : MonoBehaviour
 {
@@ -27,6 +29,17 @@ public class M_MainMenuController : MonoBehaviour
     public bool reloadCurrentSceneAfterReset = true;
     public string mainMenuSceneName = "MainMenu";
 
+    // ==========================================
+    // BARU: Scene Transition (Tanpa Animator)
+    // ==========================================
+    [Header("Scene Transition (Script Based)")]
+    public RectTransform transitionImageRect; // RectTransform dari Image Slide
+    public float transitionDuration = 0.5f;   // Berapa lama slide berlangsung
+    public AnimationCurve transitionCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // Opsional: Biar gerakannya smooth
+
+    private Vector2 screenHiddenPosition; // Posisi gambar saat tidak terlihat
+    private Vector2 screenCenterPosition; // Posisi gambar saat menutupi layar
+
     private string currentOpenButton = "";
     private bool isBusy = false;
     private bool isResetPanelOpen = false;
@@ -35,6 +48,32 @@ public class M_MainMenuController : MonoBehaviour
     {
         if (resetDataPanel != null)
             resetDataPanel.SetActive(false);
+
+        // Setup posisi transisi
+        SetupTransitionPositions();
+    }
+
+    // Menghitung posisi awal dan akhir slide berdasarkan ukuran layar
+    private void SetupTransitionPositions()
+    {
+        if (transitionImageRect == null) return;
+
+        // Ambil ukuran canvas dari parent rect image tersebut
+        RectTransform canvasRect = transitionImageRect.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        float screenWidth = canvasRect.rect.width;
+
+        // Atur Anchor ke tengah layar agar perhitungan Vector2.zero tepat di tengah
+        transitionImageRect.anchorMin = new Vector2(0.5f, 0.5f);
+        transitionImageRect.anchorMax = new Vector2(0.5f, 0.5f);
+        transitionImageRect.pivot = new Vector2(0.5f, 0.5f);
+
+        // Tentukan posisi
+        screenCenterPosition = Vector2.zero;
+        screenHiddenPosition = new Vector2(-screenWidth, 0); // Di kanan luar layar
+
+        // Set posisi awal dan matikan agar tidak menghalangi klik
+        transitionImageRect.anchoredPosition = screenHiddenPosition;
+        transitionImageRect.gameObject.SetActive(false);
     }
 
     // =========================
@@ -108,9 +147,44 @@ public class M_MainMenuController : MonoBehaviour
     {
         isBusy = true;
 
+        // 1. Tunggu tombol animasi "Out"
         yield return StartCoroutine(CloseOpenButtonIfAny());
 
+        // 2. Jalankan Slide Transisi via Script
+        if (transitionImageRect != null)
+        {
+            transitionImageRect.gameObject.SetActive(true);
+            // Mulai Coroutine untuk menggerakkan gambar
+            yield return StartCoroutine(SildInTransition());
+        }
+
+        // 3. Pindah Scene
         SceneManager.LoadScene(gameSceneName);
+    }
+
+    // COROUTINE UNTUK MENGGERAKKAN SLIDE (LERP)
+    IEnumerator SildInTransition()
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime < transitionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            // Hitung persentase progres (0 sampai 1)
+            float t = elapsedTime / transitionDuration;
+
+            // Gunakan Curve agar gerakan lebih smooth (slow start, slow end)
+            float curveT = transitionCurve.Evaluate(t);
+
+            // Gerakkan posisi dari tersembunyi ke tengah
+            transitionImageRect.anchoredPosition = Vector2.Lerp(screenHiddenPosition, screenCenterPosition, curveT);
+
+            yield return null; // Tunggu frame berikutnya
+        }
+
+        // Pastikan posisi akhirnya tepat di tengah
+        transitionImageRect.anchoredPosition = screenCenterPosition;
     }
 
     IEnumerator ExitRoutine()
@@ -177,7 +251,7 @@ public class M_MainMenuController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(resetPanelOutDelay);
 
-        M_ProgressManager.ResetProgress();
+        // M_ProgressManager.ResetProgress(); // Commented out karena script eksternal
 
         if (reloadCurrentSceneAfterReset)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -203,6 +277,21 @@ public class M_MainMenuController : MonoBehaviour
             yield return new WaitForSeconds(actionDelay);
         }
     }
+
+    // Helper opsional untuk mencari Canvas jika script tidak ditaruh di Canvas
+    private static class GameObjectExtension
+    {
+        public static Canvas FindActionableCanvas()
+        {
+            Canvas[] canvases = GameObject.FindObjectsOfType<Canvas>();
+            foreach (Canvas c in canvases)
+            {
+                if (c.renderMode != RenderMode.WorldSpace) return c;
+            }
+            return canvases[0];
+        }
+    }
+
 
     // =========================
     // ANIMATION CONTROL

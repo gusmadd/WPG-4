@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 public class M_BackButton : MonoBehaviour
 {
     [Header("Menu")]
-    public string mainMenuScene= "MainMenu";
+    public string mainMenuScene = "MainMenu";
     public void BackToMainMenu()
     {
-        SceneManager.LoadScene(mainMenuScene);
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(mainMenuScene);
     }
 }
