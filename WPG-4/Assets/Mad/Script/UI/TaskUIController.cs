@@ -100,6 +100,7 @@ public class TaskUIController : MonoBehaviour
     public void ShowStartDayOverlay(int day)
     {
         currentShownDay = day;
+        M_AudioManager.Instance.PlayBubbleAppear();
         currentMode = OverlayMode.StartDay;
         RestartOverlayRoutine();
     }
@@ -118,10 +119,12 @@ public class TaskUIController : MonoBehaviour
         {
             pendingReminderAfterQTE = true;
             pendingReminderDay = day;
+            M_AudioManager.Instance.PlayBubbleAppear();
             return;
         }
 
         currentShownDay = day;
+        M_AudioManager.Instance.PlayBubbleAppear();
         currentMode = OverlayMode.Reminder;
         RestartOverlayRoutine();
     }

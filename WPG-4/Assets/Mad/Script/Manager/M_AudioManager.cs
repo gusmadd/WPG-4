@@ -7,6 +7,7 @@ public class M_AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     public AudioSource sfxSource;
     public AudioSource ambienceSource;
+    public AudioSource backgroundMusicSource;
 
     [Header("Volume Multipliers")]
     [Range(0f, 1f)] public float uiVolume = 1f;
@@ -40,6 +41,7 @@ public class M_AudioManager : MonoBehaviour
     public AudioClip paymentSfx;
     [Tooltip("Contoh isi: emilianodleon-button-ui-sound-effect")]
     public AudioClip wrongSfx;
+    public AudioClip daySuccessSfx;
 
     [Header("Ads")]
     [Tooltip("UI popup / iklan muncul")]
@@ -47,7 +49,8 @@ public class M_AudioManager : MonoBehaviour
 
     [Header("Big Sis - Presence")]
     [Tooltip("bigsis ngintip, bigsis starring")]
-    public AudioClip[] bigSisSfx;
+    public AudioClip bigSisNgintipSfx;
+    public AudioClip bigSisStarringSfx;
 
     [Header("PC")]
     [Tooltip("Contoh isi: pc nyala")]
@@ -65,11 +68,14 @@ public class M_AudioManager : MonoBehaviour
 
     [Header("Footstep")]
     [Tooltip("Contoh isi: footstep bigsis")]
-    public AudioClip[] footstepSfx;
+    public AudioClip footstepSfx;
 
     [Header("Extra UI")]
     [Tooltip("Contoh isi: UI 1, UI 2, UI 3, UI 4")]
     public AudioClip[] uiSfx;
+    [Header("Hold buy")]
+    public AudioClip holdBuySfx;
+    private bool isPlayingHoldBuySfx = false;
 
     [Header("Misc Gameplay")]
     [Tooltip("Contoh isi: file SFX lain yang tidak cocok ke kategori atas")]
@@ -77,8 +83,8 @@ public class M_AudioManager : MonoBehaviour
 
     [Header("Ambience")]
     [Tooltip("Contoh isi: in game ambience")]
-    public AudioClip inGameAmbience;
-    public bool playAmbienceOnStart = false;
+    public AudioClip backgroundMusicClip;
+    public bool playBackgroundMusicOnStart = false;
 
     void Awake()
     {
@@ -92,8 +98,8 @@ public class M_AudioManager : MonoBehaviour
 
     void Start()
     {
-        if (playAmbienceOnStart)
-            PlayInGameAmbience();
+        if (playBackgroundMusicOnStart)
+            PlayBackgroundMusic();  // Play background music on start
     }
 
     // =========================
@@ -170,6 +176,10 @@ public class M_AudioManager : MonoBehaviour
     {
         PlayClip(wrongSfx, uiVolume);
     }
+    public void PlayDaySuccesSfx()
+    {
+        PlayClip(daySuccessSfx, uiVolume);
+    }
 
     // =========================
     // KEYBOARD
@@ -211,6 +221,14 @@ public class M_AudioManager : MonoBehaviour
         PlayClip(hideKeyboardSfx, uiVolume);
     }
 
+    public void PlayHoldBuy()
+    {
+        if (isPlayingHoldBuySfx) return;
+
+        isPlayingHoldBuySfx = true;
+        PlayClip(holdBuySfx, uiVolume);
+    }
+
     // =========================
     // PURCHASE / SHOP
     // =========================
@@ -236,22 +254,20 @@ public class M_AudioManager : MonoBehaviour
     // =========================
     // BIG SIS
     // =========================
-    public void PlayBigSisSfx()
+    public void PlayBigSisNgintipSfx()
     {
-        PlayRandom(bigSisSfx, bigSisVolume);
+        PlayClip(bigSisNgintipSfx, bigSisVolume);
     }
 
-    public void PlayBigSisByIndex(int index)
+    public void PlayBigSisStarringSfx()
     {
-        if (!IsValidArray(bigSisSfx)) return;
-        if (index < 0 || index >= bigSisSfx.Length) return;
-
-        PlayClip(bigSisSfx[index], bigSisVolume);
+        PlayClip(bigSisStarringSfx, bigSisVolume);
     }
 
-    public void PlayRandomFootstep()
+
+    public void PlayFootstepSfx()
     {
-        PlayRandom(footstepSfx, miscVolume);
+        PlayClip(footstepSfx, bigSisVolume);
     }
 
     // =========================
@@ -310,18 +326,15 @@ public class M_AudioManager : MonoBehaviour
     // =========================
     // AMBIENCE
     // =========================
-    public void PlayInGameAmbience()
+    public void PlayBackgroundMusic()
     {
-        if (ambienceSource == null) return;
-        if (inGameAmbience == null) return;
-
-        if (ambienceSource.clip == inGameAmbience && ambienceSource.isPlaying)
-            return;
-
-        ambienceSource.clip = inGameAmbience;
-        ambienceSource.loop = true;
-        ambienceSource.volume = ambienceVolume;
-        ambienceSource.Play();
+        if (backgroundMusicSource != null && backgroundMusicClip != null)
+        {
+            backgroundMusicSource.clip = backgroundMusicClip;  // Set background music clip
+            backgroundMusicSource.loop = true;             // Set to loop the background music
+            backgroundMusicSource.volume = ambienceVolume; // Set volume for the music
+            backgroundMusicSource.Play();                  // Play the background music
+        }
     }
 
     public void StopAmbience()
@@ -379,11 +392,7 @@ public class M_AudioManager : MonoBehaviour
         PlayAdsSfx();
     }
 
-    [ContextMenu("Test Big Sis Sfx")]
-    public void TestBigSisSfx()
-    {
-        PlayBigSisSfx();
-    }
+
 
     [ContextMenu("Test Bubble")]
     public void TestBubble()
@@ -391,9 +400,4 @@ public class M_AudioManager : MonoBehaviour
         PlayBubbleAppear();
     }
 
-    [ContextMenu("Test Ambience")]
-    public void TestAmbience()
-    {
-        PlayInGameAmbience();
-    }
 }

@@ -112,30 +112,35 @@ public class M_MainMenuController : MonoBehaviour
     // =========================
     public void ClickStart()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isBusy || isResetPanelOpen) return;
         StartCoroutine(StartRoutine());
     }
 
     public void ClickExit()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isBusy || isResetPanelOpen) return;
         StartCoroutine(ExitRoutine());
     }
 
     public void ClickResetData()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isBusy || isResetPanelOpen) return;
         StartCoroutine(OpenResetPanelRoutine());
     }
 
     public void ClickCancelReset()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isBusy || !isResetPanelOpen) return;
         StartCoroutine(CloseResetPanelRoutine());
     }
 
     public void ClickConfirmReset()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isBusy || !isResetPanelOpen) return;
         StartCoroutine(ConfirmResetRoutine());
     }

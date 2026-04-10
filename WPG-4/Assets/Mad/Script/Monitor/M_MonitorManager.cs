@@ -36,6 +36,10 @@ public class M_MonitorManager : MonoBehaviour
     public Sprite powerOffSprite;
     public Sprite powerOnSprite;
 
+    [Header("Lights")]
+    public GameObject powerLight;     // nyala saat tombol power ON
+    public GameObject monitorLight;   // nyala saat monitor sudah benar-benar ON
+
     [Header("Pages")]
     public GameObject desktopPage;
     public GameObject searchHomePage;
@@ -68,6 +72,9 @@ public class M_MonitorManager : MonoBehaviour
         if (screenOff != null) screenOff.SetActive(true);
         if (screenOn != null) screenOn.SetActive(false);
         if (loadingCircle != null) loadingCircle.SetActive(false);
+
+        if (powerLight != null) powerLight.SetActive(false);
+        if (monitorLight != null) monitorLight.SetActive(false);
 
         if (loadingCircle != null)
             loadingRenderer = loadingCircle.GetComponent<SpriteRenderer>();
@@ -118,7 +125,7 @@ public class M_MonitorManager : MonoBehaviour
                 powerCollider != null &&
                 powerCollider.OverlapPoint(mousePos))
             {
-                M_AudioManager.Instance?.PlayCursorClick();
+                M_AudioManager.Instance?.PlayPcButton();
                 PowerOn();
                 return;
             }
@@ -168,6 +175,10 @@ public class M_MonitorManager : MonoBehaviour
         if (powerSprite != null && powerOnSprite != null)
             powerSprite.sprite = powerOnSprite;
 
+        // Light tombol power langsung nyala setelah sprite power ON
+        if (powerLight != null)
+            powerLight.SetActive(true);
+
         currentState = MonitorState.LoadingIn;
 
         if (loadingAnimator != null)
@@ -210,9 +221,15 @@ public class M_MonitorManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(delayAfterOut);
 
         currentState = MonitorState.On;
+        M_AudioManager.Instance?.PlayPcPowerOn();
 
         if (screenOff != null) screenOff.SetActive(false);
         if (screenOn != null) screenOn.SetActive(true);
+        
+
+        // Light monitor nyala saat monitor benar-benar ON
+        if (monitorLight != null)
+            monitorLight.SetActive(true);
 
         if (desktopPage != null) desktopPage.SetActive(true);
         if (searchHomePage != null) searchHomePage.SetActive(false);
@@ -320,6 +337,9 @@ public class M_MonitorManager : MonoBehaviour
         if (screenOff != null) screenOff.SetActive(true);
         if (screenOn != null) screenOn.SetActive(false);
         if (loadingCircle != null) loadingCircle.SetActive(false);
+
+        if (powerLight != null) powerLight.SetActive(false);
+        if (monitorLight != null) monitorLight.SetActive(false);
 
         if (desktopPage != null) desktopPage.SetActive(false);
         if (searchHomePage != null) searchHomePage.SetActive(false);

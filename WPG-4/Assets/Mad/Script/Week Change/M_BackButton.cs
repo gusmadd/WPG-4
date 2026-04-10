@@ -9,6 +9,7 @@ public class M_BackButton : MonoBehaviour
     public string mainMenuScene = "MainMenu";
     public void BackToMainMenu()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(mainMenuScene);
     }

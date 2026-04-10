@@ -84,6 +84,7 @@ public class PauseManager : MonoBehaviour
 
     public void Pause()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (isPaused || isTransitioning) return;
         if (!CanPause()) return;
 
@@ -106,6 +107,7 @@ public class PauseManager : MonoBehaviour
         }
 
         Time.timeScale = 0f;
+        AudioListener.pause = true;
         TaskManager.Instance?.PauseTimer();
 
         RefreshPauseButton();
@@ -114,6 +116,8 @@ public class PauseManager : MonoBehaviour
 
     public void Resume()
     {
+        AudioListener.pause = false;
+        M_AudioManager.Instance?.PlayRandomUi();
         if (!isPaused || isTransitioning) return;
         StartCoroutine(ResumeRoutine());
     }
@@ -148,6 +152,8 @@ public class PauseManager : MonoBehaviour
 
     public void Restart()
     {
+        AudioListener.pause = false;
+        M_AudioManager.Instance?.PlayRandomUi();
         if (!isPaused || isTransitioning) return;
         StartCoroutine(RestartRoutine());
     }
@@ -191,12 +197,14 @@ public class PauseManager : MonoBehaviour
 
     public void BackToMenu()
     {
+        AudioListener.pause = false;
+        M_AudioManager.Instance?.PlayRandomUi();
         Time.timeScale = 1f;
 
         M_MonitorManager monitor = FindObjectOfType<M_MonitorManager>();
         if (monitor != null)
             monitor.ResetToOff();
-    
+
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition("Week");
     }

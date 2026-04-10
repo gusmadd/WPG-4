@@ -36,6 +36,8 @@ public class DayManager : MonoBehaviour
     public int maxDay = 5;
     public GameObject weekCompletePanel;
 
+    public GameObject[] dayCalendarObjects; // Array berisi 5 GameObject (Day 1 - Day 5)
+    public float calendarDisplayDuration = 5f; // Durasi tampil kalender
     int currentDay;
 
     public string mainMenuSceneName = "MainMenu";
@@ -118,6 +120,7 @@ public class DayManager : MonoBehaviour
 
     IEnumerator SuccessRoutine()
     {
+        M_AudioManager.Instance?.PlayRandomCalendar();
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.FreezeNoise(true);
 
@@ -126,14 +129,42 @@ public class DayManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(successDelay);
 
+
+        // --- LOGIKA KALENDER BARU ---
+        // Cek apakah index kalender valid (currentDay biasanya 1-5, jadi index -1)
+        int calendarIndex = currentDay - 1;
+        if (dayCalendarObjects != null && calendarIndex < dayCalendarObjects.Length)
+        {
+            // Aktifkan object kalender yang sesuai hari ini
+            if (dayCalendarObjects[calendarIndex] != null)
+            {
+                dayCalendarObjects[calendarIndex].SetActive(true);
+
+                // Jika ada script animasi spesifik, jalankan di sini
+                // calendarAnimation?.PlayAnimation(); 
+
+                // Tunggu selama durasi yang ditentukan
+                yield return new WaitForSecondsRealtime(calendarDisplayDuration);
+
+                // Matikan kembali object kalender
+                dayCalendarObjects[calendarIndex].SetActive(false);
+            }
+        }
+        // ----------------------------
+
+        // Logika setelah kalender selesai tampil
         if (currentDay >= maxDay)
         {
             M_ProgressManager.CompleteWeek(currentWeek);
             if (weekCompletePanel != null)
+            {
+                M_AudioManager.Instance?.PlayDaySuccesSfx();
                 weekCompletePanel.SetActive(true);
+            }
             yield break;
         }
 
+        M_AudioManager.Instance?.PlayDaySuccesSfx();
         UI_Script.Instance?.ShowDaySuccess(currentDay);
     }
 
@@ -187,6 +218,13 @@ public class DayManager : MonoBehaviour
 
     public void RestartGame()
     {
+        if (M_AudioManager.Instance.sfxSource != null && M_AudioManager.Instance.footstepSfx != null)
+        {
+            M_AudioManager.Instance.sfxSource.clip = M_AudioManager.Instance.footstepSfx;  // Set footstep SFX ke AudioSource
+            M_AudioManager.Instance.sfxSource.loop = true;  // Aktifkan loop untuk footstep
+            M_AudioManager.Instance.sfxSource.volume = M_AudioManager.Instance.miscVolume;  // Set volume sesuai dengan volume yang diinginkan
+            M_AudioManager.Instance.sfxSource.Play();  // Memainkan footstep
+        }
         UI_Script.Instance?.HideDaySuccess();
         UI_Script.Instance?.HideGameOver();
 
@@ -216,18 +254,21 @@ public class DayManager : MonoBehaviour
 
     public void GoHome()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(mainMenuSceneName);
     }
 
     public void GoToWeekChoice()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(weekChoiceSceneName);
     }
 
     public void GoToNextWeek()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(nextWeekSceneName);
     }

@@ -40,6 +40,7 @@ public class M_WeekSelectButton : MonoBehaviour
 
     public void ClickOpen()
     {
+        M_AudioManager.Instance?.PlayRandomUi();
         if (!M_ProgressManager.IsWeekUnlocked(weekNumber))
             return;
 

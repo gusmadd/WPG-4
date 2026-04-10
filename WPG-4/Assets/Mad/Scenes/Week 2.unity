@@ -6869,7 +6869,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 945422018}
-  m_Father: {fileID: 634299536}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12253,6 +12253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 1175296276}
   ambienceSource: {fileID: 0}
+  loopSFXSource: {fileID: 0}
   uiVolume: 1
   keyboardVolume: 1
   adsVolume: 1
@@ -12275,20 +12276,19 @@ MonoBehaviour:
   hideKeyboardSfx: {fileID: 8300000, guid: 4f9279c1a35b32041b79b445e0c5dfa0, type: 3}
   paymentSfx: {fileID: 8300000, guid: f03075b137965404393403a506b0cdce, type: 3}
   wrongSfx: {fileID: 8300000, guid: a71820849f61d704585a1fff08aea258, type: 3}
+  rightSfx: {fileID: 0}
   adsSfx:
   - {fileID: 8300000, guid: 2c11945e99e9287499737c38806f208f, type: 3}
   - {fileID: 8300000, guid: 8c09f15b4bba4824f9e90efb94e5235a, type: 3}
-  bigSisSfx:
-  - {fileID: 8300000, guid: bf7e307e4b6d1194c8bfe4d119ee0130, type: 3}
-  - {fileID: 8300000, guid: 389b8f1d97c93824d89d377f373c2765, type: 3}
+  bigSisNgintipSfx: {fileID: 0}
+  bigSisStarringSfx: {fileID: 0}
   pcPowerOnSfx: {fileID: 8300000, guid: 17e829049b223ef48b8019e5316d05bc, type: 3}
   pcButtonSfx: {fileID: 8300000, guid: a01198811deda9345b92771d3833e162, type: 3}
   bubbleAppearSfx: {fileID: 8300000, guid: a8b29af19ddeba34d8f2a7767fbb24da, type: 3}
   calendarSfx:
   - {fileID: 8300000, guid: 7a96b8eea8118df4ba6fbd9ccc012fbf, type: 3}
   - {fileID: 8300000, guid: 6b1b365fc53c71e41b8405e4a18af646, type: 3}
-  footstepSfx:
-  - {fileID: 8300000, guid: bb93e0d4750287e4bac3ab59d5f5d097, type: 3}
+  footstepSfx: {fileID: 0}
   uiSfx:
   - {fileID: 8300000, guid: 472ff0d6d49d45841b4b39ce7fd30db3, type: 3}
   - {fileID: 8300000, guid: 3d033c803ebcecb4e822d701caa21db2, type: 3}
@@ -18857,7 +18857,6 @@ RectTransform:
   - {fileID: 1028784337}
   - {fileID: 66481080}
   - {fileID: 1949157251}
-  - {fileID: 605547867}
   m_Father: {fileID: 320188905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -20167,6 +20166,8 @@ MonoBehaviour:
   powerSprite: {fileID: 1077343298}
   powerOffSprite: {fileID: 21300000, guid: 7377095c743d16e42bb37b76758a7fa5, type: 3}
   powerOnSprite: {fileID: 21300000, guid: c8b22d37e95a6844bb26935c84d7f333, type: 3}
+  powerLight: {fileID: 1458681171}
+  monitorLight: {fileID: 619781603}
   desktopPage: {fileID: 1749184489}
   searchHomePage: {fileID: 1049357084}
   searchResultPage: {fileID: 1316313778}
@@ -39278,4 +39279,4 @@ SceneRoots:
   - {fileID: 2033995597}
   - {fileID: 791470751}
   - {fileID: 12683883}
-  - {fileID: 634299536}
+  - {fileID: 320188905}
