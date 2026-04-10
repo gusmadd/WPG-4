@@ -835,6 +835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 120715777}
   ambienceSource: {fileID: 0}
+  backgroundMusicSource: {fileID: 0}
   uiVolume: 1
   keyboardVolume: 1
   adsVolume: 1
@@ -857,28 +858,28 @@ MonoBehaviour:
   hideKeyboardSfx: {fileID: 8300000, guid: 4f9279c1a35b32041b79b445e0c5dfa0, type: 3}
   paymentSfx: {fileID: 8300000, guid: f03075b137965404393403a506b0cdce, type: 3}
   wrongSfx: {fileID: 8300000, guid: a71820849f61d704585a1fff08aea258, type: 3}
+  daySuccessSfx: {fileID: 0}
   adsSfx:
   - {fileID: 8300000, guid: 2c11945e99e9287499737c38806f208f, type: 3}
   - {fileID: 8300000, guid: 8c09f15b4bba4824f9e90efb94e5235a, type: 3}
-  bigSisSfx:
-  - {fileID: 8300000, guid: bf7e307e4b6d1194c8bfe4d119ee0130, type: 3}
-  - {fileID: 8300000, guid: 389b8f1d97c93824d89d377f373c2765, type: 3}
+  bigSisNgintipSfx: {fileID: 0}
+  bigSisStarringSfx: {fileID: 0}
   pcPowerOnSfx: {fileID: 8300000, guid: 17e829049b223ef48b8019e5316d05bc, type: 3}
   pcButtonSfx: {fileID: 8300000, guid: a01198811deda9345b92771d3833e162, type: 3}
   bubbleAppearSfx: {fileID: 8300000, guid: a8b29af19ddeba34d8f2a7767fbb24da, type: 3}
   calendarSfx:
   - {fileID: 8300000, guid: 7a96b8eea8118df4ba6fbd9ccc012fbf, type: 3}
   - {fileID: 8300000, guid: 6b1b365fc53c71e41b8405e4a18af646, type: 3}
-  footstepSfx:
-  - {fileID: 8300000, guid: bb93e0d4750287e4bac3ab59d5f5d097, type: 3}
+  footstepSfx: {fileID: 0}
   uiSfx:
   - {fileID: 8300000, guid: 472ff0d6d49d45841b4b39ce7fd30db3, type: 3}
   - {fileID: 8300000, guid: 3d033c803ebcecb4e822d701caa21db2, type: 3}
   - {fileID: 8300000, guid: 7703490a922a1f3429256b15187dfbfb, type: 3}
   - {fileID: 8300000, guid: c2c17a11fc47bef49ba900b5852693da, type: 3}
+  holdBuySfx: {fileID: 0}
   miscSfx: []
-  inGameAmbience: {fileID: 0}
-  playAmbienceOnStart: 0
+  backgroundMusicClip: {fileID: 0}
+  playBackgroundMusicOnStart: 0
 --- !u!1 &47899871 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7600850341767482352, guid: d537ee6ad553825489860f57f043ae98, type: 3}
@@ -4325,6 +4326,8 @@ MonoBehaviour:
   adsChanceAfterDay3: 0.17
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
+  dayCalendarObjects: []
+  calendarDisplayDuration: 5
   mainMenuSceneName: MainMenu
   weekChoiceSceneName: Week
   nextWeekSceneName: Week
@@ -9530,67 +9533,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!1 &527101685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 527101686}
-  - component: {fileID: 527101687}
-  m_Layer: 0
-  m_Name: Audio Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &527101686
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 527101685}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1978782955}
-  - {fileID: 832466939}
-  m_Father: {fileID: 357905973}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &527101687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 527101685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 347ba616361246f4384ebc96f40885a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfxSource: {fileID: 1978782956}
-  cursorClicks:
-  - {fileID: 8300000, guid: a0ed34ec1eb348247be2c7c1fd0d147e, type: 3}
-  - {fileID: 8300000, guid: ae920e3835f33f549b4624b29a7201de, type: 3}
-  keyboardClicks:
-  - {fileID: 8300000, guid: 95b18fe4dfeed7a4c9889834252aa2cd, type: 3}
-  - {fileID: 8300000, guid: a9d2124d5a8dbe345bc1ad38eb3753b8, type: 3}
-  spacebarClick: {fileID: 8300000, guid: dd8a45f8f328b084b8b85887b549e624, type: 3}
-  paymentSfx: {fileID: 8300000, guid: f03075b137965404393403a506b0cdce, type: 3}
-  showKeyboardSfx: {fileID: 8300000, guid: dd5240fe29a71fd4f9bd854b35fd7ff7, type: 3}
-  hideKeyboardSfx: {fileID: 8300000, guid: 4f9279c1a35b32041b79b445e0c5dfa0, type: 3}
-  adsSfx:
-  - {fileID: 8300000, guid: 2c11945e99e9287499737c38806f208f, type: 3}
-  - {fileID: 8300000, guid: 8c09f15b4bba4824f9e90efb94e5235a, type: 3}
-  wrongSfx: {fileID: 8300000, guid: a71820849f61d704585a1fff08aea258, type: 3}
 --- !u!1001 &527811801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20160,6 +20102,8 @@ MonoBehaviour:
   powerSprite: {fileID: 1077343298}
   powerOffSprite: {fileID: 21300000, guid: 7377095c743d16e42bb37b76758a7fa5, type: 3}
   powerOnSprite: {fileID: 21300000, guid: c8b22d37e95a6844bb26935c84d7f333, type: 3}
+  powerLight: {fileID: 0}
+  monitorLight: {fileID: 0}
   desktopPage: {fileID: 1749184489}
   searchHomePage: {fileID: 1049357084}
   searchResultPage: {fileID: 1316313778}
@@ -26147,7 +26091,6 @@ RectTransform:
   m_Children:
   - {fileID: 995232944}
   - {fileID: 554523788}
-  - {fileID: 1492367415}
   - {fileID: 1275428520}
   m_Father: {fileID: 2009968917}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27629,10 +27572,6 @@ MonoBehaviour:
   cameraTransform: {fileID: 519420032}
   shakeDuration: 0.4
   shakeMagnitude: 0.05
-  wrongPurchaseAnimator: {fileID: 1662713585}
-  useShakeOnWrongPurchase: 1
-  wrongShakeDuration: 0.15
-  wrongShakeMagnitude: 0.05
   timerUI: {fileID: 1007437186}
   timerFill: {fileID: 1312929521}
   daySuccessPanel: {fileID: 1693920192}

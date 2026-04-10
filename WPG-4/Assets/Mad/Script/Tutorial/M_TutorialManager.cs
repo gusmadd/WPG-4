@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal; // tambah ini
 
 public class M_TutorialManager : MonoBehaviour
 {
@@ -37,6 +38,10 @@ public class M_TutorialManager : MonoBehaviour
     public SpriteRenderer powerSprite;
     public Sprite powerOffSprite;
     public Sprite powerOnSprite;
+
+    [Header("Monitor Lights")] // tambah ini
+    public Light2D powerButtonLight;
+    public Light2D monitorLight;
 
     [Header("Browser")]
     public Collider2D browserCollider;
@@ -309,6 +314,10 @@ public class M_TutorialManager : MonoBehaviour
         if (tutorialSearchField != null)
             tutorialSearchField.DeactivateField();
 
+        // kondisi awal: semua lampu mati
+        if (powerButtonLight != null) powerButtonLight.enabled = false;
+        if (monitorLight != null) monitorLight.enabled = false;
+
         ResetHoldState();
     }
 
@@ -435,6 +444,10 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator PowerOnSequence()
     {
+        // power button ditekan -> lampu tombol power nyala
+        if (powerButtonLight != null)
+            powerButtonLight.enabled = true;
+
         if (loadingAnimator != null)
             loadingAnimator.SetTrigger("isIn");
 
@@ -472,6 +485,10 @@ public class M_TutorialManager : MonoBehaviour
 
         if (powerSprite != null && powerOnSprite != null)
             powerSprite.sprite = powerOnSprite;
+
+        // monitor sudah nyala -> lampu monitor nyala
+        if (monitorLight != null)
+            monitorLight.enabled = true;
     }
 
     IEnumerator BrowserGuideSequence()
@@ -737,7 +754,7 @@ public class M_TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
 
         M_ProgressManager.CompleteTutorial();
-                if (SceneTransitionManager.Instance != null)
+        if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(nextSceneName);
     }
 
