@@ -26,7 +26,7 @@ public class DayManager : MonoBehaviour
     public M_SearchInput homeSearchInput;
     public M_SearchInput resultSearchInput;
 
-    [Header("Ads Changce per day")]
+    [Header("Ads Chance per day")]
     public float day1AdsChance = 0.05f;
     public float day2AdsChance = 0.1f;
     public float day3AdsChance = 0.15f;
@@ -44,6 +44,9 @@ public class DayManager : MonoBehaviour
     public string weekChoiceSceneName = "WeekChoice";
     public string nextWeekSceneName = "NextWeekScene";
 
+    bool isAdvancingDay = false;
+    bool isEndingDay = false;
+
     void Awake()
     {
         Instance = this;
@@ -57,8 +60,12 @@ public class DayManager : MonoBehaviour
 
         if (TaskManager.Instance != null)
         {
+            TaskManager.Instance.OnDaySuccess -= HandleDaySuccess;
             TaskManager.Instance.OnDaySuccess += HandleDaySuccess;
+
+            TaskManager.Instance.OnDayFailed -= HandleDayFailed;
             TaskManager.Instance.OnDayFailed += HandleDayFailed;
+
             TaskManager.Instance.StopTimer();
         }
 
@@ -81,11 +88,23 @@ public class DayManager : MonoBehaviour
         StartCoroutine(StartDayRoutine(currentDay));
     }
 
+    void OnDestroy()
+    {
+        if (TaskManager.Instance != null)
+        {
+            TaskManager.Instance.OnDaySuccess -= HandleDaySuccess;
+            TaskManager.Instance.OnDayFailed -= HandleDayFailed;
+        }
+    }
+
     IEnumerator StartDayRoutine(int day)
     {
         Debug.Log("Starting Day: " + day);  // Debug untuk memeriksa apakah StartDayRoutine dipanggil
 
         int tasks = startTasks + (day - 1) * tasksIncreasePerDay;
+
+        isAdvancingDay = false;
+        isEndingDay = false;
 
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.ResetForNewDay();
@@ -114,6 +133,9 @@ public class DayManager : MonoBehaviour
 
     void HandleDaySuccess()
     {
+        if (isEndingDay) return;
+        isEndingDay = true;
+
         M_GameManager.Instance?.ForceEndQTEState();
         StartCoroutine(SuccessRoutine());
     }
@@ -170,6 +192,9 @@ public class DayManager : MonoBehaviour
 
     void HandleDayFailed()
     {
+        if (isEndingDay) return;
+        isEndingDay = true;
+
         M_GameManager.Instance?.ForceEndQTEState();
 
         if (M_NoiseSystem.Instance != null)
@@ -189,6 +214,8 @@ public class DayManager : MonoBehaviour
         {
             if (weekCompletePanel != null)
                 weekCompletePanel.SetActive(true);
+
+            isAdvancingDay = false;
             return;
         }
 
@@ -241,12 +268,11 @@ public class DayManager : MonoBehaviour
         M_PlayerController.Instance?.BackToIdle();
 
         currentDay = startDay;
+        isAdvancingDay = false;
+        isEndingDay = false;
 
         if (monitorManager != null)
             monitorManager.ResetToOff();
-
-        if (M_GameManager.Instance != null)
-            M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
 
         StopAllCoroutines();
         StartCoroutine(StartDayRoutine(currentDay));
@@ -325,6 +351,8 @@ public class DayManager : MonoBehaviour
         StopAllCoroutines();
 
         currentDay = startDay;
+        isAdvancingDay = false;
+        isEndingDay = false;
 
         UI_Script.Instance?.HideDaySuccess();
         UI_Script.Instance?.HideGameOver();
@@ -356,4 +384,4 @@ public class DayManager : MonoBehaviour
     {
         return currentDay;
     }
-}
+}   
