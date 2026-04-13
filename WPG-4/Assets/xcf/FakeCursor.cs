@@ -82,7 +82,6 @@ public class FakeCursor : MonoBehaviour
         }
         else
         {
-            // matikan burst kalau UI prioritas kebuka
             burstTimeLeft = 0f;
         }
 
@@ -93,11 +92,18 @@ public class FakeCursor : MonoBehaviour
     {
         if (M_GameManager.Instance == null) return false;
 
-        // shake cuma saat gameplay normal
-        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
+        // Allow Gameplay & QTE
+        if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay &&
+            M_GameManager.Instance.currentState != M_GameManager.GameState.QTE)
             return false;
 
-        // pause panel kebuka
+        // 🦈 KUNCI: saat QTE tapi belum aktif (masih zoom/fade) → NO SHAKE
+        if (M_NoiseSystem.Instance != null &&
+            M_GameManager.Instance.currentState == M_GameManager.GameState.QTE &&
+            !M_NoiseSystem.Instance.isQTEActive)
+            return false;
+
+        // Pause check
         if (PauseManager.Instance != null)
         {
             if (PauseManager.Instance.pausePanel != null &&
@@ -105,7 +111,7 @@ public class FakeCursor : MonoBehaviour
                 return false;
         }
 
-        // game over / day success kebuka
+        // UI blocking check
         if (UI_Script.Instance != null)
         {
             if (UI_Script.Instance.gameOverPanel != null &&

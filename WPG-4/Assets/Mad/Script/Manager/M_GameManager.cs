@@ -101,8 +101,9 @@ public class M_GameManager : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.isQTEActive = true;
+        // ❌ DIHAPUS DARI SINI (biar zoom gak shake)
+        // if (M_NoiseSystem.Instance != null)
+        //     M_NoiseSystem.Instance.isQTEActive = true;
 
         if (UI_Script.Instance != null)
             yield return StartCoroutine(UI_Script.Instance.Shake());
@@ -126,6 +127,10 @@ public class M_GameManager : MonoBehaviour
             ForceEndQTEState();
             yield break;
         }
+
+        // 🦈 PINDAH KE SINI (SETELAH ZOOM SELESAI)
+        if (M_NoiseSystem.Instance != null)
+            M_NoiseSystem.Instance.isQTEActive = true;
 
         if (qtePrefab != null)
             Instantiate(qtePrefab);
@@ -162,7 +167,6 @@ public class M_GameManager : MonoBehaviour
             yield break;
         }
 
-        // keluar dulu dari QTE state
         currentState = GameState.Gameplay;
 
         if (M_NoiseSystem.Instance != null)
@@ -171,7 +175,6 @@ public class M_GameManager : MonoBehaviour
             M_NoiseSystem.Instance.ResetAfterQTE();
         }
 
-        // baru task popup/reminder boleh muncul
         TaskUIController.Instance?.ShowTaskAfterQTE();
         TaskManager.Instance?.ResumeTimer();
 
