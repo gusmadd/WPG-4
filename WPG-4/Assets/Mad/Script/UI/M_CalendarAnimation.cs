@@ -5,48 +5,48 @@ using UnityEngine.UI;  // Untuk UI Image
 public class M_CalendarAnimation : MonoBehaviour
 {
     [Header("UI Image Settings")]
-    public Image calendarImage;  // Image komponen untuk kalender
-    public Sprite[] calendarFrames;  // Array untuk 5 frame kalender
+    public Image calendarImage;
+    public Sprite[] calendarFrames;
 
     [Header("Timing Settings")]
-    public float frameDelay = 0.2f;  // Waktu antara pergantian frame
-    public float delayBeforeOut = 2f;  // Waktu delay sebelum animasi keluar
+    public float frameDelay = 0.2f;
+    public float delayBeforeOut = 2f;
 
     private bool isPlayingOut = false;
 
     void Start()
     {
-        // Mainkan SFX muncul kalender
-        // Mulai animasi masuk
+        M_AudioManager.Instance?.PlayInCalendar();
         StartCoroutine(PlayInAnimation());
     }
 
     IEnumerator PlayInAnimation()
     {
-        // Mainkan animasi masuk dengan mengganti sprite frame
-        for (int i = 0; i < 9; i++)
+        if (calendarImage == null || calendarFrames == null || calendarFrames.Length == 0)
+            yield break;
+
+        for (int i = 0; i < calendarFrames.Length; i++)
         {
-            calendarImage.sprite = calendarFrames[i];  // Ganti sprite ke frame ke-i
-            yield return new WaitForSeconds(frameDelay);  // Tunggu sesuai frameDelay
+            calendarImage.sprite = calendarFrames[i];
+            yield return new WaitForSeconds(frameDelay);
         }
 
-        // Setelah animasi masuk selesai, tunggu 2 detik, kemudian animasi keluar
         yield return new WaitForSeconds(delayBeforeOut);
-
-        // Mainkan animasi keluar dengan frame terbalik
-        StartCoroutine(PlayOutAnimation());
+        M_AudioManager.Instance?.PlayOutCalendar();
+        yield return StartCoroutine(PlayOutAnimation());
     }
 
     IEnumerator PlayOutAnimation()
     {
+        if (isPlayingOut) yield break;
         isPlayingOut = true;
 
-        for (int i = 8; i >= 0; i--)  // Mulai dari frame terakhir dan berbalik
+        for (int i = calendarFrames.Length - 1; i >= 0; i--)
         {
-            calendarImage.sprite = calendarFrames[i];  // Ganti sprite ke frame terbalik
-            yield return new WaitForSeconds(frameDelay);  // Tunggu sesuai frameDelay
+            calendarImage.sprite = calendarFrames[i];
+            yield return new WaitForSeconds(frameDelay);
         }
 
-        isPlayingOut = false;  // Animasi keluar selesai
+        isPlayingOut = false;
     }
 }

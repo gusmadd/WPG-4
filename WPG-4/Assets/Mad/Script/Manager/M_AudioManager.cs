@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class M_AudioManager : MonoBehaviour
 {
+
     public static M_AudioManager Instance;
 
     [Header("Audio Sources")]
     public AudioSource sfxSource;
     public AudioSource ambienceSource;
     public AudioSource backgroundMusicSource;
+    public AudioSource holdBuySource;
 
     [Header("Volume Multipliers")]
     [Range(0f, 1f)] public float uiVolume = 1f;
@@ -64,7 +66,8 @@ public class M_AudioManager : MonoBehaviour
 
     [Header("Calendar")]
     [Tooltip("Contoh isi: suara kalender, suara kalender 2")]
-    public AudioClip[] calendarSfx;
+    public AudioClip calendarInSfx;
+    public AudioClip calendarOutSfx;
 
     [Header("Footstep")]
     [Tooltip("Contoh isi: footstep bigsis")]
@@ -73,9 +76,9 @@ public class M_AudioManager : MonoBehaviour
     [Header("Extra UI")]
     [Tooltip("Contoh isi: UI 1, UI 2, UI 3, UI 4")]
     public AudioClip[] uiSfx;
-    [Header("Hold buy")]
+
+    [Header("Hold Buy")]
     public AudioClip holdBuySfx;
-    private bool isPlayingHoldBuySfx = false;
 
     [Header("Misc Gameplay")]
     [Tooltip("Contoh isi: file SFX lain yang tidak cocok ke kategori atas")]
@@ -99,12 +102,9 @@ public class M_AudioManager : MonoBehaviour
     void Start()
     {
         if (playBackgroundMusicOnStart)
-            PlayBackgroundMusic();  // Play background music on start
+            PlayBackgroundMusic();
     }
 
-    // =========================
-    // CORE HELPERS
-    // =========================
     bool HasSfxSource()
     {
         return sfxSource != null;
@@ -176,6 +176,7 @@ public class M_AudioManager : MonoBehaviour
     {
         PlayClip(wrongSfx, uiVolume);
     }
+
     public void PlayDaySuccesSfx()
     {
         PlayClip(daySuccessSfx, uiVolume);
@@ -190,7 +191,6 @@ public class M_AudioManager : MonoBehaviour
         if (!IsValidArray(keyboardClicks)) return;
 
         int randomIndex = Random.Range(0, keyboardClicks.Length);
-
         float originalPitch = sfxSource.pitch;
 
         if (randomizeKeyboardPitch)
@@ -221,12 +221,32 @@ public class M_AudioManager : MonoBehaviour
         PlayClip(hideKeyboardSfx, uiVolume);
     }
 
-    public void PlayHoldBuy()
+    // =========================
+    // HOLD BUY
+    // =========================
+    public void PlayHoldBuyLoop()
     {
-        if (isPlayingHoldBuySfx) return;
+        if (holdBuySource == null) return;
+        if (!IsValid(holdBuySfx)) return;
 
-        isPlayingHoldBuySfx = true;
-        PlayClip(holdBuySfx, uiVolume);
+        if (holdBuySource.isPlaying && holdBuySource.clip == holdBuySfx)
+            return;
+
+        holdBuySource.clip = holdBuySfx;
+        holdBuySource.loop = true;
+        holdBuySource.volume = uiVolume;
+        holdBuySource.Play();
+    }
+
+    public void StopHoldBuyLoop()
+    {
+        if (holdBuySource == null) return;
+
+        if (holdBuySource.isPlaying)
+            holdBuySource.Stop();
+
+        holdBuySource.clip = null;
+        holdBuySource.loop = false;
     }
 
     // =========================
@@ -264,7 +284,6 @@ public class M_AudioManager : MonoBehaviour
         PlayClip(bigSisStarringSfx, bigSisVolume);
     }
 
-
     public void PlayFootstepSfx()
     {
         PlayClip(footstepSfx, bigSisVolume);
@@ -294,17 +313,14 @@ public class M_AudioManager : MonoBehaviour
         PlayClip(bubbleAppearSfx, uiVolume);
     }
 
-    public void PlayRandomCalendar()
+    public void PlayInCalendar()
     {
-        PlayRandom(calendarSfx, uiVolume);
+        PlayClip(calendarInSfx, uiVolume);
     }
 
-    public void PlayCalendarByIndex(int index)
+    public void PlayOutCalendar()
     {
-        if (!IsValidArray(calendarSfx)) return;
-        if (index < 0 || index >= calendarSfx.Length) return;
-
-        PlayClip(calendarSfx[index], uiVolume);
+        PlayClip(calendarOutSfx, uiVolume);
     }
 
     // =========================
@@ -330,10 +346,10 @@ public class M_AudioManager : MonoBehaviour
     {
         if (backgroundMusicSource != null && backgroundMusicClip != null)
         {
-            backgroundMusicSource.clip = backgroundMusicClip;  // Set background music clip
-            backgroundMusicSource.loop = true;             // Set to loop the background music
-            backgroundMusicSource.volume = ambienceVolume; // Set volume for the music
-            backgroundMusicSource.Play();                  // Play the background music
+            backgroundMusicSource.clip = backgroundMusicClip;
+            backgroundMusicSource.loop = true;
+            backgroundMusicSource.volume = ambienceVolume;
+            backgroundMusicSource.Play();
         }
     }
 
@@ -392,12 +408,22 @@ public class M_AudioManager : MonoBehaviour
         PlayAdsSfx();
     }
 
-
-
     [ContextMenu("Test Bubble")]
     public void TestBubble()
     {
         PlayBubbleAppear();
+    }
+
+    [ContextMenu("Test Hold Buy Start")]
+    public void TestHoldBuyStart()
+    {
+        PlayHoldBuyLoop();
+    }
+
+    [ContextMenu("Test Hold Buy Stop")]
+    public void TestHoldBuyStop()
+    {
+        StopHoldBuyLoop();
     }
 
 }

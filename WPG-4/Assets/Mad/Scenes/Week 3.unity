@@ -528,11 +528,7 @@ RectTransform:
   - {fileID: 733174400}
   - {fileID: 403214064}
   - {fileID: 608377887}
-  - {fileID: 1961522925}
-  - {fileID: 235538148}
-  - {fileID: 1494644590}
-  - {fileID: 2032439344}
-  - {fileID: 1686356774}
+  - {fileID: 2038704683}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4204,8 +4200,13 @@ MonoBehaviour:
   adsChanceAfterDay3: 0.15
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
-  dayCalendarObjects: []
-  calendarDisplayDuration: 5
+  dayCalendarObjects:
+  - {fileID: 1961522924}
+  - {fileID: 235538147}
+  - {fileID: 1494644589}
+  - {fileID: 2032439343}
+  - {fileID: 1686356773}
+  calendarDisplayDuration: 2.8
   mainMenuSceneName: MainMenu
   weekChoiceSceneName: Week
   nextWeekSceneName: Week 4
@@ -5355,7 +5356,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 2038704683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5384,9 +5385,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 88f4997e11a530249828b0b68843b252, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &235538150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27803,6 +27804,7 @@ MonoBehaviour:
   shakeMagnitude: 0.05
   timerUI: {fileID: 915213178}
   timerFill: {fileID: 819278531}
+  incorrectEffect: {fileID: 0}
   daySuccessPanel: {fileID: 1693920192}
   dayHomeButton: {fileID: 1120867927}
   dayNextButton: {fileID: 397982624}
@@ -29220,7 +29222,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 2038704683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29249,9 +29251,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 61bb19c8ce6e49d4e869b5abe32ad500, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1494644592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31962,7 +31964,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 2038704683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -31991,9 +31993,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: abcf40841a210ae40a1e23cc1e0d7559, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1686356776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37853,7 +37855,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 2038704683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -37882,9 +37884,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 45f4472a80a64974ab5ae25f1deec0cd, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1961522927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38636,7 +38638,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 2038704683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -38665,9 +38667,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 77f98aff6114a0349939fde2e8eb18eb, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &2032439346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38774,6 +38776,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2038704682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2038704683}
+  m_Layer: 5
+  m_Name: Kalender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2038704683
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038704682}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1961522925}
+  - {fileID: 235538148}
+  - {fileID: 1494644590}
+  - {fileID: 2032439344}
+  - {fileID: 1686356774}
+  m_Father: {fileID: 12683883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2042069555 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 867681955063408266, guid: d537ee6ad553825489860f57f043ae98, type: 3}

@@ -256,7 +256,7 @@ public class M_MainMenuController : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(resetPanelOutDelay);
 
-        // M_ProgressManager.ResetProgress(); // Commented out karena script eksternal
+        M_ProgressManager.ResetProgress(); // Commented out karena script eksternal
 
         if (reloadCurrentSceneAfterReset)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);

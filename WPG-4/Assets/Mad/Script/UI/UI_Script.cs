@@ -20,6 +20,9 @@ public class UI_Script : MonoBehaviour
     public GameObject timerUI;
     public Image timerFill;
 
+    [Header("incorrect effect")]
+    public Animator incorrectEffect;
+
     [Header("Day Success Panel")]
     public GameObject daySuccessPanel;
     public Button dayHomeButton;
@@ -121,7 +124,7 @@ public class UI_Script : MonoBehaviour
     public void UpdateTimer(float current, float max)
     {
         if (timerFill != null)
-            timerFill.fillAmount = Mathf.Clamp01(current / max);
+            timerFill.fillAmount = Mathf.Clamp01(1 -current / max);
     }
 
     public void StopTimer()
@@ -143,15 +146,14 @@ public class UI_Script : MonoBehaviour
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
     }
-public void PlayWrongEffect()
-{
-    // play sound
-    M_AudioManager.Instance?.PlayWrongSfx();
-
+    public void PlayWrongEffect()
+    {
+        if (incorrectEffect != null)
+            incorrectEffect.SetTrigger("Play");
     // optional: camera shake (small)
-    if (cameraTransform != null)
-        StartCoroutine(Shake());
-}
+        if (cameraTransform != null)
+            StartCoroutine(Shake());
+    }
     public void HideDaySuccess()
     {
         if (daySuccessPanel != null) daySuccessPanel.SetActive(false);

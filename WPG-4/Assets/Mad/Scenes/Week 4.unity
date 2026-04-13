@@ -528,11 +528,7 @@ RectTransform:
   - {fileID: 733174400}
   - {fileID: 420357760}
   - {fileID: 1662713584}
-  - {fileID: 1539872979}
-  - {fileID: 356142744}
-  - {fileID: 1501062142}
-  - {fileID: 1090466139}
-  - {fileID: 796665883}
+  - {fileID: 302603548}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4331,8 +4327,13 @@ MonoBehaviour:
   adsChanceAfterDay3: 0.17
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
-  dayCalendarObjects: []
-  calendarDisplayDuration: 5
+  dayCalendarObjects:
+  - {fileID: 1539872978}
+  - {fileID: 356142743}
+  - {fileID: 1501062141}
+  - {fileID: 1090466138}
+  - {fileID: 796665882}
+  calendarDisplayDuration: 2.8
   mainMenuSceneName: MainMenu
   weekChoiceSceneName: Week
   nextWeekSceneName: Week
@@ -6719,6 +6720,46 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &302603547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 302603548}
+  m_Layer: 5
+  m_Name: kalender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &302603548
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302603547}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1539872979}
+  - {fileID: 356142744}
+  - {fileID: 1501062142}
+  - {fileID: 1090466139}
+  - {fileID: 796665883}
+  m_Father: {fileID: 12683883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &314207401
 GameObject:
   m_ObjectHideFlags: 0
@@ -7428,7 +7469,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 302603548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7457,9 +7498,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 1bd6ce81d953bce43b66635b5b925b55, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &356142746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15884,7 +15925,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 302603548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -15913,9 +15954,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: ebee977310d7e734585e31d9973224d7, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &796665885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21744,7 +21785,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 302603548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -21773,9 +21814,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: d1ae3f68ea53dd74f934f89a4cb77de6, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1090466141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27882,6 +27923,7 @@ MonoBehaviour:
   shakeMagnitude: 0.05
   timerUI: {fileID: 1007437186}
   timerFill: {fileID: 1312929521}
+  incorrectEffect: {fileID: 0}
   daySuccessPanel: {fileID: 1693920192}
   dayHomeButton: {fileID: 1120867927}
   dayNextButton: {fileID: 397982624}
@@ -29037,12 +29079,12 @@ GameObject:
   - component: {fileID: 1480256992}
   - component: {fileID: 1480256993}
   m_Layer: 0
-  m_Name: Light 2D laar
+  m_Name: Light 2D layar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1480256992
 Transform:
   m_ObjectHideFlags: 0
@@ -29280,7 +29322,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 302603548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29309,9 +29351,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: fb9baacd7818fa04faf2fc44125db271, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1501062144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29844,7 +29886,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 302603548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29873,9 +29915,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 0c2d5b9b473478f498a2bc7dcd409600, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.2
 --- !u!114 &1539872981
 MonoBehaviour:
   m_ObjectHideFlags: 0

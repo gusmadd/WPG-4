@@ -528,11 +528,7 @@ RectTransform:
   - {fileID: 733174400}
   - {fileID: 525664241}
   - {fileID: 1744021171}
-  - {fileID: 719650528}
-  - {fileID: 1152394327}
-  - {fileID: 1374847010}
-  - {fileID: 263544580}
-  - {fileID: 1817663962}
+  - {fileID: 1355473316}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4182,11 +4178,12 @@ MonoBehaviour:
   maxDay: 5
   weekCompletePanel: {fileID: 733174399}
   dayCalendarObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  calendarDisplayDuration: 5
+  - {fileID: 719650527}
+  - {fileID: 1152394326}
+  - {fileID: 1374847009}
+  - {fileID: 263544579}
+  - {fileID: 1817663961}
+  calendarDisplayDuration: 2.8
   mainMenuSceneName: MainMenu
   weekChoiceSceneName: Week
   nextWeekSceneName: Week 3
@@ -5994,7 +5991,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 1355473316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6023,9 +6020,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: c33b597905959db4db9b38b2646883d4, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.3
 --- !u!114 &263544582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14954,7 +14951,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 1355473316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14983,9 +14980,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 46759a11fc93660468dc927daa30635b, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.3
 --- !u!114 &719650530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23153,7 +23150,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 1355473316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -23182,9 +23179,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 403ebab8c3e820245b6a67b020e3c41f, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.3
 --- !u!114 &1152394329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26427,6 +26424,46 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1355473315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355473316}
+  m_Layer: 5
+  m_Name: Kalender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1355473316
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355473315}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 719650528}
+  - {fileID: 1152394327}
+  - {fileID: 1374847010}
+  - {fileID: 263544580}
+  - {fileID: 1817663962}
+  m_Father: {fileID: 12683883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1367936751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27572,7 +27609,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 1355473316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -27601,9 +27638,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: ca3b0a9580cbe1c4fac53fe34bafcc34, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.3
 --- !u!114 &1374847012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27993,6 +28030,7 @@ MonoBehaviour:
   shakeMagnitude: 0.05
   timerUI: {fileID: 911533289}
   timerFill: {fileID: 1739727867}
+  incorrectEffect: {fileID: 0}
   daySuccessPanel: {fileID: 1693920192}
   dayHomeButton: {fileID: 1120867927}
   dayNextButton: {fileID: 397982624}
@@ -34249,7 +34287,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 12683883}
+  m_Father: {fileID: 1355473316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -34278,9 +34316,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac01a9dfc042cc142aa72d539a17d7ec, type: 3}
   - {fileID: 21300000, guid: 6d8264f003288f34eb48d8de045b7a03, type: 3}
   - {fileID: 21300000, guid: 993ab4cef5d80d2448871b12ed61a184, type: 3}
-  - {fileID: 21300000, guid: e088829095554424d8d4469e521c1831, type: 3}
+  - {fileID: 21300000, guid: 7c05ea24b0b058340af71323333609e7, type: 3}
   frameDelay: 0.02
-  delayBeforeOut: 2.5
+  delayBeforeOut: 2.3
 --- !u!114 &1817663964
 MonoBehaviour:
   m_ObjectHideFlags: 0

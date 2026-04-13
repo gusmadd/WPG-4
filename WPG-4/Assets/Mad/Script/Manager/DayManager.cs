@@ -44,6 +44,7 @@ public class DayManager : MonoBehaviour
     public string weekChoiceSceneName = "WeekChoice";
     public string nextWeekSceneName = "NextWeekScene";
 
+
     bool isAdvancingDay = false;
     bool isEndingDay = false;
 
@@ -142,7 +143,6 @@ public class DayManager : MonoBehaviour
 
     IEnumerator SuccessRoutine()
     {
-        M_AudioManager.Instance?.PlayRandomCalendar();
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.FreezeNoise(true);
 
@@ -384,4 +384,4 @@ public class DayManager : MonoBehaviour
     {
         return currentDay;
     }
-}   
+}

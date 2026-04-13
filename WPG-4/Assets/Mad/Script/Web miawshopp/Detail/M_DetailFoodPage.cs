@@ -52,8 +52,16 @@ public class M_DetailFoodPage : MonoBehaviour
         ResetHoldState();
     }
 
+    void OnDisable()
+    {
+        M_AudioManager.Instance?.StopHoldBuyLoop();
+        ResetHoldState();
+    }
+
     void OnDestroy()
     {
+        M_AudioManager.Instance?.StopHoldBuyLoop();
+
         if (runtimeBuyMat != null)
             Destroy(runtimeBuyMat);
     }
@@ -63,6 +71,7 @@ public class M_DetailFoodPage : MonoBehaviour
         if (!gameObject.activeSelf) return;
         if (M_GameManager.Instance == null) return;
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay) return;
+        if (Camera.main == null) return;
 
         Vector2 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -110,6 +119,7 @@ public class M_DetailFoodPage : MonoBehaviour
 
             if (buyCollider != null && buyCollider.OverlapPoint(mousePosWorld))
             {
+                M_AudioManager.Instance?.PlayCursorClick();
                 StartHoldBuy();
                 return;
             }
@@ -142,18 +152,25 @@ public class M_DetailFoodPage : MonoBehaviour
 
     void StartHoldBuy()
     {
+        if (isHoldingBuy) return;
+
         isHoldingBuy = true;
         holdTimer = 0f;
         UpdateBuyFill();
+
+        M_AudioManager.Instance?.PlayHoldBuyLoop();
     }
 
     void CancelHoldBuy()
     {
+        M_AudioManager.Instance?.StopHoldBuyLoop();
         ResetHoldState();
     }
 
     void TryCompleteBuy()
     {
+        M_AudioManager.Instance?.StopHoldBuyLoop();
+
         if (M_GameManager.Instance != null &&
             M_GameManager.Instance.currentState == M_GameManager.GameState.QTE)
         {
@@ -219,4 +236,5 @@ public class M_DetailFoodPage : MonoBehaviour
         pendingItemId = "";
         pendingBuySuccessPage = null;
     }
+
 }

@@ -9,6 +9,11 @@ public class TaskManager : MonoBehaviour
     [Header("Day Settings")]
     public float dayDurationSeconds = 120f;
 
+    [Header("Clock Light")]
+    public Animator clockLightAnimator;
+    public string timeLeftBoolName = "Time Left";
+    public float timeLeftThreshold = 30f;
+
     [Header("Runtime")]
     public int itemsPerTask = 3;
     public List<string> targetItemIds = new List<string>();
@@ -29,17 +34,26 @@ public class TaskManager : MonoBehaviour
 
     void Update()
     {
-        if (!timerRunning) return;
-        if (completed) return;
-        if (dayResolved) return;
-
-        timer -= Time.deltaTime;
-
-        if (timer <= 0f)
+        if (timerRunning && !completed && !dayResolved)
         {
-            timer = 0f;
-            FailDay();
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
+            {
+                timer = 0f;
+                FailDay();
+            }
         }
+
+        UpdateClockLightState();
+    }
+
+    void UpdateClockLightState()
+    {
+        if (clockLightAnimator == null) return;
+
+        bool isTimeLeft = timer <= timeLeftThreshold;
+        clockLightAnimator.SetBool(timeLeftBoolName, isTimeLeft);
     }
 
     public void SetupNewDay(int newItemsPerTask, float durationSeconds)
@@ -55,6 +69,8 @@ public class TaskManager : MonoBehaviour
         dayResolved = false;
 
         timer = dayDurationSeconds;
+
+        UpdateClockLightState();
 
         Debug.Log("SetupNewDay done. itemsPerTask=" + itemsPerTask + " timer=" + GetTimeLeft());
 
@@ -178,24 +194,26 @@ public class TaskManager : MonoBehaviour
         OnDayFailed?.Invoke();
     }
 
-    public void OnItemPurchased(string itemId)
+    public bool OnItemPurchased(string itemId)
     {
-        if (completed) return;
-        if (dayResolved) return;
+        if (completed) return false;
+        if (dayResolved) return false;
 
         int targetCount = GetTargetCount(itemId);
         int purchasedCount = GetPurchasedCount(itemId);
 
-        // ❌ SALAH
         if (targetCount <= 0)
         {
             OnWrongPurchase(itemId);
-            return;
+            return false;
         }
 
-        if (purchasedCount >= targetCount) return;
+        if (purchasedCount >= targetCount)
+        {
+            OnWrongPurchase(itemId);
+            return false;
+        }
 
-        // ✅ BENAR
         purchasedItemIds.Add(itemId);
 
         if (purchasedItemIds.Count >= targetItemIds.Count)
@@ -204,25 +222,22 @@ public class TaskManager : MonoBehaviour
             dayResolved = true;
             timerRunning = false;
             OnDaySuccess?.Invoke();
-            return;
+            return true;
         }
 
         TaskUIController.Instance?.ShowReminderOverlay(
             DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1
         );
+
+        return true;
     }
 
     void OnWrongPurchase(string itemId)
     {
         Debug.Log("WRONG ITEM: " + itemId);
 
-        // 🔊 SFX
         M_AudioManager.Instance?.PlayWrongSfx();
-
-        // 💥 Visual
         UI_Script.Instance?.PlayWrongEffect();
-
-        // (opsional) tambah noise biar punish
         M_NoiseSystem.Instance?.AddNoise(10f);
     }
 

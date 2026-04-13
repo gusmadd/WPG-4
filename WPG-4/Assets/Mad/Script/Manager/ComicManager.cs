@@ -1,48 +1,113 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ComicManager : MonoBehaviour
 {
     [Header("Animator")]
-    public Animator animator;  // Animator untuk comic
+    public Animator animator;
+
+    [Header("UI")]
+    public Button skipButton;
 
     [Header("Animation Settings")]
-    public float sceneDuration = 3f; // Durasi untuk menampilkan setiap scene
-    public float sceneTransitionDuration = 1f; // Durasi transisi antara scene (in/out)
+    public float sceneDuration = 3f;              // total durasi tiap scene
+    public float sceneTransitionDuration = 1f;    // durasi animasi Out
+    public int totalScenes = 4;
 
-    public string nextSceneName = "WeekScene";  // Nama scene berikutnya (misalnya "WeekScene")
+    [Header("Skip Button Settings")]
+    public float skipShowDelay = 1f;              // tombol skip muncul setelah 1 detik
+
+    [Header("Next Scene")]
+    public string nextSceneName = "WeekScene";
+
+    private bool skipRequested = false;
 
     void Start()
     {
-        // Mulai animasi komik
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(false);
+            skipButton.onClick.AddListener(OnSkipPressed);
+        }
+
         StartCoroutine(PlayComicScenes());
+    }
+
+    void OnDestroy()
+    {
+        if (skipButton != null)
+        {
+            skipButton.onClick.RemoveListener(OnSkipPressed);
+        }
+    }
+
+    void OnSkipPressed()
+    {
+        skipRequested = true;
+
+        if (skipButton != null)
+            skipButton.gameObject.SetActive(false);
     }
 
     IEnumerator PlayComicScenes()
     {
-        animator.SetTrigger("Scene1In");
-        yield return new WaitForSeconds(sceneDuration);
-        animator.SetTrigger("Scene1Out");
-        yield return new WaitForSeconds(sceneTransitionDuration);
-        animator.SetTrigger("Scene2In");
-        yield return new WaitForSeconds(sceneDuration); 
-        animator.SetTrigger("Scene2Out");
-        yield return new WaitForSeconds(sceneTransitionDuration);
-        animator.SetTrigger("Scene3In");
-        yield return new WaitForSeconds(sceneDuration); 
-        animator.SetTrigger("Scene3Out");
-        yield return new WaitForSeconds(sceneTransitionDuration);
-        animator.SetTrigger("Scene4In");
-        yield return new WaitForSeconds(sceneDuration);
-        // Mainkan animasi "Scene4Out"
-        animator.SetTrigger("Scene4Out");
+        for (int i = 1; i <= totalScenes; i++)
+        {
+            yield return StartCoroutine(PlayScene(i));
+        }
 
-        // Tunggu animasi selesai sebelum memuat scene berikutnya
-        // Pastikan ada waktu yang cukup agar animasi selesai (misalnya 1 detik)
-        yield return new WaitForSeconds(1f);  // Durasi animasi NextScene
-
-        // Memuat scene berikutnya menggunakan SceneManager
         SceneManager.LoadScene(nextSceneName);
+    }
+
+    IEnumerator PlayScene(int sceneIndex)
+    {
+        skipRequested = false;
+
+        string inTrigger = $"Scene{sceneIndex}In";
+        string outTrigger = $"Scene{sceneIndex}Out";
+
+        // Biar trigger lama tidak nyangkut
+        animator.ResetTrigger(inTrigger);
+        animator.ResetTrigger(outTrigger);
+
+        // Mainkan animasi masuk
+        animator.SetTrigger(inTrigger);
+
+        // Tunggu 1 detik dulu sebelum tombol skip muncul
+        float timer = 0f;
+        while (timer < skipShowDelay && !skipRequested)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // Tampilkan tombol skip kalau scene belum di-skip
+        if (!skipRequested && skipButton != null)
+        {
+            skipButton.gameObject.SetActive(true);
+        }
+
+        // Tunggu sisa durasi scene, kecuali kalau user pencet skip
+        while (timer < sceneDuration && !skipRequested)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // Sembunyikan tombol skip sebelum keluar
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(false);
+        }
+
+        // Langsung keluar ke animasi Out
+        animator.ResetTrigger(inTrigger);
+        animator.ResetTrigger(outTrigger);
+        animator.SetTrigger(outTrigger);
+
+        // Tunggu animasi Out selesai
+        yield return new WaitForSeconds(sceneTransitionDuration);
     }
 }

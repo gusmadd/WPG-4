@@ -21,7 +21,6 @@ public class M_WeekSelectButton : MonoBehaviour
 
     void Start()
     {
-        M_ProgressManager.ResetProgress();
         Refresh();
     }
 

@@ -8,7 +8,7 @@ public class M_AdsPopup : MonoBehaviour
 
     [Header("Animator")]
     public Animator adsAnimator;
-    public string inStateName = "in";
+    public string inTriggerName = "AdsIn";
     public string outTriggerName = "AdsOut";
     public float outAnimDelay = 0.25f;
 
@@ -18,7 +18,6 @@ public class M_AdsPopup : MonoBehaviour
     private M_GameManager.GameState previousState = M_GameManager.GameState.Gameplay;
     private bool hasStoredPreviousState = false;
 
-    // simpan transform awal popup
     Vector3 initialLocalScale;
     Vector3 initialLocalPosition;
     Quaternion initialLocalRotation;
@@ -44,6 +43,10 @@ public class M_AdsPopup : MonoBehaviour
     void OnEnable()
     {
         StopAllCoroutines();
+
+        if (adsAnimator != null)
+            adsAnimator.enabled = true;   // nyalakan lagi animator
+
         ResetVisualState();
         ShowAds();
     }
@@ -64,8 +67,7 @@ public class M_AdsPopup : MonoBehaviour
 
     void Update()
     {
-        if (!isOpen) return;
-        if (isClosing) return;
+        if (!isOpen || isClosing) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -96,17 +98,19 @@ public class M_AdsPopup : MonoBehaviour
             rectTransform.localRotation = initialLocalRotation;
         }
 
-        if (adsAnimator != null)
+        if (adsAnimator != null && gameObject.activeSelf)
         {
             adsAnimator.Rebind();
             adsAnimator.Update(0f);
+            adsAnimator.ResetTrigger(inTriggerName);
+            adsAnimator.ResetTrigger(outTriggerName);
         }
     }
 
     public void ShowAds()
     {
-        // Ads hanya boleh muncul saat gameplay
         if (M_GameManager.Instance == null) return;
+
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay)
         {
             gameObject.SetActive(false);
@@ -124,19 +128,16 @@ public class M_AdsPopup : MonoBehaviour
         M_GameManager.Instance.currentState = M_GameManager.GameState.AdsOverlay;
 
         M_AudioManager.Instance?.PlayAdsSfx();
+        M_NoiseSystem.Instance?.StartAdsNoise();
 
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.StartAdsNoise();
-
-        if (adsAnimator != null && !string.IsNullOrEmpty(inStateName))
-            adsAnimator.Play(inStateName, 0, 0f);
+        // kalau pakai trigger
+        adsAnimator.ResetTrigger(outTriggerName);
+        adsAnimator.SetTrigger(inTriggerName);
     }
 
     public void CloseAds()
     {
-        if (!isOpen) return;
-        if (isClosing) return;
-
+        if (!isOpen || isClosing) return;
         StartCoroutine(CloseRoutine());
     }
 
@@ -144,14 +145,32 @@ public class M_AdsPopup : MonoBehaviour
     {
         isClosing = true;
 
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.StopAdsNoise();
+        M_NoiseSystem.Instance?.StopAdsNoise();
 
         if (adsAnimator != null && !string.IsNullOrEmpty(outTriggerName))
+        {
+            adsAnimator.ResetTrigger(inTriggerName);
             adsAnimator.SetTrigger(outTriggerName);
+        }
 
         yield return new WaitForSecondsRealtime(outAnimDelay);
 
+        RestoreGameState();
+
+        isOpen = false;
+        isClosing = false;
+        hasStoredPreviousState = false;
+
+        gameObject.SetActive(false);
+    }
+
+    public void ForceCloseAdsInstant()
+    {
+        StopAllCoroutines();
+
+        M_NoiseSystem.Instance?.StopAdsNoise();
+
+        // kembalikan state game
         if (M_GameManager.Instance != null &&
             M_GameManager.Instance.currentState == M_GameManager.GameState.AdsOverlay)
         {
@@ -165,19 +184,26 @@ public class M_AdsPopup : MonoBehaviour
         isClosing = false;
         hasStoredPreviousState = false;
 
+        // jangan biarkan animator mati permanen
+        if (adsAnimator != null)
+        {
+            adsAnimator.Rebind();
+            adsAnimator.Update(0f);
+        }
+
         gameObject.SetActive(false);
     }
-    public void ForceCloseAdsInstant()
+
+    void RestoreGameState()
     {
-        StopAllCoroutines();
-
-        if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.StopAdsNoise();
-
-        isOpen = false;
-        isClosing = false;
-        hasStoredPreviousState = false;
-
-        gameObject.SetActive(false);
+        if (M_GameManager.Instance != null &&
+            M_GameManager.Instance.currentState == M_GameManager.GameState.AdsOverlay)
+        {
+            if (hasStoredPreviousState)
+                M_GameManager.Instance.currentState = previousState;
+            else
+                M_GameManager.Instance.currentState = M_GameManager.GameState.Gameplay;
+        }
     }
+
 }
