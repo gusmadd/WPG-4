@@ -422,7 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 10625221}
   adsAnimator: {fileID: 10625220}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &12683879
@@ -837,6 +837,7 @@ MonoBehaviour:
   sfxSource: {fileID: 120715777}
   ambienceSource: {fileID: 0}
   backgroundMusicSource: {fileID: 0}
+  holdBuySource: {fileID: 0}
   uiVolume: 1
   keyboardVolume: 1
   adsVolume: 1
@@ -868,9 +869,8 @@ MonoBehaviour:
   pcPowerOnSfx: {fileID: 8300000, guid: 17e829049b223ef48b8019e5316d05bc, type: 3}
   pcButtonSfx: {fileID: 8300000, guid: a01198811deda9345b92771d3833e162, type: 3}
   bubbleAppearSfx: {fileID: 8300000, guid: a8b29af19ddeba34d8f2a7767fbb24da, type: 3}
-  calendarSfx:
-  - {fileID: 8300000, guid: 7a96b8eea8118df4ba6fbd9ccc012fbf, type: 3}
-  - {fileID: 8300000, guid: 6b1b365fc53c71e41b8405e4a18af646, type: 3}
+  calendarInSfx: {fileID: 0}
+  calendarOutSfx: {fileID: 0}
   footstepSfx: {fileID: 0}
   uiSfx:
   - {fileID: 8300000, guid: 472ff0d6d49d45841b4b39ce7fd30db3, type: 3}
@@ -4271,6 +4271,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayDurationSeconds: 60
+  clockLightAnimator: {fileID: 0}
+  timeLeftBoolName: Time Left
+  timeLeftThreshold: 30
   itemsPerTask: 3
   targetItemIds: []
   purchasedItemIds: []
@@ -4638,7 +4641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 193454822}
   adsAnimator: {fileID: 193454821}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &195352670
@@ -4808,7 +4811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 195352673}
   adsAnimator: {fileID: 195352672}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &196108519
@@ -6050,7 +6053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 259315309}
   adsAnimator: {fileID: 259315308}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &265297952
@@ -8556,8 +8559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3c225210aa8054c96113e114f08e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalCursor: {fileID: 21300000, guid: a64af51ff316e224a9892d5033756651, type: 3}
-  clickCursor: {fileID: 21300000, guid: 4b3a7a40dce5c734ea47f155fc8aecec, type: 3}
+  normalCursor: {fileID: 21300000, guid: 33e538b975ef46a4e87cc340e95cbf91, type: 3}
+  clickCursor: {fileID: 21300000, guid: bd09a5616d1f4844eb20e2ac2a566d8b, type: 3}
 --- !u!114 &420357763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8897,7 +8900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 439510362}
   adsAnimator: {fileID: 439510361}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &451917055
@@ -12380,7 +12383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 583702729}
   adsAnimator: {fileID: 583702728}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.75
 --- !u!1 &611849032
@@ -20046,7 +20049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 1004936576}
   adsAnimator: {fileID: 1004936575}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &1005094894
@@ -22412,7 +22415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeCollider: {fileID: 1104093668}
   adsAnimator: {fileID: 1104093667}
-  inStateName: in
+  inTriggerName: AdsIn
   outTriggerName: AdsOut
   outAnimDelay: 0.25
 --- !u!1 &1107485803
