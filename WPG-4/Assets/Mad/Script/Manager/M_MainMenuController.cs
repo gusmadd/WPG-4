@@ -306,10 +306,12 @@ public class M_MainMenuController : MonoBehaviour
         if (startAnimator == null) return;
         startAnimator.ResetTrigger(outTrigger);
         startAnimator.SetTrigger(inTrigger);
+        M_AudioManager.Instance?.PlayShowKeyboard();
     }
 
     void HideStart()
     {
+        M_AudioManager.Instance?.PlayHideKeyboard();
         if (startAnimator == null) return;
         startAnimator.ResetTrigger(inTrigger);
         startAnimator.SetTrigger(outTrigger);
@@ -320,10 +322,12 @@ public class M_MainMenuController : MonoBehaviour
         if (exitAnimator == null) return;
         exitAnimator.ResetTrigger(outTrigger);
         exitAnimator.SetTrigger(inTrigger);
+        M_AudioManager.Instance?.PlayShowKeyboard();
     }
 
     void HideExit()
     {
+        M_AudioManager.Instance?.PlayHideKeyboard();
         if (exitAnimator == null) return;
         exitAnimator.ResetTrigger(inTrigger);
         exitAnimator.SetTrigger(outTrigger);

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class M_AudioManager : MonoBehaviour
 {
-
     public static M_AudioManager Instance;
 
     [Header("Audio Sources")]
@@ -10,6 +9,7 @@ public class M_AudioManager : MonoBehaviour
     public AudioSource ambienceSource;
     public AudioSource backgroundMusicSource;
     public AudioSource holdBuySource;
+    public AudioSource ownerStageSource;
 
     [Header("Volume Multipliers")]
     [Range(0f, 1f)] public float uiVolume = 1f;
@@ -21,73 +21,59 @@ public class M_AudioManager : MonoBehaviour
     [Range(0f, 1f)] public float miscVolume = 1f;
 
     [Header("Cursor / General UI Click")]
-    [Tooltip("Contoh isi: UI 1, UI 2, mouse click")]
     public AudioClip[] cursorClicks;
 
     [Header("Keyboard")]
-    [Tooltip("Contoh isi: keyboard baru, keyboard baru 2, keyboard baru 3, keyboard baru 4")]
     public AudioClip[] keyboardClicks;
-    [Tooltip("Isi dengan suara keyboard yang paling cocok buat spasi")]
     public AudioClip spacebarClick;
     public bool randomizeKeyboardPitch = true;
     public float keyboardPitchMin = 0.95f;
     public float keyboardPitchMax = 1.05f;
 
     [Header("UI Open / Close")]
-    [Tooltip("Contoh isi: UI 3")]
     public AudioClip showKeyboardSfx;
-    [Tooltip("Contoh isi: UI 2")]
     public AudioClip hideKeyboardSfx;
 
     [Header("Purchase / Wrong")]
     public AudioClip paymentSfx;
-    [Tooltip("Contoh isi: emilianodleon-button-ui-sound-effect")]
     public AudioClip wrongSfx;
     public AudioClip daySuccessSfx;
 
     [Header("Ads")]
-    [Tooltip("UI popup / iklan muncul")]
     public AudioClip[] adsSfx;
 
     [Header("Big Sis - Presence")]
-    [Tooltip("bigsis ngintip, bigsis starring")]
     public AudioClip bigSisNgintipSfx;
     public AudioClip bigSisStarringSfx;
 
     [Header("PC")]
-    [Tooltip("Contoh isi: pc nyala")]
     public AudioClip pcPowerOnSfx;
-    [Tooltip("Contoh isi: tombol pc")]
     public AudioClip pcButtonSfx;
 
     [Header("Bubble")]
-    [Tooltip("Contoh isi: bubble muncul")]
     public AudioClip bubbleAppearSfx;
 
     [Header("Calendar")]
-    [Tooltip("Contoh isi: suara kalender, suara kalender 2")]
     public AudioClip calendarInSfx;
     public AudioClip calendarOutSfx;
 
     [Header("Footstep")]
-    [Tooltip("Contoh isi: footstep bigsis")]
     public AudioClip footstepSfx;
 
     [Header("Extra UI")]
-    [Tooltip("Contoh isi: UI 1, UI 2, UI 3, UI 4")]
     public AudioClip[] uiSfx;
 
     [Header("Hold Buy")]
     public AudioClip holdBuySfx;
 
     [Header("Misc Gameplay")]
-    [Tooltip("Contoh isi: file SFX lain yang tidak cocok ke kategori atas")]
     public AudioClip[] miscSfx;
 
-    [Header("Ambience")]
-    [Tooltip("Contoh isi: in game ambience")]
-    public AudioClip backgroundMusicClip;
-    public bool playBackgroundMusicOnStart = false;
+    [Header("BGM")]
+    public AudioClip mainMenuBgm;
+    public AudioClip gameplayBgm;
+    public bool playMainMenuOnStart = false;
+    public bool playGameplayOnStart = false;
 
     void Awake()
     {
@@ -101,24 +87,15 @@ public class M_AudioManager : MonoBehaviour
 
     void Start()
     {
-        if (playBackgroundMusicOnStart)
-            PlayBackgroundMusic();
+        if (playMainMenuOnStart)
+            PlayMainMenuMusic();
+        else if (playGameplayOnStart)
+            PlayGameplayMusic();
     }
 
-    bool HasSfxSource()
-    {
-        return sfxSource != null;
-    }
-
-    bool IsValid(AudioClip clip)
-    {
-        return clip != null;
-    }
-
-    bool IsValidArray(AudioClip[] clips)
-    {
-        return clips != null && clips.Length > 0;
-    }
+    bool HasSfxSource() => sfxSource != null;
+    bool IsValid(AudioClip clip) => clip != null;
+    bool IsValidArray(AudioClip[] clips) => clips != null && clips.Length > 0;
 
     void PlayClip(AudioClip clip, float volumeMultiplier = 1f)
     {
@@ -145,9 +122,6 @@ public class M_AudioManager : MonoBehaviour
         M_NoiseSystem.Instance.AddNoise(amount);
     }
 
-    // =========================
-    // CURSOR / GENERAL UI
-    // =========================
     public void PlayCursorClick()
     {
         if (!IsValidArray(cursorClicks)) return;
@@ -159,32 +133,18 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    public void PlayRandomUi()
-    {
-        PlayRandom(uiSfx, uiVolume);
-    }
+    public void PlayRandomUi() => PlayRandom(uiSfx, uiVolume);
 
     public void PlayUiByIndex(int index)
     {
         if (!IsValidArray(uiSfx)) return;
         if (index < 0 || index >= uiSfx.Length) return;
-
         PlayClip(uiSfx[index], uiVolume);
     }
 
-    public void PlayWrongSfx()
-    {
-        PlayClip(wrongSfx, uiVolume);
-    }
+    public void PlayWrongSfx() => PlayClip(wrongSfx, uiVolume);
+    public void PlayDaySuccesSfx() => PlayClip(daySuccessSfx, uiVolume);
 
-    public void PlayDaySuccesSfx()
-    {
-        PlayClip(daySuccessSfx, uiVolume);
-    }
-
-    // =========================
-    // KEYBOARD
-    // =========================
     public void PlayKeyboardClick()
     {
         if (!HasSfxSource()) return;
@@ -211,26 +171,13 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.spaceNoise);
     }
 
-    public void PlayShowKeyboard()
-    {
-        PlayClip(showKeyboardSfx, uiVolume);
-    }
+    public void PlayShowKeyboard() => PlayClip(showKeyboardSfx, uiVolume);
+    public void PlayHideKeyboard() => PlayClip(hideKeyboardSfx, uiVolume);
 
-    public void PlayHideKeyboard()
-    {
-        PlayClip(hideKeyboardSfx, uiVolume);
-    }
-
-    // =========================
-    // HOLD BUY
-    // =========================
     public void PlayHoldBuyLoop()
     {
-        if (holdBuySource == null) return;
-        if (!IsValid(holdBuySfx)) return;
-
-        if (holdBuySource.isPlaying && holdBuySource.clip == holdBuySfx)
-            return;
+        if (holdBuySource == null || !IsValid(holdBuySfx)) return;
+        if (holdBuySource.isPlaying && holdBuySource.clip == holdBuySfx) return;
 
         holdBuySource.clip = holdBuySfx;
         holdBuySource.loop = true;
@@ -241,17 +188,32 @@ public class M_AudioManager : MonoBehaviour
     public void StopHoldBuyLoop()
     {
         if (holdBuySource == null) return;
-
-        if (holdBuySource.isPlaying)
-            holdBuySource.Stop();
-
+        if (holdBuySource.isPlaying) holdBuySource.Stop();
         holdBuySource.clip = null;
         holdBuySource.loop = false;
     }
 
-    // =========================
-    // PURCHASE / SHOP
-    // =========================
+    // khusus stage / Big Sis loop
+    public void PlayOwnerStageLoop(AudioClip clip)
+    {
+        if (ownerStageSource == null || !IsValid(clip)) return;
+        if (ownerStageSource.isPlaying && ownerStageSource.clip == clip) return;
+
+        ownerStageSource.Stop();
+        ownerStageSource.clip = clip;
+        ownerStageSource.loop = false;
+        ownerStageSource.volume = bigSisVolume;
+        ownerStageSource.Play();
+    }
+
+    public void StopOwnerStageLoop()
+    {
+        if (ownerStageSource == null) return;
+        if (ownerStageSource.isPlaying) ownerStageSource.Stop();
+        ownerStageSource.clip = null;
+        ownerStageSource.loop = false;
+    }
+
     public void PlayPayment()
     {
         PlayClip(paymentSfx, uiVolume);
@@ -260,9 +222,6 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.paymentNoise);
     }
 
-    // =========================
-    // ADS
-    // =========================
     public void PlayAdsSfx()
     {
         PlayRandom(adsSfx, adsVolume);
@@ -271,31 +230,11 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    // =========================
-    // BIG SIS
-    // =========================
-    public void PlayBigSisNgintipSfx()
-    {
-        PlayClip(bigSisNgintipSfx, bigSisVolume);
-    }
+    public void PlayBigSisNgintipSfx() => PlayClip(bigSisNgintipSfx, bigSisVolume);
+    public void PlayBigSisStarringSfx() => PlayClip(bigSisStarringSfx, bigSisVolume);
+    public void PlayFootstepSfx() => PlayClip(footstepSfx, bigSisVolume);
 
-    public void PlayBigSisStarringSfx()
-    {
-        PlayClip(bigSisStarringSfx, bigSisVolume);
-    }
-
-    public void PlayFootstepSfx()
-    {
-        PlayClip(footstepSfx, bigSisVolume);
-    }
-
-    // =========================
-    // PC
-    // =========================
-    public void PlayPcPowerOn()
-    {
-        PlayClip(pcPowerOnSfx, pcVolume);
-    }
+    public void PlayPcPowerOn() => PlayClip(pcPowerOnSfx, pcVolume);
 
     public void PlayPcButton()
     {
@@ -305,125 +244,48 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    // =========================
-    // BUBBLE / CALENDAR
-    // =========================
-    public void PlayBubbleAppear()
-    {
-        PlayClip(bubbleAppearSfx, uiVolume);
-    }
-
-    public void PlayInCalendar()
-    {
-        PlayClip(calendarInSfx, uiVolume);
-    }
-
-    public void PlayOutCalendar()
-    {
-        PlayClip(calendarOutSfx, uiVolume);
-    }
-
-    // =========================
-    // EXTRA / MISC
-    // =========================
-    public void PlayRandomMisc()
-    {
-        PlayRandom(miscSfx, miscVolume);
-    }
+    public void PlayBubbleAppear() => PlayClip(bubbleAppearSfx, uiVolume);
+    public void PlayInCalendar() => PlayClip(calendarInSfx, uiVolume);
+    public void PlayOutCalendar() => PlayClip(calendarOutSfx, uiVolume);
+    public void PlayRandomMisc() => PlayRandom(miscSfx, miscVolume);
 
     public void PlayMiscByIndex(int index)
     {
         if (!IsValidArray(miscSfx)) return;
         if (index < 0 || index >= miscSfx.Length) return;
-
         PlayClip(miscSfx[index], miscVolume);
     }
 
-    // =========================
-    // AMBIENCE
-    // =========================
-    public void PlayBackgroundMusic()
+    public void PlayMainMenuMusic() => PlayBgm(mainMenuBgm);
+    public void PlayGameplayMusic() => PlayBgm(gameplayBgm);
+
+    void PlayBgm(AudioClip clip)
     {
-        if (backgroundMusicSource != null && backgroundMusicClip != null)
-        {
-            backgroundMusicSource.clip = backgroundMusicClip;
-            backgroundMusicSource.loop = true;
-            backgroundMusicSource.volume = ambienceVolume;
-            backgroundMusicSource.Play();
-        }
+        if (backgroundMusicSource == null || !IsValid(clip)) return;
+        if (backgroundMusicSource.clip == clip && backgroundMusicSource.isPlaying) return;
+
+        backgroundMusicSource.Stop();
+        backgroundMusicSource.clip = clip;
+        backgroundMusicSource.loop = true;
+        backgroundMusicSource.volume = ambienceVolume;
+        backgroundMusicSource.Play();
     }
 
-    public void StopAmbience()
+    public void StopBackgroundMusic()
     {
-        if (ambienceSource == null) return;
-        ambienceSource.Stop();
+        if (backgroundMusicSource == null) return;
+        backgroundMusicSource.Stop();
     }
 
-    public void PauseAmbience()
+    public void PauseBackgroundMusic()
     {
-        if (ambienceSource == null) return;
-        if (!ambienceSource.isPlaying) return;
-
-        ambienceSource.Pause();
+        if (backgroundMusicSource == null || !backgroundMusicSource.isPlaying) return;
+        backgroundMusicSource.Pause();
     }
 
-    public void ResumeAmbience()
+    public void ResumeBackgroundMusic()
     {
-        if (ambienceSource == null) return;
-        ambienceSource.UnPause();
+        if (backgroundMusicSource == null) return;
+        backgroundMusicSource.UnPause();
     }
-
-    public void SetAmbienceVolume(float value)
-    {
-        ambienceVolume = Mathf.Clamp01(value);
-
-        if (ambienceSource != null)
-            ambienceSource.volume = ambienceVolume;
-    }
-
-    // =========================
-    // DEBUG / TEST
-    // =========================
-    [ContextMenu("Test Cursor Click")]
-    public void TestCursorClick()
-    {
-        PlayCursorClick();
-    }
-
-    [ContextMenu("Test Keyboard Click")]
-    public void TestKeyboardClick()
-    {
-        PlayKeyboardClick();
-    }
-
-    [ContextMenu("Test PC Power On")]
-    public void TestPcPowerOn()
-    {
-        PlayPcPowerOn();
-    }
-
-    [ContextMenu("Test Ads Sfx")]
-    public void TestAdsSfx()
-    {
-        PlayAdsSfx();
-    }
-
-    [ContextMenu("Test Bubble")]
-    public void TestBubble()
-    {
-        PlayBubbleAppear();
-    }
-
-    [ContextMenu("Test Hold Buy Start")]
-    public void TestHoldBuyStart()
-    {
-        PlayHoldBuyLoop();
-    }
-
-    [ContextMenu("Test Hold Buy Stop")]
-    public void TestHoldBuyStop()
-    {
-        StopHoldBuyLoop();
-    }
-
 }

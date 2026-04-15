@@ -84,9 +84,10 @@ public class PauseManager : MonoBehaviour
 
     public void Pause()
     {
-        M_AudioManager.Instance?.PlayRandomUi();
         if (isPaused || isTransitioning) return;
         if (!CanPause()) return;
+
+        M_AudioManager.Instance?.PlayRandomUi();
 
         isPaused = true;
         isTransitioning = true;
@@ -107,11 +108,17 @@ public class PauseManager : MonoBehaviour
         }
 
         Time.timeScale = 0f;
-        AudioListener.pause = true;
         TaskManager.Instance?.PauseTimer();
 
         RefreshPauseButton();
-        StartCoroutine(FinishTransition());
+        StartCoroutine(FinishPauseAudioAndTransition());
+    }
+
+    IEnumerator FinishPauseAudioAndTransition()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        AudioListener.pause = true;
+        isTransitioning = false;
     }
 
     public void Resume()

@@ -61,6 +61,7 @@ public class M_GameManager : MonoBehaviour
 
     public void ForceEndQTEState()
     {
+        UI_Script.Instance?.HideCloseAllAdsInstant();
         StopAllCoroutines();
 
         Time.timeScale = 1f;
@@ -116,11 +117,17 @@ public class M_GameManager : MonoBehaviour
             yield break;
         }
 
-        yield return new WaitForSecondsRealtime(0.2f);
+        // 1. tampilkan helper UI dulu
+        UI_Script.Instance?.ShowCloseAllAds();
 
+        // 2. kasih waktu supaya UI benar-benar kelihatan sendiri
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        // 3. optional reaction
         M_PlayerController.Instance?.PlayNoiseFull();
 
-        yield return new WaitForSecondsRealtime(1f);
+        // 4. kasih jeda lagi sedikit
+        yield return new WaitForSecondsRealtime(0.2f);
 
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
         {
@@ -128,10 +135,11 @@ public class M_GameManager : MonoBehaviour
             yield break;
         }
 
-        // 🦈 PINDAH KE SINI (SETELAH ZOOM SELESAI)
+        // 5. baru aktifkan mekanik QTE
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.isQTEActive = true;
 
+        // 6. baru spawn QTE prefab
         if (qtePrefab != null)
             Instantiate(qtePrefab);
 
@@ -154,6 +162,11 @@ public class M_GameManager : MonoBehaviour
             ForceEndQTEState();
             yield break;
         }
+
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.HideCloseAllAdsRoutine());
+
+        yield return new WaitForSecondsRealtime(0.2f);
 
         yield return StartCoroutine(FadeAndZoom(false));
 
@@ -261,6 +274,7 @@ public class M_GameManager : MonoBehaviour
 
     public IEnumerator QTEFail()
     {
+        UI_Script.Instance?.HideCloseAllAdsInstant();
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
         {
             ForceEndQTEState();

@@ -14,6 +14,7 @@ public class M_KeyArea : MonoBehaviour
             Debug.LogError("Keyboard belum di-assign di " + gameObject.name);
             return;
         }
+        
 
         keyboard.PressKey(keyValue);
     }

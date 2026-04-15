@@ -62,16 +62,11 @@ public class M_NoiseSystem : MonoBehaviour
 
         Instance = this;
 
-        // Akses melalui M_AudioManager.Instance
-        if (M_AudioManager.Instance.sfxSource != null && M_AudioManager.Instance.footstepSfx != null)
+        if (M_AudioManager.Instance != null && M_AudioManager.Instance.footstepSfx != null)
         {
-            M_AudioManager.Instance.sfxSource.clip = M_AudioManager.Instance.footstepSfx;  // Set footstep SFX ke AudioSource
-            M_AudioManager.Instance.sfxSource.loop = true;  // Aktifkan loop untuk footstep
-            M_AudioManager.Instance.sfxSource.volume = M_AudioManager.Instance.miscVolume;  // Set volume sesuai dengan volume yang diinginkan
-            M_AudioManager.Instance.sfxSource.Play();  // Memainkan footstep
+            M_AudioManager.Instance.PlayOwnerStageLoop(M_AudioManager.Instance.footstepSfx);
         }
     }
-
 
     void Update()
     {
@@ -234,44 +229,33 @@ public class M_NoiseSystem : MonoBehaviour
     {
         isStageSwitching = true;
 
-        // Fade out untuk transisi visual
         yield return StartCoroutine(FadeOwnerAlpha(1f, 0f, stageFadeOutTime));
 
         currentStage = newStage;
         ownerAnimator.SetInteger("OwnerState", currentStage);
 
-        // Hentikan footstep jika sedang diputar
-        if (M_AudioManager.Instance.sfxSource.isPlaying)
+        // stop loop stage lama, bukan stop semua sfx
+        M_AudioManager.Instance?.StopOwnerStageLoop();
+
+        if (newStage == 1)
         {
-            M_AudioManager.Instance.sfxSource.Stop(); // Menghentikan footstep jika ada di sfxSource
+            M_AudioManager.Instance?.PlayBigSisNgintipSfx();
+        }
+        else if (newStage == 2)
+        {
+            M_AudioManager.Instance?.PlayBigSisStarringSfx();
         }
 
-        // Menentukan SFX yang akan diputar berdasarkan stage
-        if (newStage == 1) // Stage 2
-        {
-            M_AudioManager.Instance.PlayBigSisNgintipSfx();
-        }
-        else if (newStage == 2) // Stage 3
-        {
-            M_AudioManager.Instance.PlayBigSisStarringSfx();
-        }
-
-        // Menunggu sebelum melanjutkan transisi visual
         yield return null;
 
         if (stageInvisibleDelay > 0f)
             yield return new WaitForSeconds(stageInvisibleDelay);
 
-        // Fade in untuk transisi visual
         yield return StartCoroutine(FadeOwnerAlpha(0f, 1f, stageFadeInTime));
 
-        // Memulai footstep SFX jika berada di stage 1
-        if (newStage == 0) // Stage 1
+        if (newStage == 0)
         {
-            // Set AudioSource untuk footstep agar looping
-            M_AudioManager.Instance.sfxSource.clip = M_AudioManager.Instance.footstepSfx;
-            M_AudioManager.Instance.sfxSource.loop = true;  // Aktifkan loop
-            M_AudioManager.Instance.sfxSource.Play();       // Mulai footstep dengan loop
+            M_AudioManager.Instance?.PlayOwnerStageLoop(M_AudioManager.Instance.footstepSfx);
         }
 
         isStageSwitching = false;

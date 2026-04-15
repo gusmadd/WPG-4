@@ -34,6 +34,11 @@ public class UI_Script : MonoBehaviour
     public Button gameOverHomeButton;
     public Button gameOverRestartButton;
 
+    [Header("Close All Ads UI")]
+    public GameObject closeAllAdsUI;
+    public Animator closeAllAdsAnimator;
+    public float closeAllAdsOutDelay = 0.35f;
+
     // anti double trigger
     bool isProcessingDayNext = false;
     bool isProcessingDayHome = false;
@@ -47,6 +52,7 @@ public class UI_Script : MonoBehaviour
 
     void Start()
     {
+        if (closeAllAdsUI != null) closeAllAdsUI.SetActive(false);
         if (daySuccessPanel != null) daySuccessPanel.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
@@ -124,7 +130,7 @@ public class UI_Script : MonoBehaviour
     public void UpdateTimer(float current, float max)
     {
         if (timerFill != null)
-            timerFill.fillAmount = Mathf.Clamp01(1 -current / max);
+            timerFill.fillAmount = Mathf.Clamp01(1 - current / max);
     }
 
     public void StopTimer()
@@ -150,7 +156,7 @@ public class UI_Script : MonoBehaviour
     {
         if (incorrectEffect != null)
             incorrectEffect.SetTrigger("Play");
-    // optional: camera shake (small)
+        // optional: camera shake (small)
         if (cameraTransform != null)
             StartCoroutine(Shake());
     }
@@ -250,5 +256,41 @@ public class UI_Script : MonoBehaviour
         M_AudioManager.Instance?.PlayCursorClick();
         HideGameOver();
         DayManager.Instance?.RestartGame();
+    }
+
+    public void ShowCloseAllAds()
+    {
+        if (closeAllAdsUI != null)
+            closeAllAdsUI.SetActive(true);
+
+        if (closeAllAdsAnimator != null)
+        {
+            closeAllAdsAnimator.ResetTrigger("out");
+            closeAllAdsAnimator.ResetTrigger("idle");
+            closeAllAdsAnimator.ResetTrigger("in");
+            closeAllAdsAnimator.SetTrigger("in");
+        }
+    }
+
+    public IEnumerator HideCloseAllAdsRoutine()
+    {
+        if (closeAllAdsAnimator != null)
+        {
+            closeAllAdsAnimator.ResetTrigger("in");
+            closeAllAdsAnimator.ResetTrigger("idle");
+            closeAllAdsAnimator.ResetTrigger("out");
+            closeAllAdsAnimator.SetTrigger("out");
+
+            yield return new WaitForSecondsRealtime(closeAllAdsOutDelay);
+        }
+
+        if (closeAllAdsUI != null)
+            closeAllAdsUI.SetActive(false);
+    }
+
+    public void HideCloseAllAdsInstant()
+    {
+        if (closeAllAdsUI != null)
+            closeAllAdsUI.SetActive(false);
     }
 }

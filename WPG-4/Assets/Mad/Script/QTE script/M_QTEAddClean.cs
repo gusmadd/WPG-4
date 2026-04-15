@@ -20,10 +20,11 @@ public class M_QTEAddClean : MonoBehaviour
     [Header("Ad Scaling")]
     public int baseAds = 15;
     public int adsIncreasePerQTE = 3;
-    public int maxAds = 30; // opsional
+    public int maxAds = 30;
 
     [Header("Spawn Timing")]
-    public float spawnInterval = 0.08f; // cepat, bisa diatur di Inspector
+    public float spawnInterval = 0.08f;
+    public float delayBeforeSpawnAds = 1f;
 
     float timer;
     bool isRunning = false;
@@ -36,15 +37,25 @@ public class M_QTEAddClean : MonoBehaviour
 
         int qteIndex = Mathf.Max(1, M_GameManager.Instance.qteCount);
         totalAds = baseAds + (qteIndex - 1) * adsIncreasePerQTE;
-        if (maxAds > 0) totalAds = Mathf.Min(totalAds, maxAds);
+
+        if (maxAds > 0)
+            totalAds = Mathf.Min(totalAds, maxAds);
 
         timer = totalTime;
+
+        StartCoroutine(BeginQTEWithDelay());
+    }
+
+    IEnumerator BeginQTEWithDelay()
+    {
+        yield return new WaitForSecondsRealtime(delayBeforeSpawnAds);
+
+        // baru mulai timer sekarang
         isRunning = true;
 
-        // 🔥 AKTIFKAN TIMER UI
-        UI_Script.Instance.StartTimer(totalTime);
+        UI_Script.Instance?.StartTimer(totalTime);
 
-        StartCoroutine(SpawnAdsRoutine());
+        yield return StartCoroutine(SpawnAdsRoutine());
     }
 
     void Update()
@@ -58,8 +69,7 @@ public class M_QTEAddClean : MonoBehaviour
         float speedMultiplier = Mathf.Lerp(2f, 1f, (float)activeAds.Count / totalAds);
         timer -= Time.unscaledDeltaTime * (speedMultiplier - 1f);
 
-        // 🔥 UPDATE FILL TIMER
-        UI_Script.Instance.UpdateTimer(timer, totalTime);
+        UI_Script.Instance?.UpdateTimer(timer, totalTime);
 
         if (timer <= 0f)
         {
@@ -96,18 +106,13 @@ public class M_QTEAddClean : MonoBehaviour
         activeAds.Remove(popup);
 
         if (activeAds.Count <= 0)
-        {
             Success();
-        }
     }
 
     void Success()
     {
         isRunning = false;
-
-        // 🔥 MATIKAN TIMER UI
-        UI_Script.Instance.StopTimer();
-
+        UI_Script.Instance?.StopTimer();
         StartCoroutine(SuccessRoutine());
     }
 
@@ -123,7 +128,6 @@ public class M_QTEAddClean : MonoBehaviour
         UI_Script.Instance?.StopTimer();
 
         CleanupAds();
-
         StartCoroutine(FailRoutine());
     }
 
@@ -140,6 +144,7 @@ public class M_QTEAddClean : MonoBehaviour
             if (activeAds[i] != null)
                 Destroy(activeAds[i].gameObject);
         }
+
         activeAds.Clear();
     }
 }
