@@ -61,11 +61,6 @@ public class M_NoiseSystem : MonoBehaviour
         }
 
         Instance = this;
-
-        if (M_AudioManager.Instance != null && M_AudioManager.Instance.footstepSfx != null)
-        {
-            M_AudioManager.Instance.PlayOwnerStageLoop(M_AudioManager.Instance.footstepSfx);
-        }
     }
 
     void Update()
@@ -73,6 +68,7 @@ public class M_NoiseSystem : MonoBehaviour
         HandleDecay();
         HandleAdsNoise();
         UpdateOwnerState();
+        HandleOwnerAudio();
     }
 
     bool IsDayResolved()
@@ -88,7 +84,6 @@ public class M_NoiseSystem : MonoBehaviour
 
         if (M_GameManager.Instance == null) return false;
 
-        // noise boleh berjalan saat gameplay biasa dan ads overlay
         return M_GameManager.Instance.currentState == M_GameManager.GameState.Boot
             || M_GameManager.Instance.currentState == M_GameManager.GameState.TaskOverlay
             || M_GameManager.Instance.currentState == M_GameManager.GameState.QTE;
@@ -205,6 +200,8 @@ public class M_NoiseSystem : MonoBehaviour
         noiseTriggered = false;
         isQTEActive = false;
         adsNoiseActive = false;
+
+        M_AudioManager.Instance?.StopOwnerStageLoop();
     }
 
     void UpdateOwnerState()
@@ -235,6 +232,27 @@ public class M_NoiseSystem : MonoBehaviour
         }
     }
 
+    void HandleOwnerAudio()
+    {
+        if (M_AudioManager.Instance == null) return;
+
+        if (IsDayResolved() || isQTEActive || freezeNoise || isStageSwitching)
+        {
+            M_AudioManager.Instance.StopOwnerStageLoop();
+            return;
+        }
+
+        if (currentStage == 0)
+        {
+            if (M_AudioManager.Instance.footstepSfx != null)
+                M_AudioManager.Instance.PlayOwnerStageLoop(M_AudioManager.Instance.footstepSfx);
+        }
+        else
+        {
+            M_AudioManager.Instance.StopOwnerStageLoop();
+        }
+    }
+
     IEnumerator SwitchOwnerStageRoutine(int newStage)
     {
         isStageSwitching = true;
@@ -243,6 +261,8 @@ public class M_NoiseSystem : MonoBehaviour
         int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
         int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
 
+        M_AudioManager.Instance?.StopOwnerStageLoop();
+
         yield return StartCoroutine(FadeOwnerAlpha(1f, 0f, stageFadeOutTime));
 
         currentStage = newStage;
@@ -250,8 +270,6 @@ public class M_NoiseSystem : MonoBehaviour
 
         TelemetryManager.Instance?.SendNoiseStageChanged(oldStage, newStage, currentNoise, day, week);
         TelemetryManager.Instance?.SendStageLevel(newStage, day, week);
-
-        M_AudioManager.Instance?.StopOwnerStageLoop();
 
         if (newStage == 1)
         {
@@ -268,11 +286,6 @@ public class M_NoiseSystem : MonoBehaviour
             yield return new WaitForSeconds(stageInvisibleDelay);
 
         yield return StartCoroutine(FadeOwnerAlpha(0f, 1f, stageFadeInTime));
-
-        if (newStage == 0)
-        {
-            M_AudioManager.Instance?.PlayOwnerStageLoop(M_AudioManager.Instance.footstepSfx);
-        }
 
         isStageSwitching = false;
         switchRoutine = null;
@@ -326,6 +339,8 @@ public class M_NoiseSystem : MonoBehaviour
         noiseTriggered = false;
         isQTEActive = false;
         adsNoiseActive = false;
+
+        M_AudioManager.Instance?.StopOwnerStageLoop();
     }
 
     public void FreezeNoise(bool freeze)
@@ -334,7 +349,21 @@ public class M_NoiseSystem : MonoBehaviour
         currentDecayRate = 0f;
 
         if (freeze)
+        {
             adsNoiseActive = false;
+            M_AudioManager.Instance?.StopOwnerStageLoop();
+        }
+    }
+
+    public void SetQTEActive(bool active)
+    {
+        isQTEActive = active;
+
+        if (active)
+        {
+            adsNoiseActive = false;
+            M_AudioManager.Instance?.StopOwnerStageLoop();
+        }
     }
 
     public void ResetForNewDay()
@@ -358,5 +387,7 @@ public class M_NoiseSystem : MonoBehaviour
 
         if (ownerAnimator != null)
             ownerAnimator.SetInteger("OwnerState", 0);
+
+        M_AudioManager.Instance?.StopOwnerStageLoop();
     }
 }

@@ -193,7 +193,6 @@ public class M_AudioManager : MonoBehaviour
         holdBuySource.loop = false;
     }
 
-    // khusus stage / Big Sis loop
     public void PlayOwnerStageLoop(AudioClip clip)
     {
         if (ownerStageSource == null || !IsValid(clip)) return;
@@ -201,7 +200,7 @@ public class M_AudioManager : MonoBehaviour
 
         ownerStageSource.Stop();
         ownerStageSource.clip = clip;
-        ownerStageSource.loop = false;
+        ownerStageSource.loop = true;
         ownerStageSource.volume = bigSisVolume;
         ownerStageSource.Play();
     }
