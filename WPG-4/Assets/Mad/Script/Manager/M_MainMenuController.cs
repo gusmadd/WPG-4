@@ -165,6 +165,7 @@ public class M_MainMenuController : MonoBehaviour
 
         // 3. Pindah Scene
         SceneManager.LoadScene(gameSceneName);
+        TelemetryManager.Instance?.SendSessionStart();
     }
 
     // COROUTINE UNTUK MENGGERAKKAN SLIDE (LERP)

@@ -56,7 +56,6 @@ public class M_FoodPage : MonoBehaviour
     void Update()
     {
         if (!gameObject.activeSelf) return;
-        Debug.Log("M_FoodPage Update running");
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay) return;
 
         if (Input.GetMouseButtonDown(0))

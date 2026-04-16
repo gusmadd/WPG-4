@@ -646,7 +646,7 @@ MonoBehaviour:
   homeCollider: {fileID: 1323477419}
   servicesCollider: {fileID: 1786645182}
   backCollider: {fileID: 2079831573}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!1 &36434706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1411,7 +1411,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -2951,7 +2951,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -4231,7 +4231,7 @@ MonoBehaviour:
   - {fileID: 1841014602}
   - {fileID: 2135906900}
   monitorManager: {fileID: 1011755573}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
   resultSearchInput: {fileID: 1013896587}
   day1AdsChance: 0.01
   day2AdsChance: 0.02
@@ -9296,7 +9296,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.006289184, g: 0.006289184, b: 0.006289184, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -9372,7 +9372,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 33
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -9673,7 +9673,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -10735,7 +10735,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -11698,7 +11698,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -14822,7 +14822,7 @@ MonoBehaviour:
   homeCollider: {fileID: 387497563}
   servicesCollider: {fileID: 1311591362}
   backCollider: {fileID: 1739551216}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
   backTargetPage: {fileID: 1250414071}
 --- !u!1 &722859608
 GameObject:
@@ -16534,7 +16534,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -24379,7 +24379,7 @@ MonoBehaviour:
   petcareCollider: {fileID: 707318445}
   accessoriesCollider: {fileID: 1474826508}
   toysCollider: {fileID: 1788980416}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!1 &1258338622
 GameObject:
   m_ObjectHideFlags: 0
@@ -24550,7 +24550,7 @@ MonoBehaviour:
   item5Collider: {fileID: 678260542}
   item6Collider: {fileID: 898231335}
   viewButton: {fileID: 223917919}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!212 &1276921619
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24708,7 +24708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desktopPage: {fileID: 1749184489}
   searchPage: {fileID: 1049357084}
-  searchField: {fileID: 0}
+  searchField: {fileID: 1850801669}
   closeButtonCollider: {fileID: 1608849218}
   homePage: {fileID: 1280542775}
   productPage: {fileID: 1250414071}
@@ -25123,7 +25123,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -26826,7 +26826,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -28196,7 +28196,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -30049,7 +30049,7 @@ MonoBehaviour:
   productPage: {fileID: 1250414071}
   homeCollider: {fileID: 1827655553}
   productCollider: {fileID: 1584567568}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!1 &1535728750
 GameObject:
   m_ObjectHideFlags: 0
@@ -30902,7 +30902,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -33292,7 +33292,7 @@ MonoBehaviour:
   item5Collider: {fileID: 98212256}
   item6Collider: {fileID: 940121544}
   viewButton: {fileID: 1459977182}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!1 &1770092983
 GameObject:
   m_ObjectHideFlags: 0
@@ -35061,7 +35061,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 
@@ -36712,7 +36712,7 @@ MonoBehaviour:
   homeCollider: {fileID: 1513805468}
   servicesCollider: {fileID: 618254612}
   backCollider: {fileID: 36434708}
-  homeSearchInput: {fileID: 0}
+  homeSearchInput: {fileID: 1850801669}
 --- !u!1 &1896726350
 GameObject:
   m_ObjectHideFlags: 0
@@ -37399,7 +37399,7 @@ PrefabInstance:
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: homeSearchInput
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1850801669}
     - target: {fileID: 3061032777072949527, guid: d537ee6ad553825489860f57f043ae98, type: 3}
       propertyPath: petshopHomePage
       value: 

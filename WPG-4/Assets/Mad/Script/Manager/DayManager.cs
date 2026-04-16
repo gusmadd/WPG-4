@@ -103,6 +103,7 @@ public class DayManager : MonoBehaviour
         Debug.Log("Starting Day: " + day);  // Debug untuk memeriksa apakah StartDayRoutine dipanggil
 
         int tasks = startTasks + (day - 1) * tasksIncreasePerDay;
+        TelemetryManager.Instance?.SendDayStart(day, tasks);
 
         isAdvancingDay = false;
         isEndingDay = false;
@@ -136,6 +137,8 @@ public class DayManager : MonoBehaviour
     {
         if (isEndingDay) return;
         isEndingDay = true;
+
+        TelemetryManager.Instance?.SendDayCompleted(currentDay);
 
         M_GameManager.Instance?.ForceEndQTEState();
         StartCoroutine(SuccessRoutine());
@@ -178,6 +181,13 @@ public class DayManager : MonoBehaviour
         if (currentDay >= maxDay)
         {
             M_ProgressManager.CompleteWeek(currentWeek);
+
+            if (currentWeek >= 4)
+            {
+                TelemetryManager.Instance?.SendSessionEnd();
+                Debug.Log("Game tamat di week 4, session_end dikirim");
+            }
+
             if (weekCompletePanel != null)
             {
                 M_AudioManager.Instance?.PlayDaySuccesSfx();
@@ -194,6 +204,9 @@ public class DayManager : MonoBehaviour
     {
         if (isEndingDay) return;
         isEndingDay = true;
+
+        TelemetryManager.Instance?.SendPlayerFail("timer_ran_out", currentDay, currentWeek);
+        TelemetryManager.Instance?.SendSessionEnd();
 
         M_GameManager.Instance?.ForceEndQTEState();
 

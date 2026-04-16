@@ -143,11 +143,21 @@ public class M_NoiseSystem : MonoBehaviour
 
     public void AddNoise(float amount)
     {
+        AddNoise(amount, "unknown");
+    }
+
+    public void AddNoise(float amount, string source)
+    {
         if (amount <= 0f) return;
         if (IsNoiseBlocked()) return;
 
         currentNoise += amount;
         currentNoise = Mathf.Clamp(currentNoise, 0f, maxNoise);
+
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendNoiseIncrease(amount, source, currentNoise, day, week);
 
         TryTriggerNoiseFull();
     }
@@ -229,12 +239,18 @@ public class M_NoiseSystem : MonoBehaviour
     {
         isStageSwitching = true;
 
+        int oldStage = currentStage;
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
         yield return StartCoroutine(FadeOwnerAlpha(1f, 0f, stageFadeOutTime));
 
         currentStage = newStage;
         ownerAnimator.SetInteger("OwnerState", currentStage);
 
-        // stop loop stage lama, bukan stop semua sfx
+        TelemetryManager.Instance?.SendNoiseStageChanged(oldStage, newStage, currentNoise, day, week);
+        TelemetryManager.Instance?.SendStageLevel(newStage, day, week);
+
         M_AudioManager.Instance?.StopOwnerStageLoop();
 
         if (newStage == 1)

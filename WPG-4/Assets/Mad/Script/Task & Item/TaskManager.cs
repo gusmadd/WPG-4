@@ -109,6 +109,12 @@ public class TaskManager : MonoBehaviour
         }
 
         Debug.Log("Week " + GetCurrentWeek() + " task list: " + string.Join(",", targetItemIds));
+        int currentDay = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+
+        for (int i = 0; i < targetItemIds.Count; i++)
+        {
+            TelemetryManager.Instance?.SendTaskStart(targetItemIds[i], currentDay);
+        }
     }
 
     List<ItemCategory> GetAllowedCategoriesForCurrentWeek()
@@ -216,6 +222,11 @@ public class TaskManager : MonoBehaviour
 
         purchasedItemIds.Add(itemId);
 
+        float duration = dayDurationSeconds - GetTimeLeft();
+        int currentDay = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+
+        TelemetryManager.Instance?.SendTaskComplete(itemId, duration, currentDay);
+
         if (purchasedItemIds.Count >= targetItemIds.Count)
         {
             completed = true;
@@ -238,7 +249,7 @@ public class TaskManager : MonoBehaviour
 
         M_AudioManager.Instance?.PlayWrongSfx();
         UI_Script.Instance?.PlayWrongEffect();
-        M_NoiseSystem.Instance?.AddNoise(10f);
+        M_NoiseSystem.Instance?.AddNoise(10f, "wrong_purchase");
     }
 
     int GetTargetCount(string itemId)
