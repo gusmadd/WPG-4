@@ -255,7 +255,13 @@ public class UI_Script : MonoBehaviour
 
         M_AudioManager.Instance?.PlayCursorClick();
         HideGameOver();
-        DayManager.Instance?.RestartGame();
+
+        string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        if (SceneTransitionManager.Instance != null)
+            SceneTransitionManager.Instance.LoadSceneWithTransition(currentSceneName);
+        else
+            UnityEngine.SceneManagement.SceneManager.LoadScene(currentSceneName);
     }
 
     public void ShowCloseAllAds()

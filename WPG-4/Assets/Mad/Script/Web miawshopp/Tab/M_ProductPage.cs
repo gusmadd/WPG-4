@@ -24,7 +24,7 @@ public class M_ProductPage : MonoBehaviour
     public Collider2D accessoriesCollider;
     public Collider2D toysCollider;
 
-    [Header ("Navigation")]
+    [Header("Navigation")]
     public M_SearchInput homeSearchInput;
 
     void Update()
@@ -49,9 +49,10 @@ public class M_ProductPage : MonoBehaviour
             if (homeCollider != null && homeCollider.OverlapPoint(mousePos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
-                    M_PlayerController.Instance?.PlayTyping();
+                M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(homePage);
+                OpenPage(homePage, "petshop_home_page");
+
                 return;
             }
 
@@ -60,7 +61,8 @@ public class M_ProductPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(servicesPage);
+                OpenPage(servicesPage, "services_page");
+
                 return;
             }
 
@@ -69,7 +71,7 @@ public class M_ProductPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(foodsPage);
+                OpenPage(foodsPage, "food_page");
                 return;
             }
 
@@ -78,7 +80,7 @@ public class M_ProductPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(petcarePage);
+                OpenPage(petcarePage, "petcare_page");
                 return;
             }
 
@@ -87,7 +89,7 @@ public class M_ProductPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(accessoriesPage);
+                OpenPage(accessoriesPage, "accessories_page");
                 return;
             }
 
@@ -96,18 +98,21 @@ public class M_ProductPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                OpenPage(toysPage);
+                OpenPage(toysPage, "toys_page");
                 return;
             }
         }
     }
 
-    void OpenPage(GameObject targetPage)
+    void OpenPage(GameObject targetPage, string pageName)
     {
         gameObject.SetActive(false);
 
         if (targetPage != null)
+        {
             targetPage.SetActive(true);
+            TrackPageOpen(pageName);
+        }
     }
 
     void CloseToDesktop()
@@ -116,10 +121,19 @@ public class M_ProductPage : MonoBehaviour
 
         if (desktopPage != null)
             desktopPage.SetActive(true);
+        TrackPageOpen("desktop");
     }
 
     public void Show()
     {
         gameObject.SetActive(true);
+    }
+    
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

@@ -225,13 +225,14 @@ public class M_MonitorManager : MonoBehaviour
 
         if (screenOff != null) screenOff.SetActive(false);
         if (screenOn != null) screenOn.SetActive(true);
-        
+
 
         // Light monitor nyala saat monitor benar-benar ON
         if (monitorLight != null)
             monitorLight.SetActive(true);
 
         if (desktopPage != null) desktopPage.SetActive(true);
+        TrackPageOpen("desktop");
         if (searchHomePage != null) searchHomePage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(false);
@@ -241,6 +242,7 @@ public class M_MonitorManager : MonoBehaviour
     {
         if (desktopPage != null) desktopPage.SetActive(false);
         if (searchHomePage != null) searchHomePage.SetActive(true);
+        TrackPageOpen("search_home_page");
         if (searchResultPage != null) searchResultPage.SetActive(false);
     }
 
@@ -284,6 +286,7 @@ public class M_MonitorManager : MonoBehaviour
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(false);
         if (desktopPage != null) desktopPage.SetActive(true);
+        TrackPageOpen("desktop");
 
         if (homeSearchInput != null)
             homeSearchInput.ResetToDefault();
@@ -297,6 +300,7 @@ public class M_MonitorManager : MonoBehaviour
         {
             if (searchHomePage != null) searchHomePage.SetActive(false);
             if (searchResultPage != null) searchResultPage.SetActive(true);
+            TrackPageOpen("search_result_page");
 
             if (resultSearchInput != null)
                 resultSearchInput.SetTextFromExternal(url);
@@ -323,6 +327,7 @@ public class M_MonitorManager : MonoBehaviour
         if (desktopPage != null) desktopPage.SetActive(false);
         if (searchResultPage != null) searchResultPage.SetActive(false);
         if (petshopPage != null) petshopPage.SetActive(true);
+        TrackPageOpen("petshop_home_page");
     }
 
     public void ResetToOff()
@@ -389,5 +394,12 @@ public class M_MonitorManager : MonoBehaviour
 
         if (keyboard != null)
             keyboard.HideKeyboard();
+    }
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

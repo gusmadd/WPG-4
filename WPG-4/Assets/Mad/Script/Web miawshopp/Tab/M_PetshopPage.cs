@@ -64,6 +64,7 @@ public class M_PetshopPage : MonoBehaviour
         gameObject.SetActive(false);
         if (productPage != null)
             productPage.SetActive(true);
+            TrackPageOpen("product_page");
     }
 
     void OpenServicePage()
@@ -71,6 +72,7 @@ public class M_PetshopPage : MonoBehaviour
         gameObject.SetActive(false);
         if (servicePage != null)
             servicePage.SetActive(true);
+            TrackPageOpen("service_page");
     }
 
     public void Show()
@@ -79,6 +81,8 @@ public class M_PetshopPage : MonoBehaviour
         homePage.SetActive(true);
         productPage.SetActive(false);
         servicePage.SetActive(false);
+
+        TrackPageOpen("petshop_home_page");
     }
 
     void CloseToDesktop()
@@ -87,5 +91,13 @@ public class M_PetshopPage : MonoBehaviour
 
         if (desktopPage != null)
             desktopPage.SetActive(true);
+            TrackPageOpen("desktop");
+    }
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

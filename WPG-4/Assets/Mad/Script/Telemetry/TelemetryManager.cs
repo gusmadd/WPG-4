@@ -307,4 +307,29 @@ public class TelemetryManager : MonoBehaviour
         AnalyticsService.Instance.RecordEvent(ev);
         Debug.Log($"stage_level sent, stage = {stageLevel}, day = {dayNumber}, week = {weekNumber}");
     }
+    public void SendPageOpen(string pageName, int dayNumber, int weekNumber)
+    {
+        if (!isReady)
+        {
+            Debug.LogWarning("Telemetry belum siap");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(runId))
+        {
+            Debug.LogWarning("run_id belum ada, session_start belum dikirim");
+            return;
+        }
+
+        var ev = new CustomEvent("page_open")
+    {
+        { "page_name", pageName },
+        { "day_number", dayNumber },
+        { "week_number", weekNumber }
+    };
+
+        AnalyticsService.Instance.RecordEvent(ev);
+
+        Debug.Log($"page_open sent, page = {pageName}, day = {dayNumber}, week = {weekNumber}");
+    }
 }

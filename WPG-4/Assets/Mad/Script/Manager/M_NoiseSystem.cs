@@ -32,14 +32,16 @@ public class M_NoiseSystem : MonoBehaviour
     public float stage2Decay = 8f;
     public float stage3Decay = 3f;
 
-    [Header("Animator")]
-    public Animator ownerAnimator;
-
     [Header("BigSis Visual")]
     public List<SpriteRenderer> ownerRenderers = new List<SpriteRenderer>();
     public float stageFadeOutTime = 0.03f;
     public float stageInvisibleDelay = 0.03f;
     public float stageFadeInTime = 0.05f;
+
+    [Header("Animator")]
+    public Animator ownerAnimator;
+    public string ownerStateParam = "OwnerState";
+    public string qteBoolParam = "is QTE";
 
     [HideInInspector] public bool isQTEActive = false;
 
@@ -69,6 +71,7 @@ public class M_NoiseSystem : MonoBehaviour
         HandleAdsNoise();
         UpdateOwnerState();
         HandleOwnerAudio();
+        UpdateOwnerAnimatorParams();
     }
 
     bool IsDayResolved()
@@ -266,7 +269,11 @@ public class M_NoiseSystem : MonoBehaviour
         yield return StartCoroutine(FadeOwnerAlpha(1f, 0f, stageFadeOutTime));
 
         currentStage = newStage;
-        ownerAnimator.SetInteger("OwnerState", currentStage);
+        ownerAnimator.SetInteger(ownerStateParam, currentStage);
+
+        // hanya saat stage naik
+        if (newStage > oldStage)
+            M_PlayerController.Instance?.PlaySurprise();
 
         TelemetryManager.Instance?.SendNoiseStageChanged(oldStage, newStage, currentNoise, day, week);
         TelemetryManager.Instance?.SendStageLevel(newStage, day, week);
@@ -340,6 +347,9 @@ public class M_NoiseSystem : MonoBehaviour
         isQTEActive = false;
         adsNoiseActive = false;
 
+        if (ownerAnimator != null)
+            ownerAnimator.SetBool(qteBoolParam, false);
+
         M_AudioManager.Instance?.StopOwnerStageLoop();
     }
 
@@ -358,6 +368,9 @@ public class M_NoiseSystem : MonoBehaviour
     public void SetQTEActive(bool active)
     {
         isQTEActive = active;
+
+        if (ownerAnimator != null)
+            ownerAnimator.SetBool(qteBoolParam, isQTEActive);
 
         if (active)
         {
@@ -386,8 +399,19 @@ public class M_NoiseSystem : MonoBehaviour
         SetOwnerAlpha(1f);
 
         if (ownerAnimator != null)
-            ownerAnimator.SetInteger("OwnerState", 0);
+        {
+            ownerAnimator.SetInteger(ownerStateParam, 0);
+            ownerAnimator.SetBool(qteBoolParam, false);
+        }
 
         M_AudioManager.Instance?.StopOwnerStageLoop();
+    }
+
+    void UpdateOwnerAnimatorParams()
+    {
+        if (ownerAnimator == null) return;
+
+        ownerAnimator.SetInteger(ownerStateParam, currentStage);
+        ownerAnimator.SetBool(qteBoolParam, isQTEActive);
     }
 }

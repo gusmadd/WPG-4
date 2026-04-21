@@ -11,6 +11,9 @@ public class M_AudioManager : MonoBehaviour
     public AudioSource holdBuySource;
     public AudioSource ownerStageSource;
 
+    [Header("Master Volume")]
+    [Range(0f, 1f)] public float masterVolume = 1f;
+
     [Header("Volume Multipliers")]
     [Range(0f, 1f)] public float uiVolume = 1f;
     [Range(0f, 1f)] public float keyboardVolume = 1f;
@@ -75,6 +78,8 @@ public class M_AudioManager : MonoBehaviour
     public bool playMainMenuOnStart = false;
     public bool playGameplayOnStart = false;
 
+    const string MasterVolumeKey = "MasterVolume";
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -83,6 +88,9 @@ public class M_AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        LoadVolumeSettings();
+        ApplyVolumeSettings();
     }
 
     void Start()
@@ -96,6 +104,46 @@ public class M_AudioManager : MonoBehaviour
     bool HasSfxSource() => sfxSource != null;
     bool IsValid(AudioClip clip) => clip != null;
     bool IsValidArray(AudioClip[] clips) => clips != null && clips.Length > 0;
+
+    public float GetMasterVolume()
+    {
+        return masterVolume;
+    }
+
+    public void SetMasterVolume(float value)
+    {
+        masterVolume = Mathf.Clamp01(value);
+        ApplyVolumeSettings();
+        SaveVolumeSettings();
+    }
+
+    void SaveVolumeSettings()
+    {
+        PlayerPrefs.SetFloat(MasterVolumeKey, masterVolume);
+        PlayerPrefs.Save();
+    }
+
+    void LoadVolumeSettings()
+    {
+        masterVolume = PlayerPrefs.GetFloat(MasterVolumeKey, 1f);
+    }
+
+    public void ApplyVolumeSettings()
+    {
+        AudioListener.volume = masterVolume;
+
+        if (backgroundMusicSource != null)
+            backgroundMusicSource.volume = ambienceVolume;
+
+        if (ambienceSource != null)
+            ambienceSource.volume = ambienceVolume;
+
+        if (holdBuySource != null)
+            holdBuySource.volume = uiVolume;
+
+        if (ownerStageSource != null)
+            ownerStageSource.volume = bigSisVolume;
+    }
 
     void PlayClip(AudioClip clip, float volumeMultiplier = 1f)
     {
@@ -133,17 +181,28 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    public void PlayRandomUi() => PlayRandom(uiSfx, uiVolume);
+    public void PlayRandomUi()
+    {
+        PlayRandom(uiSfx, uiVolume);
+    }
 
     public void PlayUiByIndex(int index)
     {
         if (!IsValidArray(uiSfx)) return;
         if (index < 0 || index >= uiSfx.Length) return;
+
         PlayClip(uiSfx[index], uiVolume);
     }
 
-    public void PlayWrongSfx() => PlayClip(wrongSfx, uiVolume);
-    public void PlayDaySuccesSfx() => PlayClip(daySuccessSfx, uiVolume);
+    public void PlayWrongSfx()
+    {
+        PlayClip(wrongSfx, uiVolume);
+    }
+
+    public void PlayDaySuccesSfx()
+    {
+        PlayClip(daySuccessSfx, uiVolume);
+    }
 
     public void PlayKeyboardClick()
     {
@@ -171,8 +230,15 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.spaceNoise);
     }
 
-    public void PlayShowKeyboard() => PlayClip(showKeyboardSfx, uiVolume);
-    public void PlayHideKeyboard() => PlayClip(hideKeyboardSfx, uiVolume);
+    public void PlayShowKeyboard()
+    {
+        PlayClip(showKeyboardSfx, uiVolume);
+    }
+
+    public void PlayHideKeyboard()
+    {
+        PlayClip(hideKeyboardSfx, uiVolume);
+    }
 
     public void PlayHoldBuyLoop()
     {
@@ -229,11 +295,25 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    public void PlayBigSisNgintipSfx() => PlayClip(bigSisNgintipSfx, bigSisVolume);
-    public void PlayBigSisStarringSfx() => PlayClip(bigSisStarringSfx, bigSisVolume);
-    public void PlayFootstepSfx() => PlayClip(footstepSfx, bigSisVolume);
+    public void PlayBigSisNgintipSfx()
+    {
+        PlayClip(bigSisNgintipSfx, bigSisVolume);
+    }
 
-    public void PlayPcPowerOn() => PlayClip(pcPowerOnSfx, pcVolume);
+    public void PlayBigSisStarringSfx()
+    {
+        PlayClip(bigSisStarringSfx, bigSisVolume);
+    }
+
+    public void PlayFootstepSfx()
+    {
+        PlayClip(footstepSfx, bigSisVolume);
+    }
+
+    public void PlayPcPowerOn()
+    {
+        PlayClip(pcPowerOnSfx, pcVolume);
+    }
 
     public void PlayPcButton()
     {
@@ -243,20 +323,43 @@ public class M_AudioManager : MonoBehaviour
             AddNoise(M_NoiseSystem.Instance.clickNoise);
     }
 
-    public void PlayBubbleAppear() => PlayClip(bubbleAppearSfx, uiVolume);
-    public void PlayInCalendar() => PlayClip(calendarInSfx, uiVolume);
-    public void PlayOutCalendar() => PlayClip(calendarOutSfx, uiVolume);
-    public void PlayRandomMisc() => PlayRandom(miscSfx, miscVolume);
+    public void PlayBubbleAppear()
+    {
+        PlayClip(bubbleAppearSfx, uiVolume);
+    }
+
+    public void PlayInCalendar()
+    {
+        PlayClip(calendarInSfx, uiVolume);
+    }
+
+    public void PlayOutCalendar()
+    {
+        PlayClip(calendarOutSfx, uiVolume);
+    }
+
+    public void PlayRandomMisc()
+    {
+        PlayRandom(miscSfx, miscVolume);
+    }
 
     public void PlayMiscByIndex(int index)
     {
         if (!IsValidArray(miscSfx)) return;
         if (index < 0 || index >= miscSfx.Length) return;
+
         PlayClip(miscSfx[index], miscVolume);
     }
 
-    public void PlayMainMenuMusic() => PlayBgm(mainMenuBgm);
-    public void PlayGameplayMusic() => PlayBgm(gameplayBgm);
+    public void PlayMainMenuMusic()
+    {
+        PlayBgm(mainMenuBgm);
+    }
+
+    public void PlayGameplayMusic()
+    {
+        PlayBgm(gameplayBgm);
+    }
 
     void PlayBgm(AudioClip clip)
     {

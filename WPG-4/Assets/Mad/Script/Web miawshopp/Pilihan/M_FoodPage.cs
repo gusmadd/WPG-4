@@ -171,12 +171,14 @@ public class M_FoodPage : MonoBehaviour
 
         // Aktifkan detail item di scene
         selectedItemPrefab.SetActive(true);
+        TrackPageOpen("detail_food_page");
     }
 
     void GoToHome()
     {
         gameObject.SetActive(false);
         if (homePage != null) homePage.SetActive(true);
+        TrackPageOpen("petshop_home_page");
     }
 
     void GoToService()
@@ -185,6 +187,7 @@ public class M_FoodPage : MonoBehaviour
         if (servicePage != null)
         {
             servicePage.SetActive(true);
+            TrackPageOpen("service_page");
             Debug.Log("servicePage aktif? " + servicePage.activeSelf);
         }
     }
@@ -194,6 +197,7 @@ public class M_FoodPage : MonoBehaviour
         if (productPage != null)
         {
             productPage.SetActive(true);
+            TrackPageOpen("product_page");
         }
 
         gameObject.SetActive(false);
@@ -203,5 +207,13 @@ public class M_FoodPage : MonoBehaviour
     {
         gameObject.SetActive(false);
         if (desktopPage != null) desktopPage.SetActive(true);
+        TrackPageOpen("desktop");
+    }
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

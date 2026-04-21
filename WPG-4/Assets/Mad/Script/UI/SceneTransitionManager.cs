@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,14 +12,20 @@ public class SceneTransitionManager : MonoBehaviour
     [Header("Animator")]
     public Animator transitionAnimator;
 
+    [Header("Audio")]
+    public AudioSource transitionAudioSource;
+    public AudioClip transitionSfx;
+    [Range(0f, 1f)] public float transitionVolume = 1f;
+    public bool playSfxOnOpenToo = false;
+
     [Header("Trigger Names")]
     public string closeTrigger = "Close";
     public string openTrigger = "Open";
 
     [Header("Timing")]
-    public float closeDuration = 3f;       // anim Close kamu
+    public float closeDuration = 3f;
     public float openDelayAfterLoad = 0.05f;
-    public float openFinishDelay = 1.5f;   // anim Open kamu
+    public float openFinishDelay = 1.5f;
 
     private bool isTransitioning = false;
 
@@ -43,6 +48,9 @@ public class SceneTransitionManager : MonoBehaviour
 
         if (transitionObject != null)
             transitionObject.SetActive(false);
+
+        if (transitionAudioSource != null)
+            transitionAudioSource.ignoreListenerPause = true;
     }
 
     public void LoadSceneWithTransition(string sceneName)
@@ -58,11 +66,13 @@ public class SceneTransitionManager : MonoBehaviour
         if (transitionObject != null)
             transitionObject.SetActive(true);
 
+        PlayTransitionSfx();
+
         if (transitionAnimator != null)
         {
             transitionAnimator.ResetTrigger(openTrigger);
             transitionAnimator.ResetTrigger(closeTrigger);
-            transitionAnimator.Play("Idle", 0, 0f); // optional, biar selalu mulai dari awal
+            transitionAnimator.Play("Idle", 0, 0f);
             transitionAnimator.SetTrigger(closeTrigger);
         }
 
@@ -71,6 +81,9 @@ public class SceneTransitionManager : MonoBehaviour
         yield return SceneManager.LoadSceneAsync(sceneName);
 
         yield return new WaitForSecondsRealtime(openDelayAfterLoad);
+
+        if (playSfxOnOpenToo)
+            PlayTransitionSfx();
 
         if (transitionAnimator != null)
         {
@@ -85,5 +98,13 @@ public class SceneTransitionManager : MonoBehaviour
             transitionObject.SetActive(false);
 
         isTransitioning = false;
+    }
+
+    void PlayTransitionSfx()
+    {
+        if (transitionAudioSource == null) return;
+        if (transitionSfx == null) return;
+
+        transitionAudioSource.PlayOneShot(transitionSfx, transitionVolume);
     }
 }

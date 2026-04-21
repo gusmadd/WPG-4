@@ -82,7 +82,13 @@ public class M_DetailFoodPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                if (catFoodPage != null) catFoodPage.SetActive(true);
+
+                if (catFoodPage != null)
+                {
+                    catFoodPage.SetActive(true);
+                    TrackPageOpen("food_page");
+                }
+
                 gameObject.SetActive(false);
                 return;
             }
@@ -92,7 +98,13 @@ public class M_DetailFoodPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                if (petshopHomePage != null) petshopHomePage.SetActive(true);
+
+                if (petshopHomePage != null)
+                {
+                    petshopHomePage.SetActive(true);
+                    TrackPageOpen("petshop_home_page");
+                }
+
                 gameObject.SetActive(false);
                 return;
             }
@@ -101,7 +113,13 @@ public class M_DetailFoodPage : MonoBehaviour
             {
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
-                if (desktopPage != null) desktopPage.SetActive(true);
+
+                if (desktopPage != null)
+                {
+                    desktopPage.SetActive(true);
+                    TrackPageOpen("desktop");
+                }
+
                 if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 gameObject.SetActive(false);
                 return;
@@ -112,7 +130,13 @@ public class M_DetailFoodPage : MonoBehaviour
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
-                if (servicePage != null) servicePage.SetActive(true);
+
+                if (servicePage != null)
+                {
+                    servicePage.SetActive(true);
+                    TrackPageOpen("services_page");
+                }
+
                 gameObject.SetActive(false);
                 return;
             }
@@ -196,7 +220,13 @@ public class M_DetailFoodPage : MonoBehaviour
             TaskManager.Instance.OnItemPurchased(finalItemId);
 
         if (successPage != null)
+        {
             successPage.SetActive(true);
+
+            int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+            int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+            TelemetryManager.Instance?.SendPageOpen("buy_success_page", day, week);
+        }
     }
 
     void UpdateBuyFill()
@@ -237,4 +267,11 @@ public class M_DetailFoodPage : MonoBehaviour
         pendingBuySuccessPage = null;
     }
 
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
+    }
 }

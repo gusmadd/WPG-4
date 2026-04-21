@@ -37,6 +37,7 @@ public class M_ServicesPage : MonoBehaviour
                 if(homeSearchInput != null) homeSearchInput.ResetToDefault();
 
                 gameObject.SetActive(false);
+                TrackPageOpen("desktop");
                 return;
             }
             //ke home page
@@ -46,6 +47,7 @@ public class M_ServicesPage : MonoBehaviour
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if(homePage != null) homePage.SetActive(true);
                 gameObject.SetActive(false);
+                TrackPageOpen("home_page");
                 return;
             }
             //ke Product page
@@ -55,8 +57,16 @@ public class M_ServicesPage : MonoBehaviour
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if(productPage != null) productPage.SetActive(true);
                 gameObject.SetActive(false);
+                TrackPageOpen("product_page");
                 return;
             }
         } 
+    }
+        void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

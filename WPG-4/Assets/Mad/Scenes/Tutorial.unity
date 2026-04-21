@@ -12133,6 +12133,15 @@ MonoBehaviour:
   textDisplay: {fileID: 636035368}
   isTyping: 0
   blinkSpeed: 0.5
+  moveTarget: {fileID: 0}
+  focusDelay: 1
+  focusMoveY: 0.35
+  focusMoveDuration: 0.15
+  quickLinks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  linkAppearInterval: 0.12
 --- !u!1 &970636759
 GameObject:
   m_ObjectHideFlags: 0
@@ -20421,6 +20430,11 @@ MonoBehaviour:
   frames:
   - {fileID: 21300000, guid: 71b131ad464a0a54f9dd0381cf6430ac, type: 3}
   - {fileID: 21300000, guid: f8949eb59b94fe1409afe1cdaaa0e6db, type: 3}
+  - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
+  - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
+  - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
+  - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
+  - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
   - {fileID: 21300000, guid: a7cfb8197b5c0874d84abb8474443d81, type: 3}
   frameRate: 5
   playOnEnable: 1

@@ -23,19 +23,21 @@ public class M_AccessorisPage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!gameObject.activeSelf) return;
+        if (!gameObject.activeSelf) return;
         if (M_GameManager.Instance.currentState != M_GameManager.GameState.Gameplay) return;
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousepos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             // close ke dekstop
-            if(closeCollider != null && closeCollider.OverlapPoint(mousepos))
+            if (closeCollider != null && closeCollider.OverlapPoint(mousepos))
             {
                 M_AudioManager.Instance?.PlayCursorClick();
                 M_PlayerController.Instance?.PlayTyping();
                 if (dekstopPage != null) dekstopPage.SetActive(true);
+                TrackPageOpen("desktop");
                 if (homeSearchInput != null) homeSearchInput.ResetToDefault();
                 gameObject.SetActive(false);
+
                 return;
             }
             // ke home page
@@ -45,7 +47,9 @@ public class M_AccessorisPage : MonoBehaviour
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (homePage != null) homePage.SetActive(true);
+                TrackPageOpen("petshop_home_page");
                 gameObject.SetActive(false);
+
                 return;
             }
             // ke services page
@@ -55,7 +59,9 @@ public class M_AccessorisPage : MonoBehaviour
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicesPage != null) servicesPage.SetActive(true);
+                TrackPageOpen("service_page");
                 gameObject.SetActive(false);
+
                 return;
             }
             // kembali ke products page
@@ -65,9 +71,17 @@ public class M_AccessorisPage : MonoBehaviour
                 M_PlayerController.Instance?.PlayTyping();
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (productsPage != null) productsPage.SetActive(true);
+                TrackPageOpen("product_page");
                 gameObject.SetActive(false);
                 return;
             }
         }
+    }
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

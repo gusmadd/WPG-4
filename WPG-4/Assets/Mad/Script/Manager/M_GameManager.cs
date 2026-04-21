@@ -68,7 +68,7 @@ public class M_GameManager : MonoBehaviour
         isSequenceRunning = false;
 
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.isQTEActive = false;
+           M_NoiseSystem.Instance.SetQTEActive(false);
 
         if (mainCamera != null)
         {
@@ -137,7 +137,7 @@ public class M_GameManager : MonoBehaviour
 
         // 5. baru aktifkan mekanik QTE
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.isQTEActive = true;
+            M_NoiseSystem.Instance.SetQTEActive(true);
 
         // 6. baru spawn QTE prefab
         if (qtePrefab != null)
@@ -184,7 +184,7 @@ public class M_GameManager : MonoBehaviour
 
         if (M_NoiseSystem.Instance != null)
         {
-            M_NoiseSystem.Instance.isQTEActive = false;
+            M_NoiseSystem.Instance.SetQTEActive(false);
             M_NoiseSystem.Instance.ResetAfterQTE();
         }
 
@@ -275,11 +275,18 @@ public class M_GameManager : MonoBehaviour
     public IEnumerator QTEFail()
     {
         UI_Script.Instance?.HideCloseAllAdsInstant();
+
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
         {
             ForceEndQTEState();
             yield break;
         }
+
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPlayerFail("qte_fail", day, week);
+        TelemetryManager.Instance?.SendSessionEnd();
 
         currentState = GameState.QTE;
 
@@ -287,7 +294,7 @@ public class M_GameManager : MonoBehaviour
         TaskUIController.Instance?.HideTaskInstant();
 
         if (M_NoiseSystem.Instance != null)
-            M_NoiseSystem.Instance.isQTEActive = false;
+           M_NoiseSystem.Instance.SetQTEActive(false);
 
         if (UI_Script.Instance != null)
             yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));

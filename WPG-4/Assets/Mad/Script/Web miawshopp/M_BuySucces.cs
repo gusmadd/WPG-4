@@ -35,6 +35,7 @@ public class M_BuySucces : MonoBehaviour
 
                 if (desktopPage != null)
                     desktopPage.SetActive(true);
+                    TrackPageOpen("desktop");
 
                 if (homeSearchInput != null)
                     homeSearchInput.ResetToDefault();
@@ -50,6 +51,7 @@ public class M_BuySucces : MonoBehaviour
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (petshopHomePage != null)
                     petshopHomePage.SetActive(true);
+                    TrackPageOpen("petshop_home_page");
 
                 gameObject.SetActive(false);
                 return;
@@ -62,6 +64,7 @@ public class M_BuySucces : MonoBehaviour
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (servicesPage != null)
                     servicesPage.SetActive(true);
+                    TrackPageOpen("services_page");
 
                 gameObject.SetActive(false);
                 return;
@@ -74,10 +77,18 @@ public class M_BuySucces : MonoBehaviour
                 DayManager.Instance?.TryShowAdsFromPawshoppClick();
                 if (backTargetPage != null)
                     backTargetPage.SetActive(true);
+                    TrackPageOpen("product_page");
 
                 gameObject.SetActive(false);
                 return;
             }
         }
+    }
+    void TrackPageOpen(string pageName)
+    {
+        int day = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int week = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
+
+        TelemetryManager.Instance?.SendPageOpen(pageName, day, week);
     }
 }

@@ -18,6 +18,10 @@ public class M_MainMenuController : MonoBehaviour
     public RectTransform startButtonRect;
     public RectTransform exitButtonRect;
 
+    [Header("Buttons")]
+    public Button resetDataButton;
+    public Button volumeButton;
+
     [Header("Trigger Names")]
     public string inTrigger = "In";
     public string outTrigger = "Out";
@@ -28,6 +32,15 @@ public class M_MainMenuController : MonoBehaviour
     public float resetPanelOutDelay = 0.3f;
     public bool reloadCurrentSceneAfterReset = true;
     public string mainMenuSceneName = "MainMenu";
+
+    [Header("Volume Panel")]
+    public GameObject volumeSliderPanel;
+    public Animator volumeSliderAnimator;
+    public RectTransform volumeButtonRect;
+    public RectTransform volumeSliderRect;
+    public float volumePanelOutDelay = 0.25f;
+
+    private bool isVolumePanelOpen = false;
 
     // ==========================================
     // BARU: Scene Transition (Tanpa Animator)
@@ -46,6 +59,8 @@ public class M_MainMenuController : MonoBehaviour
 
     private void Start()
     {
+        if (volumeSliderPanel != null)
+            volumeSliderPanel.SetActive(false);
         if (resetDataPanel != null)
             resetDataPanel.SetActive(false);
 
@@ -91,6 +106,8 @@ public class M_MainMenuController : MonoBehaviour
             ShowStart();
             currentOpenButton = "Start";
         }
+                if (isVolumePanelOpen)
+            StartCoroutine(CloseVolumePanelRoutine());
     }
 
     public void HoverExit()
@@ -105,6 +122,8 @@ public class M_MainMenuController : MonoBehaviour
             ShowExit();
             currentOpenButton = "Exit";
         }
+                if (isVolumePanelOpen)
+            StartCoroutine(CloseVolumePanelRoutine());
     }
 
     // =========================
@@ -343,6 +362,21 @@ public class M_MainMenuController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (isVolumePanelOpen)
+            {
+                bool clickOnVolumeButton = volumeButtonRect != null &&
+                    RectTransformUtility.RectangleContainsScreenPoint(volumeButtonRect, Input.mousePosition);
+
+                bool clickInsideVolumePanel = volumeSliderRect != null &&
+                    RectTransformUtility.RectangleContainsScreenPoint(volumeSliderRect, Input.mousePosition);
+
+                if (!clickOnVolumeButton && !clickInsideVolumePanel)
+                {
+                    StartCoroutine(CloseVolumePanelRoutine());
+                    return;
+                }
+            }
+
             if (currentOpenButton == "Start")
             {
                 if (!RectTransformUtility.RectangleContainsScreenPoint(startButtonRect, Input.mousePosition))
@@ -368,5 +402,66 @@ public class M_MainMenuController : MonoBehaviour
             HideExit();
 
         currentOpenButton = "";
+    }
+    public void ClickVolume()
+    {
+        M_AudioManager.Instance?.PlayRandomUi();
+
+        if (isBusy || isResetPanelOpen) return;
+
+        if (isVolumePanelOpen)
+            StartCoroutine(CloseVolumePanelRoutine());
+        else
+            StartCoroutine(OpenVolumePanelRoutine());
+    }
+
+    IEnumerator OpenVolumePanelRoutine()
+    {
+        isBusy = true;
+
+        yield return StartCoroutine(CloseOpenButtonIfAny());
+
+        if (volumeSliderPanel != null)
+            volumeSliderPanel.SetActive(true);
+
+        if (volumeSliderAnimator != null)
+        {
+            volumeSliderAnimator.ResetTrigger(outTrigger);
+            volumeSliderAnimator.ResetTrigger(inTrigger);
+            volumeSliderAnimator.SetTrigger(inTrigger);
+        }
+
+        isVolumePanelOpen = true;
+        SetVolumePanelButtonLock(false);
+        isBusy = false;
+    }
+
+    IEnumerator CloseVolumePanelRoutine()
+    {
+        isBusy = true;
+
+        if (volumeSliderAnimator != null)
+        {
+            volumeSliderAnimator.ResetTrigger(inTrigger);
+            volumeSliderAnimator.ResetTrigger(outTrigger);
+            volumeSliderAnimator.SetTrigger(outTrigger);
+        }
+
+        yield return new WaitForSecondsRealtime(volumePanelOutDelay);
+
+        if (volumeSliderPanel != null)
+            volumeSliderPanel.SetActive(false);
+
+        isVolumePanelOpen = false;
+        SetVolumePanelButtonLock(true);
+        isBusy = false;
+    }
+    void SetVolumePanelButtonLock(bool canInteract)
+    {
+        if (resetDataButton != null)
+            resetDataButton.interactable = canInteract;
+
+        if (volumeButton != null)
+            volumeButton.interactable = canInteract;
     }
 }
