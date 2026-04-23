@@ -138,7 +138,7 @@ public class DayManager : MonoBehaviour
         if (isEndingDay) return;
         isEndingDay = true;
 
-        TelemetryManager.Instance?.SendDayCompleted(currentDay);
+        TelemetryManager.Instance?.SendDayCompleted(currentDay, currentWeek);
 
         M_GameManager.Instance?.ForceEndQTEState();
         StartCoroutine(SuccessRoutine());

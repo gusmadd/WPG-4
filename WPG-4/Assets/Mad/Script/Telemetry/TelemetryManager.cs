@@ -150,7 +150,7 @@ public class TelemetryManager : MonoBehaviour
         Debug.Log($"task_complete sent, task = {taskId}, duration = {durationSeconds}, day = {dayNumber}");
     }
 
-    public void SendDayCompleted(int dayNumber)
+    public void SendDayCompleted(int dayNumber, int weekNumber)
     {
         if (!isReady)
         {
@@ -167,12 +167,13 @@ public class TelemetryManager : MonoBehaviour
         var ev = new CustomEvent("day_completed")
     {
         { "run_id", runId },
-        { "day_number", dayNumber }
+        { "day_number", dayNumber },
+        { "week_number", weekNumber }
     };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
-        Debug.Log($"day_completed sent, day = {dayNumber}");
+        Debug.Log($"day_completed sent, day = {dayNumber}, week = {weekNumber}");
     }
 
     public void SendPlayerFail(string cause, int dayNumber, int weekNumber)
@@ -220,13 +221,13 @@ public class TelemetryManager : MonoBehaviour
         var ev = new CustomEvent("session_end")
     {
         { "run_id", runId },
-        { "total_time_seconds", totalTimeSeconds }
+        { "total_time_second", totalTimeSeconds }
     };
 
         AnalyticsService.Instance.RecordEvent(ev);
         AnalyticsService.Instance.Flush();
 
-        Debug.Log($"session_end sent, total_time_seconds = {totalTimeSeconds}");
+        Debug.Log($"session_end sent, total_time_second = {totalTimeSeconds}");
     }
 
     public void SendNoiseIncrease(float amount, string source, float noiseValue, int dayNumber, int weekNumber)

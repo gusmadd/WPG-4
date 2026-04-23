@@ -32,6 +32,7 @@ public class M_MainMenuController : MonoBehaviour
     public float resetPanelOutDelay = 0.3f;
     public bool reloadCurrentSceneAfterReset = true;
     public string mainMenuSceneName = "MainMenu";
+    public float resetPanelInDelay = 0.3f;
 
     [Header("Volume Panel")]
     public GameObject volumeSliderPanel;
@@ -106,7 +107,7 @@ public class M_MainMenuController : MonoBehaviour
             ShowStart();
             currentOpenButton = "Start";
         }
-                if (isVolumePanelOpen)
+        if (isVolumePanelOpen)
             StartCoroutine(CloseVolumePanelRoutine());
     }
 
@@ -122,7 +123,7 @@ public class M_MainMenuController : MonoBehaviour
             ShowExit();
             currentOpenButton = "Exit";
         }
-                if (isVolumePanelOpen)
+        if (isVolumePanelOpen)
             StartCoroutine(CloseVolumePanelRoutine());
     }
 
@@ -237,11 +238,19 @@ public class M_MainMenuController : MonoBehaviour
 
         if (resetDataPanelAnimator != null)
         {
+            resetDataPanelAnimator.enabled = true;
             resetDataPanelAnimator.ResetTrigger(outTrigger);
+            resetDataPanelAnimator.ResetTrigger(inTrigger);
             resetDataPanelAnimator.SetTrigger(inTrigger);
         }
 
         isResetPanelOpen = true;
+
+        yield return new WaitForSecondsRealtime(resetPanelInDelay);
+
+        if (resetDataPanelAnimator != null)
+            resetDataPanelAnimator.enabled = false;
+
         isBusy = false;
     }
 
@@ -251,7 +260,9 @@ public class M_MainMenuController : MonoBehaviour
 
         if (resetDataPanelAnimator != null)
         {
+            resetDataPanelAnimator.enabled = true;
             resetDataPanelAnimator.ResetTrigger(inTrigger);
+            resetDataPanelAnimator.ResetTrigger(outTrigger);
             resetDataPanelAnimator.SetTrigger(outTrigger);
         }
 
@@ -270,20 +281,21 @@ public class M_MainMenuController : MonoBehaviour
 
         if (resetDataPanelAnimator != null)
         {
+            resetDataPanelAnimator.enabled = true;
             resetDataPanelAnimator.ResetTrigger(inTrigger);
+            resetDataPanelAnimator.ResetTrigger(outTrigger);
             resetDataPanelAnimator.SetTrigger(outTrigger);
         }
 
         yield return new WaitForSecondsRealtime(resetPanelOutDelay);
 
-        M_ProgressManager.ResetProgress(); // Commented out karena script eksternal
+        M_ProgressManager.ResetProgress();
 
         if (reloadCurrentSceneAfterReset)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         else
             SceneManager.LoadScene(mainMenuSceneName);
     }
-
     // =========================
     // HELPER
     // =========================
