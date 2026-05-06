@@ -24,6 +24,10 @@ public class TaskManager : MonoBehaviour
     bool timerRunning = false;
     bool dayResolved = false;
 
+    // Tambahan untuk telemetry durasi per item
+    float currentTaskStartElapsed = 0f;
+    int purchaseOrderInDay = 0;
+
     public event Action OnDaySuccess;
     public event Action OnDayFailed;
 
@@ -68,6 +72,10 @@ public class TaskManager : MonoBehaviour
         completed = false;
         dayResolved = false;
 
+        // Reset telemetry durasi per item
+        currentTaskStartElapsed = 0f;
+        purchaseOrderInDay = 0;
+
         timer = dayDurationSeconds;
 
         UpdateClockLightState();
@@ -109,6 +117,7 @@ public class TaskManager : MonoBehaviour
         }
 
         Debug.Log("Week " + GetCurrentWeek() + " task list: " + string.Join(",", targetItemIds));
+
         int currentDay = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
 
         for (int i = 0; i < targetItemIds.Count; i++)
@@ -221,11 +230,32 @@ public class TaskManager : MonoBehaviour
         }
 
         purchasedItemIds.Add(itemId);
+        UI_Script.Instance?.PlayCorrectEffect();
 
-        float duration = dayDurationSeconds - GetTimeLeft();
+        float elapsedDayTime = dayDurationSeconds - GetTimeLeft();
+        float taskDuration = elapsedDayTime - currentTaskStartElapsed;
+        taskDuration = Mathf.Max(0f, taskDuration);
+
+        purchaseOrderInDay++;
+
         int currentDay = DayManager.Instance != null ? DayManager.Instance.GetCurrentDay() : 1;
+        int currentWeek = DayManager.Instance != null ? DayManager.Instance.GetCurrentWeek() : 1;
 
-        TelemetryManager.Instance?.SendTaskComplete(itemId, duration, currentDay);
+        Debug.Log("elapsedDayTime = " + elapsedDayTime);
+        Debug.Log("taskDuration = " + taskDuration);
+        Debug.Log("purchaseOrderInDay = " + purchaseOrderInDay);
+        Debug.Log("itemId = " + itemId);
+
+        TelemetryManager.Instance?.SendTaskComplete(
+            itemId,
+            taskDuration,
+            currentDay,
+            currentWeek,
+            purchaseOrderInDay
+        );
+
+        // Reset start time untuk item berikutnya
+        currentTaskStartElapsed = elapsedDayTime;
 
         if (purchasedItemIds.Count >= targetItemIds.Count)
         {

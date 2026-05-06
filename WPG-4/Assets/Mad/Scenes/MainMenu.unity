@@ -1149,7 +1149,7 @@ MonoBehaviour:
   outTrigger: Out
   resetDataPanel: {fileID: 1447445760}
   resetDataPanelAnimator: {fileID: 1447445764}
-  resetPanelOutDelay: 1
+  resetPanelOutDelay: 1.5
   reloadCurrentSceneAfterReset: 1
   mainMenuSceneName: MainMenu
   resetPanelInDelay: 1.9

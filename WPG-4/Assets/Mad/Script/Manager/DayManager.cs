@@ -38,6 +38,10 @@ public class DayManager : MonoBehaviour
 
     public GameObject[] dayCalendarObjects; // Array berisi 5 GameObject (Day 1 - Day 5)
     public float calendarDisplayDuration = 5f; // Durasi tampil kalender
+
+    [Header("Comic week success")]
+    public GameObject weekSuccessComic;
+    public float comicDisplayDuration = 3f;
     int currentDay;
 
     public string mainMenuSceneName = "MainMenu";
@@ -87,6 +91,8 @@ public class DayManager : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(StartDayRoutine(currentDay));
+        if (weekSuccessComic != null)
+            weekSuccessComic.SetActive(false);
     }
 
     void OnDestroy()
@@ -188,11 +194,20 @@ public class DayManager : MonoBehaviour
                 Debug.Log("Game tamat di week 4, session_end dikirim");
             }
 
+            if (weekSuccessComic != null)
+            {
+                weekSuccessComic.SetActive(true);
+
+                yield return new WaitForSecondsRealtime(comicDisplayDuration);
+
+            }
+
             if (weekCompletePanel != null)
             {
                 M_AudioManager.Instance?.PlayDaySuccesSfx();
                 weekCompletePanel.SetActive(true);
             }
+
             yield break;
         }
 

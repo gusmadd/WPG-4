@@ -23,6 +23,9 @@ public class UI_Script : MonoBehaviour
     [Header("incorrect effect")]
     public Animator incorrectEffect;
 
+    [Header("Correct effect")]
+    public Animator correctEffect;
+
     [Header("Day Success Panel")]
     public GameObject daySuccessPanel;
     public Button dayHomeButton;
@@ -159,6 +162,11 @@ public class UI_Script : MonoBehaviour
         // optional: camera shake (small)
         if (cameraTransform != null)
             StartCoroutine(Shake());
+    }
+    public void PlayCorrectEffect()
+    {
+        if (correctEffect != null)
+            correctEffect.SetTrigger("Play");
     }
     public void HideDaySuccess()
     {

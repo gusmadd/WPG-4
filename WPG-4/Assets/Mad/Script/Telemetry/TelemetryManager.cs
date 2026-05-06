@@ -31,9 +31,6 @@ public class TelemetryManager : MonoBehaviour
         try
         {
             await UnityServices.InitializeAsync();
-
-            // Untuk prototype / tugas
-            // ini menyalakan pengumpulan data setelah init
             AnalyticsService.Instance.StartDataCollection();
 
             isReady = true;
@@ -71,6 +68,7 @@ public class TelemetryManager : MonoBehaviour
     {
         return runId;
     }
+
     public void SendDayStart(int dayNumber, int totalTasksInDay)
     {
         if (!isReady)
@@ -86,11 +84,11 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("day_start")
-    {
-        { "run_id", runId },
-        { "day_number", dayNumber },
-        { "total_tasks_in_day", totalTasksInDay }
-    };
+        {
+            { "run_id", runId },
+            { "day_number", dayNumber },
+            { "total_tasks_in_day", totalTasksInDay }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
@@ -112,18 +110,18 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("task_start")
-    {
-        { "run_id", runId },
-        { "task_id", taskId },
-        { "day_number", dayNumber }
-    };
+        {
+            { "run_id", runId },
+            { "task_id", taskId },
+            { "day_number", dayNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
         Debug.Log($"task_start sent, task = {taskId}, day = {dayNumber}");
     }
 
-    public void SendTaskComplete(string taskId, float durationSeconds, int dayNumber)
+    public void SendTaskComplete(string taskId, float durationSeconds, int dayNumber, int weekNumber, int purchaseOrderInDay)
     {
         if (!isReady)
         {
@@ -138,16 +136,18 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("task_complete")
-    {
-        { "run_id", runId },
-        { "task_id", taskId },
-        { "duration_seconds", durationSeconds },
-        { "day_number", dayNumber }
-    };
+        {
+            { "run_id", runId },
+            { "task_id", taskId },
+            { "duration_seconds", durationSeconds },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber },
+            { "purchase_order_in_day", purchaseOrderInDay }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
-        Debug.Log($"task_complete sent, task = {taskId}, duration = {durationSeconds}, day = {dayNumber}");
+        Debug.Log($"task_complete sent, task = {taskId}, duration = {durationSeconds}, day = {dayNumber}, week = {weekNumber}, order = {purchaseOrderInDay}");
     }
 
     public void SendDayCompleted(int dayNumber, int weekNumber)
@@ -165,11 +165,11 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("day_completed")
-    {
-        { "run_id", runId },
-        { "day_number", dayNumber },
-        { "week_number", weekNumber }
-    };
+        {
+            { "run_id", runId },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
@@ -191,17 +191,18 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("player_fail")
-    {
-        { "run_id", runId },
-        { "cause", cause },
-        { "day_number", dayNumber },
-        { "week_number", weekNumber }
-    };
+        {
+            { "run_id", runId },
+            { "cause", cause },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
 
         Debug.Log($"player_fail sent, cause = {cause}, day = {dayNumber}, week = {weekNumber}");
     }
+
     public void SendSessionEnd()
     {
         if (!isReady)
@@ -219,10 +220,10 @@ public class TelemetryManager : MonoBehaviour
         float totalTimeSeconds = Time.time - sessionStartTime;
 
         var ev = new CustomEvent("session_end")
-    {
-        { "run_id", runId },
-        { "total_time_second", totalTimeSeconds }
-    };
+        {
+            { "run_id", runId },
+            { "total_time_second", totalTimeSeconds }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
         AnalyticsService.Instance.Flush();
@@ -245,13 +246,13 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("noise_increase")
-    {
-        { "amount", amount },
-        { "source", source },
-        { "noise_value", noiseValue },
-        { "day_number", dayNumber },
-        { "week_number", weekNumber }
-    };
+        {
+            { "amount", amount },
+            { "source", source },
+            { "noise_value", noiseValue },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
         Debug.Log($"noise_increase sent, amount = {amount}, source = {source}, noise = {noiseValue}, day = {dayNumber}, week = {weekNumber}");
@@ -272,13 +273,13 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("noise_stage_changed")
-    {
-        { "old_stage", oldStage },
-        { "new_stage", newStage },
-        { "noise_value", noiseValue },
-        { "day_number", dayNumber },
-        { "week_number", weekNumber }
-    };
+        {
+            { "old_stage", oldStage },
+            { "new_stage", newStage },
+            { "noise_value", noiseValue },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
         Debug.Log($"noise_stage_changed sent, {oldStage} -> {newStage}, noise = {noiseValue}, day = {dayNumber}, week = {weekNumber}");
@@ -299,15 +300,16 @@ public class TelemetryManager : MonoBehaviour
         }
 
         var ev = new CustomEvent("stage_level")
-    {
-        { "stage_level", stageLevel },
-        { "day_number", dayNumber },
-        { "week_number", weekNumber }
-    };
+        {
+            { "stage_level", stageLevel },
+            { "day_number", dayNumber },
+            { "week_number", weekNumber }
+        };
 
         AnalyticsService.Instance.RecordEvent(ev);
         Debug.Log($"stage_level sent, stage = {stageLevel}, day = {dayNumber}, week = {weekNumber}");
     }
+
     public void SendPageOpen(string pageName, int dayNumber, int weekNumber)
     {
         if (!isReady)
@@ -324,6 +326,7 @@ public class TelemetryManager : MonoBehaviour
 
         var ev = new CustomEvent("page_open")
     {
+        { "run_id", runId },
         { "page_name", pageName },
         { "day_number", dayNumber },
         { "week_number", weekNumber }
@@ -331,6 +334,6 @@ public class TelemetryManager : MonoBehaviour
 
         AnalyticsService.Instance.RecordEvent(ev);
 
-        Debug.Log($"page_open sent, page = {pageName}, day = {dayNumber}, week = {weekNumber}");
+        Debug.Log($"page_open sent, run_id = {runId}, page = {pageName}, day = {dayNumber}, week = {weekNumber}");
     }
 }

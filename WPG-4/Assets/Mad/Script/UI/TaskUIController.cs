@@ -24,6 +24,10 @@ public class TaskUIController : MonoBehaviour
     public float outAnimDelay = 0.35f;
     public float overlayBlockTime = 1f;
 
+    [Header("Task Complete X")]
+    public List<Image> completeXImages = new List<Image>();
+    public Sprite[] completeXSprites;
+
     enum OverlayMode
     {
         None,
@@ -264,6 +268,17 @@ public class TaskUIController : MonoBehaviour
 
             bool done = TaskManager.Instance.IsPurchasedAtIndex(i);
             itemIcons[i].color = done ? doneColor : notDoneColor;
+
+            if (i < completeXImages.Count && completeXImages[i] != null)
+            {
+                completeXImages[i].gameObject.SetActive(done);
+
+                if (done && completeXSprites != null && completeXSprites.Length > 0)
+                {
+                    int spriteIndex = i % completeXSprites.Length;
+                    completeXImages[i].sprite = completeXSprites[spriteIndex];
+                }
+            }
         }
     }
 
