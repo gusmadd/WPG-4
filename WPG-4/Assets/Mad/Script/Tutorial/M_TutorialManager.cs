@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering.Universal; // tambah ini
+using UnityEngine.Rendering.Universal;
 
 public class M_TutorialManager : MonoBehaviour
 {
@@ -39,7 +39,7 @@ public class M_TutorialManager : MonoBehaviour
     public Sprite powerOffSprite;
     public Sprite powerOnSprite;
 
-    [Header("Monitor Lights")] // tambah ini
+    [Header("Monitor Lights")]
     public Light2D powerButtonLight;
     public Light2D monitorLight;
 
@@ -63,7 +63,6 @@ public class M_TutorialManager : MonoBehaviour
     public GameObject buySuccessPage;
 
     [Header("Buy Success End")]
-    [TextArea] public string continueMessage = "See? You already know what to do.\nNow don't mess it up when I'm not helping.";
     public float continueMessageDelay = 1f;
     public string nextSceneName = "InGame";
 
@@ -314,7 +313,6 @@ public class M_TutorialManager : MonoBehaviour
         if (tutorialSearchField != null)
             tutorialSearchField.DeactivateField();
 
-        // kondisi awal: semua lampu mati
         if (powerButtonLight != null) powerButtonLight.enabled = false;
         if (monitorLight != null) monitorLight.enabled = false;
 
@@ -333,17 +331,33 @@ public class M_TutorialManager : MonoBehaviour
         };
         yield return PlayVN(lines1);
 
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         var lines2 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "Do you see something here that you want?")
+            new VNTextController.Line("Narrator", "Do you have something here that you want?")
         };
         yield return PlayVN(lines2);
 
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         var lines3 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "I know it's hard thinking with that tiny little head, so I'll help you. Just this once.")
+            new VNTextController.Line("Narrator", "Good. But don't take too long staring.")
         };
         yield return PlayVN(lines3);
+
+        ShowCatLine("(confused)");
+
+        var lines4 = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Big Sis could come back any minute."),
+            new VNTextController.Line("Narrator", "I know it's hard thinking with that tiny little head, so I'll help you. Just this once.")
+        };
+        yield return PlayVN(lines4);
+
         yield return new WaitForSecondsRealtime(clickToThinkDelay);
 
         PlayCatNod();
@@ -351,12 +365,12 @@ public class M_TutorialManager : MonoBehaviour
 
         yield return ShowTaskAndWaitForSpace();
 
-        var lines4 = new List<VNTextController.Line>
+        var lines5 = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "That little bubble? That's what you want."),
-            new VNTextController.Line("Narrator", "Remember it. You'll need to find it yourself.")
+            new VNTextController.Line("Narrator", "That big bubble? That's what you want."),
+            new VNTextController.Line("Narrator", "Remember it. You'll need to find it yourself later.")
         };
-        yield return PlayVN(lines4);
+        yield return PlayVN(lines5);
 
         yield return PowerGuideSequence();
         yield return BrowserGuideSequence();
@@ -426,6 +440,7 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "First, turn that thing on.")
         };
         yield return PlayVN(lines);
+
         PlayCatNod();
         ShowCatLine("(nodding)");
 
@@ -444,7 +459,6 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator PowerOnSequence()
     {
-        // power button ditekan -> lampu tombol power nyala
         if (powerButtonLight != null)
             powerButtonLight.enabled = true;
 
@@ -466,6 +480,7 @@ public class M_TutorialManager : MonoBehaviour
 
         if (loadingCircle != null)
             loadingCircle.SetActive(false);
+
         currentFrame = 0;
         frameTimer = 0f;
 
@@ -486,7 +501,6 @@ public class M_TutorialManager : MonoBehaviour
         if (powerSprite != null && powerOnSprite != null)
             powerSprite.sprite = powerOnSprite;
 
-        // monitor sudah nyala -> lampu monitor nyala
         if (monitorLight != null)
             monitorLight.enabled = true;
     }
@@ -498,9 +512,11 @@ public class M_TutorialManager : MonoBehaviour
 
         var lines = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", "Good. Now open Meowser.")
+            new VNTextController.Line("Narrator", "Good. Now open Meowser."),
+            new VNTextController.Line("Narrator", "That's where humans waste all their money.")
         };
         yield return PlayVN(lines);
+
         PlayCatNod();
         ShowCatLine("(nodding)");
 
@@ -540,6 +556,7 @@ public class M_TutorialManager : MonoBehaviour
             new VNTextController.Line("Narrator", "Use the search bar. That long little box.")
         };
         yield return PlayVN(lines);
+
         PlayCatNod();
         ShowCatLine("(nodding)");
 
@@ -580,9 +597,11 @@ public class M_TutorialManager : MonoBehaviour
         var lines = new List<VNTextController.Line>
         {
             new VNTextController.Line("Narrator", "Pick the right website."),
-            new VNTextController.Line("Narrator", "Not every link is worth your paw.")
+            new VNTextController.Line("Narrator", "Not every link is worth your paw."),
+            new VNTextController.Line("Narrator", "Some places just want to waste your time.")
         };
         yield return PlayVN(lines);
+
         PlayCatNod();
         ShowCatLine("(nodding)");
 
@@ -613,6 +632,17 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator ProductGuideSequence()
     {
+        var lines = new List<VNTextController.Line>
+        {
+            new VNTextController.Line("Narrator", "Now find the item you wanted."),
+            new VNTextController.Line("Narrator", "Look carefully. Don't buy random junk."),
+            new VNTextController.Line("Narrator", "Humans already do enough of that.")
+        };
+        yield return PlayVN(lines);
+
+        PlayCatNod();
+        ShowCatLine("(nodding)");
+
         waitingProductClick = true;
         productClicked = false;
 
@@ -640,15 +670,6 @@ public class M_TutorialManager : MonoBehaviour
 
     IEnumerator FoodGuideSequence()
     {
-        var lines = new List<VNTextController.Line>
-        {
-            new VNTextController.Line("Narrator", "Now find the item you wanted."),
-            new VNTextController.Line("Narrator", "Look carefully. Don't buy random junk.")
-        };
-        yield return PlayVN(lines);
-        PlayCatNod();
-        ShowCatLine("(nodding)");
-
         waitingFoodClick = true;
         foodClicked = false;
 
@@ -707,10 +728,11 @@ public class M_TutorialManager : MonoBehaviour
         {
             new VNTextController.Line("Narrator", "Once you find it, hold the buy button."),
             new VNTextController.Line("Narrator", "Don't just tap it. Hold it."),
-            new VNTextController.Line("Narrator", "Hurry up. You don't have much time."),
-            new VNTextController.Line("Narrator", "Stay quiet... and don't draw attention.")
+            new VNTextController.Line("Narrator", "And hurry."),
+            new VNTextController.Line("Narrator", "Big Sis hears more than you think.")
         };
         yield return PlayVN(lines);
+
         PlayCatNod();
         ShowCatLine("(nodding)");
 
@@ -738,7 +760,10 @@ public class M_TutorialManager : MonoBehaviour
 
         var endLines = new List<VNTextController.Line>
         {
-            new VNTextController.Line("Narrator", continueMessage)
+            new VNTextController.Line("Narrator", "See? You already know what to do."),
+            new VNTextController.Line("Narrator", "Buy what you want before Big Sis knows what you doing."),
+            new VNTextController.Line("Narrator", "And try not to get caught making a mess."),
+            new VNTextController.Line("Narrator", "You're on your own now.")
         };
 
         yield return PlayVN(endLines);
@@ -754,6 +779,7 @@ public class M_TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
 
         M_ProgressManager.CompleteTutorial();
+
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(nextSceneName);
     }
