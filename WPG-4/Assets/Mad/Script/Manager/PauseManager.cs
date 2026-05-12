@@ -49,7 +49,8 @@ public class PauseManager : MonoBehaviour
             var state = M_GameManager.Instance.currentState;
 
             if (state == M_GameManager.GameState.QTE ||
-                state == M_GameManager.GameState.TaskOverlay)
+                state == M_GameManager.GameState.TaskOverlay ||
+                state == M_GameManager.GameState.Paused)
             {
                 shouldShow = false;
             }
@@ -70,6 +71,7 @@ public class PauseManager : MonoBehaviour
 
         if (state == M_GameManager.GameState.QTE) return false;
         if (state == M_GameManager.GameState.TaskOverlay) return false;
+        if (state == M_GameManager.GameState.Paused) return false;
 
         return true;
     }
@@ -96,7 +98,10 @@ public class PauseManager : MonoBehaviour
             dayText.text = "" + DayManager.Instance.GetCurrentDay();
 
         if (M_GameManager.Instance != null)
+        {
             stateBeforePause = M_GameManager.Instance.currentState;
+            M_GameManager.Instance.currentState = M_GameManager.GameState.Paused;
+        }
 
         if (pausePanel != null)
             pausePanel.SetActive(true);
@@ -123,9 +128,11 @@ public class PauseManager : MonoBehaviour
 
     public void Resume()
     {
+        if (!isPaused || isTransitioning) return;
+
         AudioListener.pause = false;
         M_AudioManager.Instance?.PlayRandomUi();
-        if (!isPaused || isTransitioning) return;
+
         StartCoroutine(ResumeRoutine());
     }
 
@@ -159,9 +166,11 @@ public class PauseManager : MonoBehaviour
 
     public void Restart()
     {
+        if (!isPaused || isTransitioning) return;
+
         AudioListener.pause = false;
         M_AudioManager.Instance?.PlayRandomUi();
-        if (!isPaused || isTransitioning) return;
+
         StartCoroutine(RestartRoutine());
     }
 

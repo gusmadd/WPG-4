@@ -9,7 +9,8 @@ public class M_GameManager : MonoBehaviour
         Gameplay,
         TaskOverlay,
         AdsOverlay,
-        QTE
+        QTE,
+        Paused
     }
 
     public static M_GameManager Instance;
@@ -52,6 +53,9 @@ public class M_GameManager : MonoBehaviour
 
     void HandleNoiseFull()
     {
+        if (currentState == GameState.Paused)
+            return;
+
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
             return;
 
@@ -83,6 +87,9 @@ public class M_GameManager : MonoBehaviour
 
     IEnumerator NoiseFullSequence()
     {
+        if (currentState == GameState.Paused)
+            yield break;
+
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
             yield break;
 
@@ -102,10 +109,6 @@ public class M_GameManager : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        // ❌ DIHAPUS DARI SINI (biar zoom gak shake)
-        // if (M_NoiseSystem.Instance != null)
-        //     M_NoiseSystem.Instance.isQTEActive = true;
-
         if (UI_Script.Instance != null)
             yield return StartCoroutine(UI_Script.Instance.Shake());
 
@@ -117,16 +120,12 @@ public class M_GameManager : MonoBehaviour
             yield break;
         }
 
-        // 1. tampilkan helper UI dulu
         UI_Script.Instance?.ShowCloseAllAds();
 
-        // 2. kasih waktu supaya UI benar-benar kelihatan sendiri
         yield return new WaitForSecondsRealtime(0.1f);
 
-        // 3. optional reaction
         M_PlayerController.Instance?.PlayNoiseFull();
 
-        // 4. kasih jeda lagi sedikit
         yield return new WaitForSecondsRealtime(0.2f);
 
         if (TaskManager.Instance != null && TaskManager.Instance.IsDayResolved())
@@ -135,11 +134,9 @@ public class M_GameManager : MonoBehaviour
             yield break;
         }
 
-        // 5. baru aktifkan mekanik QTE
         if (M_NoiseSystem.Instance != null)
             M_NoiseSystem.Instance.SetQTEActive(true);
 
-        // 6. baru spawn QTE prefab
         if (qtePrefab != null)
             Instantiate(qtePrefab);
 
