@@ -160,32 +160,26 @@ public class DayManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(successDelay);
 
-
-        // --- LOGIKA KALENDER BARU ---
-        // Cek apakah index kalender valid (currentDay biasanya 1-5, jadi index -1)
         int calendarIndex = currentDay - 1;
-        if (dayCalendarObjects != null && calendarIndex < dayCalendarObjects.Length)
-        {
-            // Aktifkan object kalender yang sesuai hari ini
-            if (dayCalendarObjects[calendarIndex] != null)
-            {
-                dayCalendarObjects[calendarIndex].SetActive(true);
 
-                // Jika ada script animasi spesifik, jalankan di sini
-                // calendarAnimation?.PlayAnimation(); 
-
-                // Tunggu selama durasi yang ditentukan
-                yield return new WaitForSecondsRealtime(calendarDisplayDuration);
-
-                // Matikan kembali object kalender
-                dayCalendarObjects[calendarIndex].SetActive(false);
-            }
-        }
-        // ----------------------------
-
-        // Logika setelah kalender selesai tampil
+        // DAY 5 / WEEK SUCCESS
+        // Tidak tampilkan kalender
         if (currentDay >= maxDay)
         {
+            if (dayCalendarObjects != null &&
+                calendarIndex >= 0 &&
+                calendarIndex < dayCalendarObjects.Length)
+            {
+                if (dayCalendarObjects[calendarIndex] != null)
+                {
+                    dayCalendarObjects[calendarIndex].SetActive(true);
+
+                    yield return new WaitForSecondsRealtime(calendarDisplayDuration);
+
+                    // Day 5: jangan SetActive(false)
+                }
+            }
+
             M_ProgressManager.CompleteWeek(currentWeek);
 
             if (currentWeek >= 4)
@@ -197,9 +191,7 @@ public class DayManager : MonoBehaviour
             if (weekSuccessComic != null)
             {
                 weekSuccessComic.SetActive(true);
-
                 yield return new WaitForSecondsRealtime(comicDisplayDuration);
-
             }
 
             if (weekCompletePanel != null)
@@ -211,6 +203,21 @@ public class DayManager : MonoBehaviour
             yield break;
         }
 
+        // DAY 1 - 4
+        if (dayCalendarObjects != null &&
+            calendarIndex >= 0 &&
+            calendarIndex < dayCalendarObjects.Length)
+        {
+            if (dayCalendarObjects[calendarIndex] != null)
+            {
+                dayCalendarObjects[calendarIndex].SetActive(true);
+
+                yield return new WaitForSecondsRealtime(calendarDisplayDuration);
+
+                dayCalendarObjects[calendarIndex].SetActive(false);
+            }
+        }
+
         M_AudioManager.Instance?.PlayDaySuccesSfx();
         UI_Script.Instance?.ShowDaySuccess(currentDay);
     }
@@ -220,6 +227,11 @@ public class DayManager : MonoBehaviour
         if (isEndingDay) return;
         isEndingDay = true;
 
+        StartCoroutine(TimerOutFailRoutine());
+    }
+
+    IEnumerator TimerOutFailRoutine()
+    {
         TelemetryManager.Instance?.SendPlayerFail("timer_ran_out", currentDay, currentWeek);
         TelemetryManager.Instance?.SendSessionEnd();
 
@@ -231,7 +243,12 @@ public class DayManager : MonoBehaviour
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
 
-        UI_Script.Instance?.ShowGameOver();
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        if (UI_Script.Instance != null)
+            yield return StartCoroutine(UI_Script.Instance.ShowJumpscareThenGameOver("Timer Out"));
+        else
+            UI_Script.Instance?.ShowGameOver();
     }
 
     public void NextDay()
@@ -322,7 +339,15 @@ public class DayManager : MonoBehaviour
 
     public void GoToNextWeek()
     {
+        StartCoroutine(GoToNextWeekRoutine());
+    }
+
+    IEnumerator GoToNextWeekRoutine()
+    {
         M_AudioManager.Instance?.PlayRandomUi();
+
+        yield return new WaitForSecondsRealtime(1f);
+
         if (SceneTransitionManager.Instance != null)
             SceneTransitionManager.Instance.LoadSceneWithTransition(nextWeekSceneName);
     }

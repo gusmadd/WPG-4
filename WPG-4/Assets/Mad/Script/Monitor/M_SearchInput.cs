@@ -10,7 +10,7 @@ public class M_SearchInput : MonoBehaviour
     public int maxCharacter = 20;
 
     [Header("Default")]
-    public string defaultText = "Search...";
+    public string defaultText = "pawshopp";
     bool isFirstInput = true;
 
     [Header("References")]
@@ -22,46 +22,23 @@ public class M_SearchInput : MonoBehaviour
     public bool isTyping = false;
     public float blinkSpeed = 0.5f;
 
-    [Header("Focus Move")]
-    public Transform moveTarget;
-    public float focusDelay = 1f;
-    public float focusMoveY = 0.35f;
-    public float focusMoveDuration = 0.15f;
-
-    [Header("Quick Links")]
-    public GameObject[] quickLinks = new GameObject[3];
-    public float linkAppearInterval = 0.12f;
+    [Header("Text Color")]
+    public Color32 defaultGuideColor = new Color32(128, 128, 128, 255);
+    public Color activeTextColor = Color.black;
 
     bool cursorVisible = true;
-    bool isFocused = false;
-
-    Vector3 baseLocalPosition;
-
     Coroutine blinkRoutine;
-    Coroutine focusRoutine;
-    Coroutine moveRoutine;
 
     void Start()
     {
         currentText = defaultText;
         UpdateText();
-
-        if (moveTarget == null)
-            moveTarget = transform;
-
-        baseLocalPosition = moveTarget.localPosition;
-
-        HideQuickLinksInstant();
         StartBlinkRoutine();
     }
 
     void OnEnable()
     {
         UpdateText();
-        HideQuickLinksInstant();
-
-        if (moveTarget != null)
-            moveTarget.localPosition = baseLocalPosition;
     }
 
     void OnMouseDown()
@@ -75,7 +52,6 @@ public class M_SearchInput : MonoBehaviour
 
         keyboard.ShowKeyboard();
         ForceTyping();
-        FocusSearchField();
     }
 
     public void AddCharacter(string c)
@@ -157,6 +133,8 @@ public class M_SearchInput : MonoBehaviour
     {
         if (textDisplay == null) return;
 
+        textDisplay.color = isFirstInput ? defaultGuideColor : activeTextColor;
+
         if (isTyping && cursorVisible)
             textDisplay.text = currentText + "|";
         else
@@ -168,8 +146,6 @@ public class M_SearchInput : MonoBehaviour
         isTyping = false;
         cursorVisible = true;
         UpdateText();
-
-        UnfocusSearchField();
 
         if (monitorManager != null)
             monitorManager.HandleSearch(currentText);
@@ -196,8 +172,6 @@ public class M_SearchInput : MonoBehaviour
         isTyping = false;
         cursorVisible = true;
         UpdateText();
-
-        UnfocusSearchField();
     }
 
     public void SetTextFromExternal(string newText)
@@ -207,8 +181,6 @@ public class M_SearchInput : MonoBehaviour
         isTyping = false;
         cursorVisible = true;
         UpdateText();
-
-        UnfocusSearchField();
     }
 
     public void OnQuickLinkClicked(string url)
@@ -219,95 +191,11 @@ public class M_SearchInput : MonoBehaviour
         cursorVisible = true;
         UpdateText();
 
-        UnfocusSearchField();
-
         if (keyboard != null)
             keyboard.HideKeyboard();
 
         if (monitorManager != null)
             monitorManager.HandleSearch(url);
-    }
-
-    void FocusSearchField()
-    {
-        if (focusRoutine != null)
-            StopCoroutine(focusRoutine);
-
-        isFocused = true;
-        focusRoutine = StartCoroutine(FocusSequence());
-    }
-
-    void UnfocusSearchField()
-    {
-        isFocused = false;
-
-        if (focusRoutine != null)
-        {
-            StopCoroutine(focusRoutine);
-            focusRoutine = null;
-        }
-
-        HideQuickLinksInstant();
-        MoveTo(baseLocalPosition);
-    }
-
-    IEnumerator FocusSequence()
-    {
-        HideQuickLinksInstant();
-
-        if (!isFocused) yield break;
-
-        yield return MoveTo(baseLocalPosition + new Vector3(0f, focusMoveY, 0f));
-        if (focusDelay > 0f)
-            yield return new WaitForSeconds(focusDelay);
-
-        if (!isFocused) yield break;
-
-        for (int i = 0; i < quickLinks.Length; i++)
-        {
-            if (!isFocused) yield break;
-
-            if (quickLinks[i] != null)
-                quickLinks[i].SetActive(true);
-
-            if (i < quickLinks.Length - 1)
-                yield return new WaitForSeconds(linkAppearInterval);
-        }
-
-        focusRoutine = null;
-    }
-
-    IEnumerator MoveTo(Vector3 targetLocalPos)
-    {
-        if (moveTarget == null) yield break;
-
-        if (moveRoutine != null)
-            StopCoroutine(moveRoutine);
-
-        Vector3 start = moveTarget.localPosition;
-        float t = 0f;
-
-        while (t < focusMoveDuration)
-        {
-            t += Time.deltaTime;
-            float lerp = Mathf.Clamp01(t / Mathf.Max(0.0001f, focusMoveDuration));
-            moveTarget.localPosition = Vector3.Lerp(start, targetLocalPos, lerp);
-            yield return null;
-        }
-
-        moveTarget.localPosition = targetLocalPos;
-        moveRoutine = null;
-    }
-
-    void HideQuickLinksInstant()
-    {
-        if (quickLinks == null) return;
-
-        for (int i = 0; i < quickLinks.Length; i++)
-        {
-            if (quickLinks[i] != null)
-                quickLinks[i].SetActive(false);
-        }
     }
 
     void StartBlinkRoutine()

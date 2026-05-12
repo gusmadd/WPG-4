@@ -34,13 +34,22 @@ public class UI_Script : MonoBehaviour
 
     [Header("Game Over Panel")]
     public GameObject gameOverPanel;
+    public Animator gameOverAnimator;
     public Button gameOverHomeButton;
     public Button gameOverRestartButton;
+    public GameObject playerDeath;
+    public GameObject bigsisOut;
+    public float gameOverBeforeDuration = 0.5f;
 
     [Header("Close All Ads UI")]
     public GameObject closeAllAdsUI;
     public Animator closeAllAdsAnimator;
     public float closeAllAdsOutDelay = 0.35f;
+
+    [Header("Jumpscare")]
+    public GameObject jumpscareUI;
+    public Animator jumpscareAnimator;
+    public float jumpscareDuration = 3f;
 
     // anti double trigger
     bool isProcessingDayNext = false;
@@ -82,6 +91,12 @@ public class UI_Script : MonoBehaviour
             gameOverRestartButton.onClick.RemoveListener(OnClickGameOverRestart);
             gameOverRestartButton.onClick.AddListener(OnClickGameOverRestart);
         }
+        if (jumpscareUI != null)
+            jumpscareUI.SetActive(false);
+        if (playerDeath != null)
+            playerDeath.SetActive(true);
+        if (bigsisOut != null)
+            bigsisOut.SetActive(true);
     }
 
     public IEnumerator Fade(float from, float to)
@@ -184,10 +199,14 @@ public class UI_Script : MonoBehaviour
         isProcessingGameOverHome = false;
         isProcessingGameOverRestart = false;
 
-        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
 
-        if (gameOverHomeButton != null) gameOverHomeButton.interactable = true;
-        if (gameOverRestartButton != null) gameOverRestartButton.interactable = true;
+        if (gameOverHomeButton != null)
+            gameOverHomeButton.interactable = true;
+
+        if (gameOverRestartButton != null)
+            gameOverRestartButton.interactable = true;
 
         if (M_GameManager.Instance != null)
             M_GameManager.Instance.currentState = M_GameManager.GameState.TaskOverlay;
@@ -306,5 +325,51 @@ public class UI_Script : MonoBehaviour
     {
         if (closeAllAdsUI != null)
             closeAllAdsUI.SetActive(false);
+    }
+    public IEnumerator ShowJumpscareThenGameOver(string triggerName)
+    {
+        if (jumpscareUI != null)
+            jumpscareUI.SetActive(true);
+
+        if (jumpscareAnimator != null)
+        {
+            jumpscareAnimator.ResetTrigger("QTE");
+            jumpscareAnimator.ResetTrigger("Timer Out");
+            jumpscareAnimator.SetTrigger(triggerName);
+        }
+
+        if (playerDeath != null)
+            playerDeath.SetActive(false);
+        if (bigsisOut != null)
+            bigsisOut.SetActive(false);
+
+        // Tunggu anim jumpscare selesai
+        yield return new WaitForSecondsRealtime(jumpscareDuration);
+
+        // Aktifkan Game Over Panel
+        ShowGameOver();
+
+        // Mainkan anim Before dulu, jumpscare masih tampil
+        if (gameOverAnimator != null)
+        {
+            gameOverAnimator.Play("Before", 0, 0f);
+        }
+
+        // Tunggu anim Before selesai
+        yield return new WaitForSecondsRealtime(gameOverBeforeDuration);
+
+        // Baru matikan jumpscare
+        if (jumpscareUI != null)
+            jumpscareUI.SetActive(false);
+
+        // Balikin kamera ke normal setelah jumpscare hilang
+      if (M_GameManager.Instance != null)
+            M_GameManager.Instance.BackCameraToNormalInstantForGameOver();
+
+        // Setelah kamera normal, baru anim In
+        if (gameOverAnimator != null)
+        {
+            gameOverAnimator.Play("In", 0, 0f);
+        }
     }
 }

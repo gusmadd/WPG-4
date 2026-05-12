@@ -13,7 +13,7 @@ public class TaskUIController : MonoBehaviour
     public Animator taskAnimator;
     public CanvasGroup taskCanvasGroup;
     public List<Image> itemIcons = new List<Image>();
-    public Text timerText;
+    public TextMeshPro timerText;
     public TMP_Text dayText;
 
     [Header("Colors")]
@@ -337,14 +337,10 @@ public class TaskUIController : MonoBehaviour
 
         HideCanvasInstant();
 
-        if (timerText != null)
-            timerText.gameObject.SetActive(false);
     }
 
     public void ShowTaskAfterQTE()
     {
-        if (timerText != null)
-            timerText.gameObject.SetActive(true);
 
         // Jika ada reminder yang tertunda karena bentrok dengan QTE, tampilkan itu
         if (pendingReminderAfterQTE)

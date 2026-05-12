@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;  // Untuk UI Image
+using UnityEngine.UI;
 
 public class M_CalendarAnimation : MonoBehaviour
 {
@@ -11,6 +11,9 @@ public class M_CalendarAnimation : MonoBehaviour
     [Header("Timing Settings")]
     public float frameDelay = 0.2f;
     public float delayBeforeOut = 2f;
+
+    [Header("Out Settings")]
+    public bool playOutAnimation = true;
 
     private bool isPlayingOut = false;
 
@@ -31,7 +34,11 @@ public class M_CalendarAnimation : MonoBehaviour
             yield return new WaitForSeconds(frameDelay);
         }
 
+        if (!playOutAnimation)
+            yield break;
+
         yield return new WaitForSeconds(delayBeforeOut);
+
         M_AudioManager.Instance?.PlayOutCalendar();
         yield return StartCoroutine(PlayOutAnimation());
     }

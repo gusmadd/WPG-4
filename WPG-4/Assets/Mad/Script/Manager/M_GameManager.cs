@@ -68,7 +68,7 @@ public class M_GameManager : MonoBehaviour
         isSequenceRunning = false;
 
         if (M_NoiseSystem.Instance != null)
-           M_NoiseSystem.Instance.SetQTEActive(false);
+            M_NoiseSystem.Instance.SetQTEActive(false);
 
         if (mainCamera != null)
         {
@@ -288,26 +288,29 @@ public class M_GameManager : MonoBehaviour
         TelemetryManager.Instance?.SendPlayerFail("qte_fail", day, week);
         TelemetryManager.Instance?.SendSessionEnd();
 
-        currentState = GameState.QTE;
+        Time.timeScale = 1f;
+
+        currentState = GameState.TaskOverlay;
 
         TaskManager.Instance?.StopTimer();
         TaskUIController.Instance?.HideTaskInstant();
 
         if (M_NoiseSystem.Instance != null)
-           M_NoiseSystem.Instance.SetQTEActive(false);
+            M_NoiseSystem.Instance.SetQTEActive(false);
+
+        M_DetailFoodPage.ClearPendingBuy();
+
+        yield return new WaitForSecondsRealtime(0.5f);
 
         if (UI_Script.Instance != null)
-            yield return StartCoroutine(UI_Script.Instance.Fade(0f, 1f));
+            yield return StartCoroutine(UI_Script.Instance.ShowJumpscareThenGameOver("QTE"));
+    }
+    public void BackCameraToNormalInstantForGameOver()
+    {
+        if (mainCamera == null)
+            return;
 
-        yield return StartCoroutine(
-            ZoomCamera(qteSize, normalSize, qtePosition, normalPosition)
-        );
-
-        if (UI_Script.Instance != null)
-            yield return StartCoroutine(UI_Script.Instance.Fade(1f, 0f));
-
-        currentState = GameState.TaskOverlay;
-
-        GameOver();
+        mainCamera.orthographicSize = normalSize;
+        mainCamera.transform.position = normalPosition;
     }
 }

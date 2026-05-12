@@ -13,6 +13,8 @@ public class TaskManager : MonoBehaviour
     public Animator clockLightAnimator;
     public string timeLeftBoolName = "Time Left";
     public float timeLeftThreshold = 30f;
+    public Animator clockAnimator;
+    public string clockRunningBoolName = "Time Left";
 
     [Header("Runtime")]
     public int itemsPerTask = 3;
@@ -23,6 +25,7 @@ public class TaskManager : MonoBehaviour
     float timer;
     bool timerRunning = false;
     bool dayResolved = false;
+    private bool hasPlayedSurprise = false;
 
     // Tambahan untuk telemetry durasi per item
     float currentTaskStartElapsed = 0f;
@@ -50,6 +53,7 @@ public class TaskManager : MonoBehaviour
         }
 
         UpdateClockLightState();
+        UpdateClockRunningState();
     }
 
     void UpdateClockLightState()
@@ -58,6 +62,30 @@ public class TaskManager : MonoBehaviour
 
         bool isTimeLeft = timer <= timeLeftThreshold;
         clockLightAnimator.SetBool(timeLeftBoolName, isTimeLeft);
+
+    }
+
+    void UpdateClockRunningState()
+    {
+        if (clockAnimator == null) return;
+
+        bool isTimeLeft = timerRunning && timer <= timeLeftThreshold;
+
+        // Clock geter hanya saat waktu <= 30 detik
+        clockAnimator.SetBool(clockRunningBoolName, isTimeLeft);
+
+        // Kucing surprise hanya sekali saat masuk <= 30 detik
+        if (isTimeLeft && !hasPlayedSurprise)
+        {
+            M_PlayerController.Instance?.PlaySurprise();
+            hasPlayedSurprise = true;
+        }
+
+        // Kalau timer di-reset atau kembali di atas 30 detik, boleh trigger lagi nanti
+        if (!isTimeLeft)
+        {
+            hasPlayedSurprise = false;
+        }
     }
 
     public void SetupNewDay(int newItemsPerTask, float durationSeconds)
@@ -79,6 +107,7 @@ public class TaskManager : MonoBehaviour
         timer = dayDurationSeconds;
 
         UpdateClockLightState();
+        UpdateClockRunningState();
 
         Debug.Log("SetupNewDay done. itemsPerTask=" + itemsPerTask + " timer=" + GetTimeLeft());
 
